@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/ic_main_background"
+    tools:context="com.example.dell.fangfangsmall.activity.TakePhotoActivity">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13px"
+        android:background="@mipmap/ic_takephoto_circle_big">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@mipmap/ic_takephoto_circle_small">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="3"
+                android:textColor="@color/color_white"
+                android:textSize="20sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="160px"
+        android:layout_marginTop="34px"
+        android:background="@mipmap/ic_takephoto_left_top" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="160px"
+        android:layout_marginTop="32px"
+        android:background="@mipmap/ic_takephoto_right_top" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="200px"
+        android:layout_marginLeft="160px"
+        android:background="@mipmap/ic_takephoto_left_bottom" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="200px"
+        android:layout_marginRight="160px"
+        android:background="@mipmap/ic_takephoto_right_bottom" />
+
+    <RelativeLayout
+        android:layout_width="170px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="94px">
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="默认3秒后自动拍照"
+            android:textColor="#7F868E"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_take_photo"
+            android:layout_width="160px"
+            android:layout_height="49px"
+            android:layout_below="@id/tv_time"
+            android:layout_marginTop="10px"
+            android:background="@drawable/bg_takephotp"
+            android:gravity="center"
+            android:text="点击拍照"
+            android:textColor="@color/color_white"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="20px"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50px"
+        android:src="@mipmap/ic_mian_bottom_line" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="14px"
+        android:layout_marginRight="40px"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_main_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20px"
+            android:background="@mipmap/ic_main_bottom_first"
+            android:gravity="center"
+            android:text="@string/main_first"
+            android:textColor="@color/color_white"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/tv_main_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20px"
+            android:background="@mipmap/ic_main_bottom_two"
+            android:gravity="center"
+            android:text="@string/main_two"
+            android:textColor="@color/color_white"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/tv_main_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20px"
+            android:background="@mipmap/ic_main_bottom_three"
+            android:gravity="center"
+            android:text="@string/main_three"
+            android:textColor="@color/color_white"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/tv_main_four"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/ic_main_bottom_four"
+            android:gravity="center"
+            android:text="@string/main_four"
+            android:textColor="@color/color_white"
+            android:textSize="11sp" />
+    </LinearLayout>
+</RelativeLayout>

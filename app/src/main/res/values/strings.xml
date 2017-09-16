@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">FangfangSmall</string>
+    <string name="main_first">首页</string>
+    <string name="main_two">视频</string>
+    <string name="main_three">语音</string>
+    <string name="main_four">功能</string>
+
+    <string-array name="voice_question_array">
+        <item>你好</item>
+        <item>我是谁</item>
+        <item>今天天气怎么样</item>
+        <item>我喜欢你</item>
+        <item>你是男的还是女的</item>
+        <item>你多大了</item>
+        <item>再见</item>
+        <item>吃饭了吗</item>
+        <item>机器人是垃圾</item>
+        <item>你太搞笑了</item>
+        <item>我帅吗</item>
+        <item>一加一等于几</item>
+        <item>笨蛋</item>
+        <item>绕口令</item>
+        <item>古诗</item>
+        <item>我很孤独</item>
+        <item>亲亲</item>
+        <item>你想干什么</item>
+        <item>哈哈哈哈哈哈</item>
+    </string-array>
+    <string-array name="voice_answer_array">
+        <item>你好，很高兴见到你</item>
+        <item>我怎么知道你是谁，我都不知道我是谁，你说我是谁，我说你是谁。</item>
+        <item>这里很热，你们那呢？</item>
+        <item>喜欢就好！我也喜欢你</item>
+        <item>我是机器人不分男女</item>
+        <item>今年两岁了</item>
+        <item> 再见，希望再次见面</item>
+        <item>我还不饿，饿了就充电，一般我都是这样就饱了</item>
+        <item>什么都是有价值的，矿泉水瓶子还能卖一毛钱一个耶～</item>
+        <item>还不够搞笑，需要更多的料</item>
+        <item> 比我家的锅帅一点，所以你可称之为帅锅</item>
+        <item>等于3，我答对了，是不是，我跟你一样聪明了，哈哈</item>
+        <item>笨的蛋是不会说话的，你看我能和你说话呢</item>
+        <item>坡上立着一只鹅，坡下就是一条河。宽宽的河，肥肥的鹅，鹅要过河，河要渡鹅不知是鹅过河，还是河渡鹅？</item>
+        <item>红豆生南国，春来发几枝。愿君多采撷，此物最相思。</item>
+        <item>不要这样子，孤独对于每个人来说都是人生必须经历的一道菜，为什么要板着脸吃下它呢？</item>
+        <item>你个大流氓</item>
+        <item> 陪你聊天</item>
+        <item>你一笑，我的世界也变得快乐了啦</item>
+
+    </string-array>
+    <string-array name="no_result">
+        <item>我好像没有听懂您说的是什么</item>
+        <item>我好想听您再说一遍</item>
+        <item>我的耳朵可能失聪了，您能再说一遍吗</item>
+    </string-array>
+</resources>

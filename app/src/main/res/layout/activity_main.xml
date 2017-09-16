@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/ic_main_background"
+    tools:context="com.example.dell.fangfangsmall.activity.MainActivity">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="437px"
+        android:layout_height="439px"
+        android:layout_marginLeft="7px"
+        android:layout_marginTop="13px"
+        android:background="@mipmap/ic_main_left_top">
+
+        <TextView
+            android:id="@+id/tv_main_question"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="67px"
+            android:layout_marginLeft="73px"
+            android:layout_marginRight="58px"
+            android:layout_marginTop="61px"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/color_white"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="23px"
+            android:layout_marginRight="116px"
+            android:src="@mipmap/ic_main_voice" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="134px"
+        android:layout_height="205px"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20px"
+        android:layout_marginTop="20px"
+        android:src="@mipmap/ic_surface" />
+
+    <RelativeLayout
+        android:layout_width="547px"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/ic_main_center"
+        android:gravity="center"
+        android:layout_alignBottom="@+id/relativeLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Give You Everything"
+            android:textColor="@color/color_white"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="20px"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50px"
+        android:src="@mipmap/ic_mian_bottom_line" />
+
+    <ImageView
+        android:layout_width="129px"
+        android:layout_height="189px"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="24px"
+        android:layout_marginLeft="65px"
+        android:src="@mipmap/ic_robot" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="736px"
+        android:layout_height="232px"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="84px"
+        android:layout_marginRight="86px"
+        android:background="@mipmap/ic_answer_background"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="123px"
+            android:layout_marginTop="39px"
+            android:text="FANG FANG"
+            android:textColor="@color/color_white" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="74px"
+            android:layout_marginRight="47px"
+            android:background="@mipmap/ic_main_line_center" />
+
+        <TextView
+            android:id="@+id/tv_main_answer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/linearLayout"
+            android:layout_alignStart="@+id/linearLayout"
+            android:layout_below="@+id/relativeLayout"
+            android:layout_marginLeft="37px"
+            android:layout_marginStart="37px"
+            android:layout_marginTop="20px"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/color_white"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="14px"
+        android:layout_marginRight="40px"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_main_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20px"
+            android:background="@mipmap/ic_main_bottom_first"
+            android:gravity="center"
+            android:text="@string/main_first"
+            android:textColor="@color/color_white"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/tv_main_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20px"
+            android:background="@mipmap/ic_main_bottom_two"
+            android:gravity="center"
+            android:text="@string/main_two"
+            android:textColor="@color/color_white"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/tv_main_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20px"
+            android:background="@mipmap/ic_main_bottom_three"
+            android:gravity="center"
+            android:text="@string/main_three"
+            android:textColor="@color/color_white"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/tv_main_four"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/ic_main_bottom_four"
+            android:gravity="center"
+            android:text="@string/main_four"
+            android:textColor="@color/color_white"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+
+</RelativeLayout>
