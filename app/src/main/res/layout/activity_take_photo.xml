@@ -21,6 +21,7 @@
             android:background="@mipmap/ic_takephoto_circle_small">
 
             <TextView
+                android:id="@+id/tv_countTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -28,6 +29,21 @@
                 android:textColor="@color/color_white"
                 android:textSize="20sp" />
         </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="200px"
+        android:layout_marginLeft="160px"
+        android:layout_marginRight="160px"
+        android:layout_marginTop="34px">
+
+        <SurfaceView
+            android:id="@+id/opengl_layout_surfaceview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10px" />
     </RelativeLayout>
 
     <RelativeLayout

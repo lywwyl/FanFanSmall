@@ -83,9 +83,9 @@ public class TrainActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.rl_face:
 //                videoPermission();
-                Bundle bundle = new Bundle();
-                bundle.putString("AuthId", "zhangT");
-                JumpItent.jump(TrainActivity.this, VerificationActivity.class, bundle);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("AuthId", "zhangT");
+                JumpItent.jump(TrainActivity.this, VerificationActivity.class);
                 break;
 
         }

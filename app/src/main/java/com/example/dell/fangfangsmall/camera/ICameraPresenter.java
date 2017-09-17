@@ -19,13 +19,9 @@ public abstract class ICameraPresenter {
         mBaseView = baseView;
     }
 
-    public abstract void accStart();
+    public abstract void verificationFace(Handler handler, Bitmap bitmap);
 
-    public abstract void accStop();
-
-    public abstract void facedDestroy();
-
-    public abstract void verificationFace(Handler handler, String authId, Bitmap bitmap);
+    public abstract void saveFace(Bitmap bitmap);
 
     public abstract void closeCamera();
 
@@ -39,7 +35,7 @@ public abstract class ICameraPresenter {
 
     public abstract void setMatrix(int width, int height);
 
-    public abstract void cameraTakePicture(String pictureTakenPath);
+    public abstract void showDialog();
 
     public interface ICameraView {
 
@@ -52,6 +48,10 @@ public abstract class ICameraPresenter {
         void setVerifyingFalse();
 
         void tranBitmap(Bitmap bitmap);
+
+        void tranBitmapFosave(Bitmap bitmap);
+
+        void saveFinish();
 
         Context getContext();
     }

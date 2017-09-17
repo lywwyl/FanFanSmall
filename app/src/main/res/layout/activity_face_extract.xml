@@ -23,11 +23,16 @@
             <!--android:visibility="visible" />-->
 
         <SurfaceView
-            android:id="@+id/opengl_layout_surfaceview"
+        android:id="@+id/opengl_layout_surfaceview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10px"/>
+
+        <com.example.dell.fangfangsmall.view.DrawSurfaceView
+            android:id="@+id/draw_sufaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10px"/>
-
+            android:layout_margin="10px" />
 
         <RelativeLayout
             android:layout_width="wrap_content"

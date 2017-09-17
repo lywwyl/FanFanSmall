@@ -16,22 +16,16 @@ import android.hardware.Camera;
 import android.media.FaceDetector;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Surface;
 import android.view.SurfaceHolder;
-import android.view.WindowManager;
 
-import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.face.yt.person.YtVerifyperson;
+import com.example.dell.fangfangsmall.listener.OnConfimListener;
 import com.example.dell.fangfangsmall.util.BitmapUtils;
-import com.example.dell.fangfangsmall.util.ConUtil;
+import com.example.dell.fangfangsmall.view.AddInfoDialog;
 import com.example.dell.fangfangsmall.youtu.PersonManager;
 import com.example.dell.fangfangsmall.youtu.callback.SimpleCallback;
-import com.megvii.facepp.sdk.Facepp;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -39,13 +33,14 @@ import java.util.List;
  * Created by zhangyuanyuan on 2017/9/14.
  */
 
-public class CameraPresenter extends ICameraPresenter implements Camera.PreviewCallback, Camera.FaceDetectionListener {
+public class CameraPresenter extends ICameraPresenter implements Camera.PreviewCallback, OnConfimListener {
 
     private ICameraView mCamerView;
 
+    private String mAuthId;
 //    private Accelerometer mAcc;
 //    private FaceDetector mFaceDetector;
-    private Facepp facepp;
+//    private Facepp facepp;
 
     private SurfaceHolder mHolder; // 用于控制SurfaceView
 
@@ -57,9 +52,12 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
     private Matrix mScaleMatrix = new Matrix();
     private int orientionOfCamera;
 
-    private String pictureTakenPath;
+    private AddInfoDialog addInfoDialog;
 
     private boolean isVerifying = false;
+    private int curCount = 0;
+    private long curTime;
+    private int orientionOfPhoto;
 
     public CameraPresenter(ICameraView baseView, SurfaceHolder surfaceHolder) {
         super(baseView);
@@ -68,38 +66,41 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
 
 //        mAcc = new Accelerometer(mCamerView.getContext());
 //        mFaceDetector = FaceDetector.createDetector(mCamerView.getContext(), null);
-        facepp = new Facepp();
-        String errorCode = facepp.init(mCamerView.getContext(), ConUtil.getFileContent(mCamerView.getContext(), R.raw.megviifacepp_0_4_7_model));//MG
+//        facepp = new Facepp();
+//        String errorCode = facepp.init(mCamerView.getContext(), ConUtil.getFileContent(mCamerView.getContext(), R.raw.megviifacepp_0_4_7_model));//MG
     }
 
-    @Override
-    public void accStart() {
+//    @Override
+//    public void accStart() {
 //        if (null != mAcc) {
 //            mAcc.start();
 //        }
-    }
+//    }
 
-    @Override
-    public void accStop() {
+//    @Override
+//    public void accStop() {
 //        if (null != mAcc) {
 //            mAcc.stop();
 //        }
-    }
+//    }
 
-    @Override
-    public void facedDestroy() {
+//    @Override
+//    public void facedDestroy() {
 //        if (null != mFaceDetector) {
 //            mFaceDetector.destroy();
 //        }
-        facepp.release();
-    }
+//        facepp.release();
+//    }
 
     @Override
-    public void verificationFace(Handler handler, String authId, Bitmap baseBitmap) {
-//        BitmapUtils.saveBitmapToFile(baseBitmap, "123", "baseBitmap.jpg");
+    public void verificationFace(Handler handler, Bitmap baseBitmap) {
+        if(mAuthId == null || mAuthId.equals("")){
+            showDialog();
+            return;
+        }
         Bitmap copyBitmap = bitmapSaturation(baseBitmap);
-        BitmapUtils.saveBitmapToFile(copyBitmap, "123", "copyBitmap.jpg");
-        PersonManager.faceVerify(handler, authId, copyBitmap, new SimpleCallback<YtVerifyperson>((Activity) mCamerView.getContext()) {
+//        BitmapUtils.saveBitmapToFile(copyBitmap, "123", "copyBitmap.jpg");
+        PersonManager.faceVerify(handler, mAuthId, copyBitmap, new SimpleCallback<YtVerifyperson>((Activity) mCamerView.getContext()) {
             @Override
             public void onBefore() {
                 isVerifying = true;
@@ -128,6 +129,16 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
                 mCamerView.setVerifyingFalse();
             }
         });
+    }
+
+    @Override
+    public void saveFace(final Bitmap bitmap) {
+        if(mAuthId == null || mAuthId.equals("")){
+            showDialog();
+            return;
+        }
+            BitmapUtils.saveBitmapToFile(bitmap, mAuthId, curCount + ".jpg");
+        curTime = System.currentTimeMillis();
     }
 
     @Override
@@ -167,36 +178,26 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
         }
         if (mCamera != null) {
             try {
-
                 Camera.Parameters parameters = mCamera.getParameters();
                 parameters.setPictureFormat(PixelFormat.JPEG);
-
                 List<Camera.Size> pictures = parameters.getSupportedPictureSizes();
-
                 Camera.Size size = pictures.get(pictures.size() - 1);
                 parameters.setPictureSize(size.width, size.height);
                 List<String> focusModes = parameters.getSupportedFocusModes();
                 if (focusModes.contains("continuous-video")) {
                     parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
                 }
-
                 parameters.setPreviewFormat(ImageFormat.NV21);
-
-//                Camera.Size previewSize = CameraUtils.getInstance().getPreviewSize(parameters.getSupportedPreviewSizes());
-//                if (previewSize != null) {
-//                    parameters.setPreviewSize(previewSize.width, previewSize.height);
-//                }
-
                 parameters.setPreviewSize(previewWidth, previewHeight);
                 mCamera.setParameters(parameters);
 
                 // 设置显示的偏转角度，大部分机器是顺时针90度，某些机器需要按情况设置
 //                mCamera.setDisplayOrientation(90);
-                orientionOfCamera = setCameraDisplayOrientation(mCameraId);
+                orientionOfCamera = CameraUtils.setCameraDisplayOrientation((Activity) mCamerView.getContext(), mCameraId);
                 mCamera.setDisplayOrientation(orientionOfCamera);
                 mCamera.startPreview();
                 mCamera.setPreviewCallback(this);
-                mCamera.setFaceDetectionListener(this);
+//                mCamera.setFaceDetectionListener(this);
 
                 try {
                     mCamera.setPreviewDisplay(mHolder);
@@ -237,21 +238,11 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
     }
 
     @Override
-    public void cameraTakePicture(String savePath) {
-        pictureTakenPath = savePath;
-        mCamera.autoFocus(new Camera.AutoFocusCallback() {//自动对焦
-            @Override
-            public void onAutoFocus(boolean success, Camera camera) {
-                // TODO Auto-generated method stub
-                if (success) {
-                    //设置参数，并拍照
-                    Camera.Parameters params = camera.getParameters();
-                    params.setPictureFormat(PixelFormat.JPEG);//图片格式
-                    camera.setParameters(params);//将参数设置到我的camera
-                    camera.takePicture(null, null, myPictureCallback);//将拍摄到的照片给自定义的对象
-                }
-            }
-        });
+    public void showDialog() {
+        if(addInfoDialog == null){
+            addInfoDialog = new AddInfoDialog(mCamerView.getContext(), this);
+        }
+        addInfoDialog.show();
     }
 
     public void setCameraId() {
@@ -262,35 +253,7 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
         }
     }
 
-    public int setCameraDisplayOrientation(int paramInt) {
-        Camera.CameraInfo info = new Camera.CameraInfo();
-        Camera.getCameraInfo(paramInt, info);
-        int rotation = ((WindowManager) mCamerView.getContext().getSystemService("window")).getDefaultDisplay().getRotation(); // 获得显示器件角度
-        int degrees = 0;
-        switch (rotation) {
-            case Surface.ROTATION_0:
-                degrees = 0;
-                break;
-            case Surface.ROTATION_90:
-                degrees = 90;
-                break;
-            case Surface.ROTATION_180:
-                degrees = 180;
-                break;
-            case Surface.ROTATION_270:
-                degrees = 270;
-                break;
-        }
 
-        int result;
-        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            result = (info.orientation + degrees) % 360;
-            result = (360 - result) % 360; // compensate the mirror
-        } else { // back-facing
-            result = (info.orientation - degrees + 360) % 360;
-        }
-        return result;
-    }
 
     private Bitmap bitmapSaturation(Bitmap baseBitmap) {
         Bitmap copyBitmap = Bitmap.createBitmap(baseBitmap.getWidth(), baseBitmap.getHeight(), baseBitmap.getConfig());
@@ -325,20 +288,12 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
         return Bitmap.createBitmap(previewBitmap, 0, 0, previewBitmap.getWidth(), previewBitmap.getHeight(), matrix, true);
     }
 
-
-    private Bitmap getBitmap(byte[] data) throws IOException {
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        File file = new File(pictureTakenPath);
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);//将图片压缩的流里面
-        bos.flush();// 刷新此缓冲区的输出流
-        bos.close();// 关闭此输出流并释放与此流有关的所有系统资源
-        return bitmap;
-    }
-
     @Override
     public void onPreviewFrame(byte[] bytes, Camera camera) {
-        boolean frontCamera = (Camera.CameraInfo.CAMERA_FACING_FRONT == mCameraId);
+        if(mAuthId == null || mAuthId.equals("")){
+            return;
+        }
+//        boolean frontCamera = (Camera.CameraInfo.CAMERA_FACING_FRONT == mCameraId);
 //        int direction = Accelerometer.getDirection();
 //        if (frontCamera) {
 //            direction = (4 - direction) % 4;
@@ -359,7 +314,6 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
         int height = previewBitmap.getHeight();
 
         Matrix matrix = new Matrix();
-//        matrix.postRotate(0.0f, previewBitmap.getWidth() / 2, previewBitmap.getHeight() / 2);
 
         FaceDetector detector = null;
         Bitmap faceBitmap = null;
@@ -368,7 +322,6 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
         orientionOfCamera = 360 - orientionOfCamera;
         switch (orientionOfCamera) {
             case 0:
-                //初始化人脸检测（下同）
                 detector = new FaceDetector(width, height, 10);
                 matrix.postRotate(0.0f, width / 2, height / 2);
                 faceBitmap = Bitmap.createBitmap(previewBitmap, 0, 0, width, height, matrix, true);
@@ -392,43 +345,37 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
 
         Bitmap copyBitmap = faceBitmap.copy(Bitmap.Config.RGB_565, true);
 
-
         FaceDetector.Face[] faces = new FaceDetector.Face[10];;
         int faceNumber = detector.findFaces(copyBitmap, faces);
 
-        Log.e("aaaaa", faceNumber + "");
-        if (faceNumber == 1) {
-//            if (faces.length == 1) {
-                if (!isVerifying) {
-                    isVerifying = true;
-//                    Bitmap verifyBitmap = bitmapTransformation(bytes, camera, frontCamera);
-//                    mCamerView.tranBitmap(verifyBitmap);
-                    mCamerView.tranBitmap(faceBitmap);
+        if (faceNumber > 0) {
+//                if (!isVerifying) {
+//                    isVerifying = true;
+//                    mCamerView.tranBitmap(faceBitmap);
+//                }
+            if(curCount < 10) {
+                if(curCount == 0){
+                    orientionOfPhoto = orientionOfCamera;
                 }
-//            }
-//            drawFacerect(frontCamera, faces);
+                if(orientionOfPhoto == orientionOfCamera) {
+                    if (System.currentTimeMillis() - curTime > 2000) {
+                        curCount++;
+                        mCamerView.tranBitmapFosave(copyBitmap);
+                    }
+                }
+            }else if(curCount == 10){
+                mCamerView.saveFinish();
+            }
         }
+
         copyBitmap.recycle();
         faceBitmap.recycle();
         previewBitmap.recycle();
     }
 
-    private Camera.PictureCallback myPictureCallback = new Camera.PictureCallback() {
-        @Override
-        public void onPictureTaken(byte[] bytes, Camera camera) {
-            try {
-                Bitmap bitmap = getBitmap(bytes);
-                camera.stopPreview();//关闭预览 处理数据
-                doStartPreview();
-                bitmap.recycle();//回收bitmap空间
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
     @Override
-    public void onFaceDetection(Camera.Face[] faces, Camera camera) {
-
+    public void onConfim(String content) {
+        mAuthId = content;
+        curCount = 0;
     }
 }

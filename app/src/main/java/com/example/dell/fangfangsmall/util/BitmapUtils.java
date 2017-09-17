@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,17 +26,17 @@ public class BitmapUtils {
     private static String mSdRootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
     private static String projectPath = mSdRootPath + File.separator + "delivery" + File.separator;
 
-    public static void deleteBitmapDir(String dirName){
+    public static void deleteBitmapDir(String dirName) {
         File dirFile = new File(projectPath + dirName);
         deleteFile(dirFile);
     }
 
-    public static void deleteFile(File file){
+    public static void deleteFile(File file) {
         if (file.exists()) {
 
             if (file.isFile()) {
                 file.delete();
-            }else if (file.isDirectory()){
+            } else if (file.isDirectory()) {
                 File files[] = file.listFiles();
                 for (int i = 0; i < files.length; i++) {
                     deleteFile(files[i]);
@@ -53,28 +54,28 @@ public class BitmapUtils {
      * @param fileName
      * @throws IOException
      */
-    public static void saveBitmapToFile(Bitmap bm, String dirName, String fileName) {
-        File dirFile = new File(projectPath + dirName);
-        if (!dirFile.exists()) {
-            dirFile.mkdirs();
-        }
-        File myCaptureFile = new File(dirFile, fileName);
-        if(!myCaptureFile.exists()){
-            try {
-                myCaptureFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public static boolean saveBitmapToFile(Bitmap bm, String dirName, String fileName) {
         try {
+            File dirFile = new File(projectPath + dirName);
+            if (!dirFile.exists()) {
+                dirFile.mkdirs();
+            }
+            File myCaptureFile = new File(dirFile, fileName);
+            if (!myCaptureFile.exists()) {
+                myCaptureFile.createNewFile();
+            }
+            Log.e("myCaptureFile", myCaptureFile.getAbsolutePath());
+
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
 
             bm.compress(Bitmap.CompressFormat.JPEG, 80, bos);
 
             bos.flush();
             bos.close();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
