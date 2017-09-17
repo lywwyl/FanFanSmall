@@ -53,4 +53,11 @@
         <item>我好想听您再说一遍</item>
         <item>我的耳朵可能失聪了，您能再说一遍吗</item>
     </string-array>
+
+    <string-array name="trackig_mode_array">
+        <item>Normal</item>
+        <item>Robust</item>
+        <item>Fast</item>
+    </string-array>
+
 </resources>

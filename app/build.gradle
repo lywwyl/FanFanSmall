@@ -32,9 +32,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    //    compile project(':xfyun')
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile files('libs/Msc.jar')
     compile 'fm.jiecao:jiecaovideoplayer:3.0_preview'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.FacePlusPlus:MegviiLicMgr-Android-SDK:0.3.0'
+    //    compile project(':sdk')
+    compile files('libs/MGFaceppSDK-0.4.7.jar')
+    compile 'com.google.code.gson:gson:2.8.1'
 }
