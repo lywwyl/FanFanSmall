@@ -59,6 +59,13 @@ public class BitmapUtils {
             dirFile.mkdirs();
         }
         File myCaptureFile = new File(dirFile, fileName);
+        if(!myCaptureFile.exists()){
+            try {
+                myCaptureFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         try {
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
 

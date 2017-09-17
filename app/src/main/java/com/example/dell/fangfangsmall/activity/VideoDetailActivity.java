@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.dell.fangfangsmall.R;
 
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
-
 /**
  * 视频播放详情
  *
@@ -15,7 +13,7 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
  */
 public class VideoDetailActivity extends AppCompatActivity {
 
-    private JCVideoPlayerStandard mJcVideo;
+//    private JCVideoPlayerStandard mJcVideo;
 
     private String upfile;//视频地址
     private String title;//视频地址;
@@ -31,7 +29,7 @@ public class VideoDetailActivity extends AppCompatActivity {
 
     private void initView() {
 
-        (mJcVideo) = (JCVideoPlayerStandard) findViewById(R.id.jc_video);
+//        (mJcVideo) = (JCVideoPlayerStandard) findViewById(R.id.jc_video);
     }
 
     private void initData() {

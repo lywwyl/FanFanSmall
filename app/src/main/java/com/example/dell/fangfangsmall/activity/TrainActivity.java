@@ -82,7 +82,10 @@ public class TrainActivity extends AppCompatActivity implements View.OnClickList
                 JumpItent.jump(TrainActivity.this, TakePhotoActivity.class);
                 break;
             case R.id.rl_face:
-                videoPermission();
+//                videoPermission();
+                Bundle bundle = new Bundle();
+                bundle.putString("AuthId", "zhangT");
+                JumpItent.jump(TrainActivity.this, VerificationActivity.class, bundle);
                 break;
 
         }
@@ -139,7 +142,8 @@ public class TrainActivity extends AppCompatActivity implements View.OnClickList
 
                     @Override
                     public void onFailed(int i, byte[] bytes) {
-                        Log.e("GG", "onFailed");
+                        String s = new String(bytes);
+                        Log.e("", "onFailed" + i + "  " + s);
                     }
                 });
     }

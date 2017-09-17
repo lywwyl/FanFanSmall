@@ -13,6 +13,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
+import android.media.FaceDetector;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Surface;
@@ -21,6 +22,7 @@ import android.view.WindowManager;
 
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.face.yt.person.YtVerifyperson;
+import com.example.dell.fangfangsmall.util.BitmapUtils;
 import com.example.dell.fangfangsmall.util.ConUtil;
 import com.example.dell.fangfangsmall.youtu.PersonManager;
 import com.example.dell.fangfangsmall.youtu.callback.SimpleCallback;
@@ -37,7 +39,7 @@ import java.util.List;
  * Created by zhangyuanyuan on 2017/9/14.
  */
 
-public class CameraPresenter extends ICameraPresenter implements Camera.PreviewCallback {
+public class CameraPresenter extends ICameraPresenter implements Camera.PreviewCallback, Camera.FaceDetectionListener {
 
     private ICameraView mCamerView;
 
@@ -53,6 +55,7 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
     private int previewHeight = 480;
     private boolean isPreviewing = false;
     private Matrix mScaleMatrix = new Matrix();
+    private int orientionOfCamera;
 
     private String pictureTakenPath;
 
@@ -95,7 +98,7 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
     public void verificationFace(Handler handler, String authId, Bitmap baseBitmap) {
 //        BitmapUtils.saveBitmapToFile(baseBitmap, "123", "baseBitmap.jpg");
         Bitmap copyBitmap = bitmapSaturation(baseBitmap);
-//        BitmapUtils.saveBitmapToFile(copyBitmap, "123", "copyBitmap.jpg");
+        BitmapUtils.saveBitmapToFile(copyBitmap, "123", "copyBitmap.jpg");
         PersonManager.faceVerify(handler, authId, copyBitmap, new SimpleCallback<YtVerifyperson>((Activity) mCamerView.getContext()) {
             @Override
             public void onBefore() {
@@ -131,8 +134,8 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
     public void closeCamera() {
         if (null != mCamera) {
             mCamera.setPreviewCallback(null);
-            mCamera.stopFaceDetection();
             mCamera.stopPreview();
+            mCamera.stopFaceDetection();
             isPreviewing = false;
             mCamera.release();
             mCamera = null;
@@ -189,9 +192,11 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
 
                 // 设置显示的偏转角度，大部分机器是顺时针90度，某些机器需要按情况设置
 //                mCamera.setDisplayOrientation(90);
-                mCamera.setDisplayOrientation(setCameraDisplayOrientation(mCameraId));
+                orientionOfCamera = setCameraDisplayOrientation(mCameraId);
+                mCamera.setDisplayOrientation(orientionOfCamera);
                 mCamera.startPreview();
                 mCamera.setPreviewCallback(this);
+                mCamera.setFaceDetectionListener(this);
 
                 try {
                     mCamera.setPreviewDisplay(mHolder);
@@ -333,26 +338,79 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
 
     @Override
     public void onPreviewFrame(byte[] bytes, Camera camera) {
-//        int direction = Accelerometer.getDirection();
         boolean frontCamera = (Camera.CameraInfo.CAMERA_FACING_FRONT == mCameraId);
+//        int direction = Accelerometer.getDirection();
 //        if (frontCamera) {
 //            direction = (4 - direction) % 4;
 //        }
 //        String result = mFaceDetector.trackNV21(bytes, previewWidth, previewHeight, 0, direction);
 //        FaceRect[] faces = ParseResult.parseResult(result);
-        final Facepp.Face[] faces = facepp.detect(bytes, previewWidth, previewHeight, Facepp.IMAGEMODE_NV21);
 
-        if (null != faces) {
-            Log.e("",faces.length+"");
-            if (faces.length == 1) {
+//        final Facepp.Face[] faces = facepp.detect(bytes, previewWidth, previewHeight, Facepp.IMAGEMODE_NV21);
+
+        Camera.Size size = camera.getParameters().getPreviewSize();
+        YuvImage yuvImage = new YuvImage(bytes, ImageFormat.NV21, size.width, size.height, null);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        yuvImage.compressToJpeg(new Rect(0, 0, size.width, size.height), 80, baos);
+        byte[] byteArray = baos.toByteArray();
+
+        Bitmap previewBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        int width = previewBitmap.getWidth();
+        int height = previewBitmap.getHeight();
+
+        Matrix matrix = new Matrix();
+//        matrix.postRotate(0.0f, previewBitmap.getWidth() / 2, previewBitmap.getHeight() / 2);
+
+        FaceDetector detector = null;
+        Bitmap faceBitmap = null;
+
+        detector = new FaceDetector(previewBitmap.getWidth(), previewBitmap.getHeight(), 10);
+        orientionOfCamera = 360 - orientionOfCamera;
+        switch (orientionOfCamera) {
+            case 0:
+                //初始化人脸检测（下同）
+                detector = new FaceDetector(width, height, 10);
+                matrix.postRotate(0.0f, width / 2, height / 2);
+                faceBitmap = Bitmap.createBitmap(previewBitmap, 0, 0, width, height, matrix, true);
+                break;
+            case 90:
+                detector = new FaceDetector(height, width, 1);
+                matrix.postRotate(-270.0f, height / 2, width / 2);
+                faceBitmap = Bitmap.createBitmap(previewBitmap, 0, 0, width, height, matrix, true);
+                break;
+            case 180:
+                detector = new FaceDetector(width, height, 1);
+                matrix.postRotate(-180.0f, width / 2, height / 2);
+                faceBitmap = Bitmap.createBitmap(previewBitmap, 0, 0, width, height, matrix, true);
+                break;
+            case 270:
+                detector = new FaceDetector(height, width, 1);
+                matrix.postRotate(-90.0f, height / 2, width / 2);
+                faceBitmap = Bitmap.createBitmap(previewBitmap, 0, 0, width, height, matrix, true);
+                break;
+        }
+
+        Bitmap copyBitmap = faceBitmap.copy(Bitmap.Config.RGB_565, true);
+
+
+        FaceDetector.Face[] faces = new FaceDetector.Face[10];;
+        int faceNumber = detector.findFaces(copyBitmap, faces);
+
+        Log.e("aaaaa", faceNumber + "");
+        if (faceNumber == 1) {
+//            if (faces.length == 1) {
                 if (!isVerifying) {
                     isVerifying = true;
-                    Bitmap verifyBitmap = bitmapTransformation(bytes, camera, frontCamera);
-                    mCamerView.tranBitmap(verifyBitmap);
+//                    Bitmap verifyBitmap = bitmapTransformation(bytes, camera, frontCamera);
+//                    mCamerView.tranBitmap(verifyBitmap);
+                    mCamerView.tranBitmap(faceBitmap);
                 }
-            }
+//            }
 //            drawFacerect(frontCamera, faces);
         }
+        copyBitmap.recycle();
+        faceBitmap.recycle();
+        previewBitmap.recycle();
     }
 
     private Camera.PictureCallback myPictureCallback = new Camera.PictureCallback() {
@@ -368,4 +426,9 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
             }
         }
     };
+
+    @Override
+    public void onFaceDetection(Camera.Face[] faces, Camera camera) {
+
+    }
 }

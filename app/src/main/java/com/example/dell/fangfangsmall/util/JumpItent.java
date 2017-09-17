@@ -148,7 +148,7 @@ public class JumpItent {
 
                         @Override
                         public void onFailed(int i, byte[] bytes) {
-                            Log.e("", "onFailed");
+                            Log.e("", "onFailed" + i + "  " + new String(bytes));
                         }
                     });
 
