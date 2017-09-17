@@ -1,13 +1,12 @@
 package com.example.dell.fangfangsmall.activity;
 
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -83,7 +82,7 @@ public class TrainActivity extends AppCompatActivity implements View.OnClickList
     public void videoPermission() {
         if (PackageManager.PERMISSION_GRANTED == ContextCompat.
                 checkSelfPermission(TrainActivity.this, android.Manifest.permission.CAMERA)) {
-            JumpItent.jump(TrainActivity.this, FaceExtractActivity.class);
+            JumpItent.jumpVerification(TrainActivity.this, "zhangT");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 //提示用户开户权限
                 String[] perms = {"android.permission.CAMERA"};
@@ -103,7 +102,7 @@ public class TrainActivity extends AppCompatActivity implements View.OnClickList
                 if (!albumAccepted_video) {
                     Toast.makeText(TrainActivity.this, "请开启应用视频权限", Toast.LENGTH_LONG).show();
                 } else {
-                    JumpItent.jump(TrainActivity.this, FaceExtractActivity.class);
+                    JumpItent.jumpVerification(TrainActivity.this, "zhangT");
                 }
                 break;
         }

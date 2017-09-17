@@ -55,10 +55,7 @@
         <activity android:name=".activity.VoiceActivity"/>
         <activity android:name=".activity.TrainActivity"/>
         <activity android:name=".activity.TakePhotoActivity" />
-        <activity android:name=".activity.FaceExtractActivity"></activity>
-        <activity android:name=".activity.DetectImageActivity">
-
-        </activity>
+        <activity android:name=".activity.VerificationActivity" />
     </application>
 
 </manifest>

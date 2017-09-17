@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/ic_main_background"
-    tools:context="com.example.dell.fangfangsmall.activity.TakePhotoActivity">
 
+    tools:context="com.example.dell.fangfangsmall.activity.TakePhotoActivity">
+<!--android:background="@mipmap/ic_main_background"-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,19 +15,19 @@
         android:layout_marginRight="160px"
         android:layout_marginTop="34px">
 
-        <SurfaceView
-            android:id="@+id/sfv_preview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10px"
-            android:visibility="visible" />
+        <!--<android.opengl.GLSurfaceView-->
+            <!--android:id="@+id/opengl_layout_surfaceview"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_margin="10px"-->
+            <!--android:visibility="visible" />-->
 
-        <com.example.dell.fangfangsmall.view.DrawSurfaceView
-            android:id="@+id/sfv_face"
+        <SurfaceView
+            android:id="@+id/opengl_layout_surfaceview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10px"
-            android:visibility="visible" />
+            android:layout_margin="10px"/>
+
 
         <RelativeLayout
             android:layout_width="wrap_content"
