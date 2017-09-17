@@ -1,24 +1,27 @@
 package com.example.dell.fangfangsmall.activity;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.camera.BaseActivity;
 import com.example.dell.fangfangsmall.camera.CameraPresenter;
 import com.example.dell.fangfangsmall.camera.ICameraPresenter;
 import com.example.dell.fangfangsmall.face.yt.person.YtVerifyperson;
+import com.example.dell.fangfangsmall.view.DrawSurfaceView;
 
 
-public class VerificationActivity extends BaseActivity implements ICameraPresenter.ICameraView, SurfaceHolder.Callback {
+public class VerificationActivity extends BaseActivity implements ICameraPresenter.ICameraView, SurfaceHolder.Callback, View.OnClickListener {
 
-    SurfaceView cameraSurfaceView;
+    private SurfaceView cameraSurfaceView;
+    private DrawSurfaceView drawSufaceView;
+    private TextView tvAddIfofo;
 
     private CameraPresenter mCameraPresenter;
 
@@ -33,8 +36,6 @@ public class VerificationActivity extends BaseActivity implements ICameraPresent
         }
     };
 
-    private String mAuthId;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_face_extract;
@@ -43,70 +44,40 @@ public class VerificationActivity extends BaseActivity implements ICameraPresent
     @Override
     protected void initView() {
         cameraSurfaceView = (SurfaceView) findViewById(R.id.opengl_layout_surfaceview);
+        drawSufaceView = (DrawSurfaceView) findViewById(R.id.draw_sufaceView);
+        tvAddIfofo = (TextView) findViewById(R.id.tv_add_info);
 
         SurfaceHolder Holder = cameraSurfaceView.getHolder(); // 获得SurfaceHolder对象
         Holder.addCallback(this); // 为SurfaceView添加状态监听
         Holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         mCameraPresenter = new CameraPresenter(this, Holder);
-
-//        cameraSurfaceView.getHolder().addCallback(this);
-//        cameraSurfaceView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-//        Button button = (Button) findViewById(R.id.camera_shutter);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mCameraPresenter.cameraTakePicture("");
-//            }
-//        });
     }
 
 
     @Override
     protected void initData() {
-        mAuthId = getIntent().getStringExtra("AuthId");
+        mCameraPresenter.showDialog();
     }
 
     @Override
     protected void setListener() {
-//        drawSufaceView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mCameraPresenter.changeCamera();
-//            }
-//        });
+        tvAddIfofo.setOnClickListener(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        mCameraPresenter.accStart();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mCameraPresenter.closeCamera();
-        mCameraPresenter.accStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mCameraPresenter.facedDestroy();
-    }
-
-
-    public static void invoke(Context context, String authId) {
-        Intent intent = new Intent(context, VerificationActivity.class);
-        intent.putExtra("AuthId", authId);
-        context.startActivity(intent);
-    }
-
-    public static void invoke(Activity context, String authId, int requestCode) {
-        Intent intent = new Intent(context, VerificationActivity.class);
-        intent.putExtra("AuthId", authId);
-        context.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -148,7 +119,17 @@ public class VerificationActivity extends BaseActivity implements ICameraPresent
 
     @Override
     public void tranBitmap(Bitmap bitmap) {
-        mCameraPresenter.verificationFace(mHandler, mAuthId, bitmap);
+        mCameraPresenter.verificationFace(mHandler, bitmap);
+    }
+
+    @Override
+    public void tranBitmapFosave(Bitmap bitmap) {
+        mCameraPresenter.saveFace(bitmap);
+    }
+
+    @Override
+    public void saveFinish() {
+        showToast("保存完成");
     }
 
 
@@ -167,5 +148,14 @@ public class VerificationActivity extends BaseActivity implements ICameraPresent
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         mCameraPresenter.closeCamera();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.tv_add_info:
+                mCameraPresenter.showDialog();
+                break;
+        }
     }
 }

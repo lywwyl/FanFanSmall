@@ -1,81 +1,123 @@
 package com.example.dell.fangfangsmall.activity;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.content.Context;
+import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.dell.fangfangsmall.R;
-import com.example.dell.fangfangsmall.util.JumpItent;
+import com.example.dell.fangfangsmall.camera.BaseActivity;
+import com.example.dell.fangfangsmall.camera.ITakePresenter;
+import com.example.dell.fangfangsmall.camera.TakePresenter;
 
 /**
  * 进行拍照   
  *@author Guanluocang
  *created at 2017/9/13 11:29
 */
-public class TakePhotoActivity extends AppCompatActivity implements View.OnClickListener {
+public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Callback, View.OnClickListener, ITakePresenter.ITakeView {
 
-    private TextView mMainFirst;//首页
-    private TextView mMainTwo;//视频
-    private TextView mMainThree;//语音
-    private TextView mMainFour;//训练
-    private TextView mTakePhoto;
+    private SurfaceView cameraSurfaceView;
+    private TextView tvTakePhoto;
+    private TextView tvCountTime;
 
-    private boolean isTakePhoto = true;
+    private TakePresenter mTakePresenter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_take_photo);
-        initView();
-        initListener();
-
-    }
-
-    private void initView() {
-        (mMainFirst) = (TextView) findViewById(R.id.tv_main_first);
-        (mMainTwo) = (TextView) findViewById(R.id.tv_main_two);
-        (mMainThree) = (TextView) findViewById(R.id.tv_main_three);
-        (mMainFour) = (TextView) findViewById(R.id.tv_main_four);
-        (mTakePhoto) = (TextView) findViewById(R.id.tv_take_photo);
-    }
-
-    private void initListener() {
-        mMainFirst.setOnClickListener(this);
-        mMainTwo.setOnClickListener(this);
-        mMainThree.setOnClickListener(this);
-        mMainFour.setOnClickListener(this);
-        mTakePhoto.setOnClickListener(this);
+    protected int getLayoutId() {
+        return R.layout.activity_take_photo;
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_main_first:
-                JumpItent.jump(TakePhotoActivity.this, MainActivity.class);
-                finish();
-                break;
-            case R.id.tv_main_two:
-                JumpItent.jump(TakePhotoActivity.this, VideoActivity.class);
-                finish();
-                break;
-            case R.id.tv_main_three:
-                JumpItent.jump(TakePhotoActivity.this, VoiceActivity.class);
-                finish();
-                break;
-            case R.id.tv_main_four:
-                finish();
-//                JumpItent.jump(TakePhotoActivity.this, TrainActivity.class);
-                break;
+    protected void initView() {
+        cameraSurfaceView = (SurfaceView) findViewById(R.id.opengl_layout_surfaceview);
+        tvTakePhoto = (TextView) findViewById(R.id.tv_take_photo);
+        tvCountTime = (TextView) findViewById(R.id.tv_countTime);
+
+        SurfaceHolder Holder = cameraSurfaceView.getHolder(); // 获得SurfaceHolder对象
+        Holder.addCallback(this); // 为SurfaceView添加状态监听
+        Holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        mTakePresenter = new TakePresenter(this, Holder);
+    }
+
+    @Override
+    protected void initData() {
+        tvTakePhoto.setOnClickListener(this);
+    }
+
+    @Override
+    protected void setListener() {
+
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mTakePresenter.closeCamera();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
             case R.id.tv_take_photo:
-//                if (isTakePhoto) {
-//                    mTakePhoto.setBackgroundResource(R.mipmap.ic_take_background_pressed);
-//                } else {
-//                    mTakePhoto.setBackgroundResource(R.mipmap.ic_take_background);
-//                }
-//                isTakePhoto = !isTakePhoto;
+                mTakePresenter.cameraTakePicture();
                 break;
         }
+    }
 
+    @Override
+    public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        mTakePresenter.openCamera();
+        mTakePresenter.doStartPreview();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        mTakePresenter.setMatrix(width, height);
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+        mTakePresenter.closeCamera();
+    }
+
+
+    @Override
+    public void startPreviewFinish() {
+        mTakePresenter.startCountDownTimer();
+    }
+
+    @Override
+    public void autoFocusSuccess() {
+        mTakePresenter.cameraTakePicture();
+    }
+
+    @Override
+    public void pictureTakenSuccess() {
+        Log.i("pictureTaken", "pictureTakenSuccess");
+    }
+
+    @Override
+    public void pictureTakenFail() {
+        Log.i("pictureTaken", "pictureTakenFail");
+    }
+
+    @Override
+    public void onTick(String l) {
+        tvCountTime.setText(l);
+        showToast(l);
+    }
+
+    @Override
+    public void onFinish() {
+        mTakePresenter.cameraTakePicture();
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

@@ -5,5 +5,5 @@ package com.example.dell.fangfangsmall.listener;
  */
 
 public interface OnConfimListener {
-    void onConfim();
+    void onConfim(String content);
 }

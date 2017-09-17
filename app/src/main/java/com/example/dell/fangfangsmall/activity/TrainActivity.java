@@ -78,6 +78,10 @@ public class TrainActivity extends AppCompatActivity implements View.OnClickList
 //                Bundle bundle = new Bundle();
 //                bundle.putString("AuthId", "zhangT");
 //                JumpItent.jump(TrainActivity.this, VerificationActivity.class, bundle);
+//                videoPermission();
+//                Bundle bundle = new Bundle();
+//                bundle.putString("AuthId", "zhangT");
+//                JumpItent.jump(TrainActivity.this, VerificationActivity.class);
                 break;
 
         }

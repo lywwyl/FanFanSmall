@@ -2,9 +2,7 @@ package com.example.dell.fangfangsmall.view;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.listener.OnConfimListener;
@@ -24,6 +23,8 @@ public class AddInfoDialog extends Dialog implements View.OnClickListener {
 
     private Context mContext;
     private OnConfimListener mOnConfimListener;
+
+    private EditText etContent;
 
     public AddInfoDialog(Context context, OnConfimListener onConfimListener) {
         super(context, R.style.CustomDialog);
@@ -41,7 +42,7 @@ public class AddInfoDialog extends Dialog implements View.OnClickListener {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.dialog_common_confirm, null);
         setContentView(view);
-        EditText et_content = (EditText) view.findViewById(R.id.et_content);
+        etContent = (EditText) view.findViewById(R.id.et_content);
         Button btn_confirm = (Button) view.findViewById(R.id.btn_confirm);
         Button btn_cancel = (Button) view.findViewById(R.id.btn_cancel);
 
@@ -61,8 +62,13 @@ public class AddInfoDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_confirm:
-                dismiss();
-                mOnConfimListener.onConfim();
+                String content = etContent.getText().toString();
+                if(content == null || content.equals("")){
+                    Toast.makeText(mContext, "请填写姓名", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                    dismiss();
+                    mOnConfimListener.onConfim(content);
                 break;
             case R.id.btn_cancel:
                 dismiss();
