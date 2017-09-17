@@ -1,5 +1,6 @@
 package com.example.dell.fangfangsmall.activity;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -7,13 +8,21 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.R;
+import com.example.dell.fangfangsmall.util.ConUtil;
 import com.example.dell.fangfangsmall.util.JumpItent;
+import com.example.dell.fangfangsmall.youtu.YoutuManager;
+import com.megvii.facepp.sdk.Facepp;
+import com.megvii.licensemanager.sdk.LicenseManager;
+
+import java.util.UUID;
 
 public class TrainActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView mMainFirst;//首页
@@ -78,11 +87,13 @@ public class TrainActivity extends AppCompatActivity implements View.OnClickList
 
         }
     }
+
     //视频权限
     public void videoPermission() {
         if (PackageManager.PERMISSION_GRANTED == ContextCompat.
-                checkSelfPermission(TrainActivity.this, android.Manifest.permission.CAMERA)) {
-            JumpItent.jumpVerification(TrainActivity.this, "zhangT");
+                checkSelfPermission(TrainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ) {
+            verificationLisence();
+        } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 //提示用户开户权限
                 String[] perms = {"android.permission.CAMERA"};
@@ -90,6 +101,7 @@ public class TrainActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     }
+
     /**
      * 权限回调
      */
@@ -102,9 +114,33 @@ public class TrainActivity extends AppCompatActivity implements View.OnClickList
                 if (!albumAccepted_video) {
                     Toast.makeText(TrainActivity.this, "请开启应用视频权限", Toast.LENGTH_LONG).show();
                 } else {
-                    JumpItent.jumpVerification(TrainActivity.this, "zhangT");
+                    verificationLisence();
                 }
                 break;
         }
+    }
+
+    public void verificationLisence() {
+        final LicenseManager licenseManager = new LicenseManager(TrainActivity.this);
+        licenseManager.setExpirationMillis(Facepp.getApiExpirationMillis(TrainActivity.this, ConUtil.getFileContent(TrainActivity.this, R.raw.megviifacepp_0_4_7_model)));
+        String uuid = UUID.randomUUID().toString();
+        uuid = Base64.encodeToString(uuid.getBytes(), Base64.DEFAULT);
+        long apiName = Facepp.getApiName();
+        licenseManager.setAuthTimeBufferMillis(0);
+        licenseManager.takeLicenseFromNetwork(uuid, YoutuManager.API_KEY, YoutuManager.API_SECRET, apiName,
+                LicenseManager.DURATION_30DAYS, "Landmark", "1", true, new LicenseManager.TakeLicenseCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.e("GG", "onSuccess");
+                        Bundle bundle = new Bundle();
+                        bundle.putString("AuthId", "zhangT");
+                        JumpItent.jump(TrainActivity.this, VerificationActivity.class, bundle);
+                    }
+
+                    @Override
+                    public void onFailed(int i, byte[] bytes) {
+                        Log.e("GG", "onFailed");
+                    }
+                });
     }
 }
