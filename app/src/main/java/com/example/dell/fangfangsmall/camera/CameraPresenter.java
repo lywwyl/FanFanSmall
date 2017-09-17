@@ -19,10 +19,9 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
 
-import com.example.dell.fangfangsmall.util.BitmapUtils;
-import com.example.dell.fangfangsmall.util.ConUtil;
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.face.yt.person.YtVerifyperson;
+import com.example.dell.fangfangsmall.util.ConUtil;
 import com.example.dell.fangfangsmall.youtu.PersonManager;
 import com.example.dell.fangfangsmall.youtu.callback.SimpleCallback;
 import com.megvii.facepp.sdk.Facepp;
@@ -94,9 +93,9 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
 
     @Override
     public void verificationFace(Handler handler, String authId, Bitmap baseBitmap) {
-        BitmapUtils.saveBitmapToFile(baseBitmap, "123", "baseBitmap.jpg");
+//        BitmapUtils.saveBitmapToFile(baseBitmap, "123", "baseBitmap.jpg");
         Bitmap copyBitmap = bitmapSaturation(baseBitmap);
-        BitmapUtils.saveBitmapToFile(copyBitmap, "123", "copyBitmap.jpg");
+//        BitmapUtils.saveBitmapToFile(copyBitmap, "123", "copyBitmap.jpg");
         PersonManager.faceVerify(handler, authId, copyBitmap, new SimpleCallback<YtVerifyperson>((Activity) mCamerView.getContext()) {
             @Override
             public void onBefore() {
@@ -106,6 +105,7 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
             @Override
             public void onSuccess(YtVerifyperson ytVerifyperson) {
                 mCamerView.verificationSuccerr(ytVerifyperson);
+                mCamerView.setVerifyingFalse();
             }
 
             @Override

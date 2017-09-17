@@ -118,15 +118,21 @@ public class VerificationActivity extends BaseActivity implements ICameraPresent
     @Override
     public void verificationSuccerr(YtVerifyperson ytVerifyperson) {
         showToast("相似度为 ： " + ytVerifyperson.getConfidence());
-        if (ytVerifyperson.ismatch()) {
-            setResult(RESULT_OK);
-            finish();
-        }
+//        if (ytVerifyperson.ismatch()) {
+//            setResult(RESULT_OK);
+//            finish();
+//        }
+        mHandler.sendEmptyMessageDelayed(1, 1000);
     }
 
     @Override
     public void verificationFail(int code, String msg) {
-        showToast(msg);
+        if(code == -1101){
+            showToast("正对摄像头，保证画面清晰");
+        }else{
+
+            showToast(msg);
+        }
         mHandler.sendEmptyMessageDelayed(1, 1000);
     }
 
