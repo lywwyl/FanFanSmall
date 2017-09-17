@@ -1,16 +1,18 @@
-package com.example.dell.fangfangsmall.activity;
+package com.example.dell.fangfangsmall.fragment;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +20,6 @@ import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.adapter.VoiceQuestionAdapter;
 import com.example.dell.fangfangsmall.util.IatSettings;
 import com.example.dell.fangfangsmall.util.JsonParser;
-import com.example.dell.fangfangsmall.util.JumpItent;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerListener;
@@ -39,86 +40,74 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-/**
- * 本地语音
- *
- * @author Guanluocang
- *         created at 2017/9/14 10:07
- */
-public class VoiceActivity extends AppCompatActivity implements View.OnClickListener {
+public class VoiceFragment extends Fragment {
 
+    private Context mContext;
 
-    private Context context;
-    private TextView mMainFirst;//首页
-    private TextView mMainTwo;//视频
-    private TextView mMainThree;//语音
-    private TextView mMainFour;//训练
-        private RecyclerView mQuestion; //问题列表
-        private TextView mAnswerv;//答案
+    private RecyclerView mQuestion; //问题列表
+    private TextView mAnswerv;//答案
 
-        private VoiceQuestionAdapter questionAdapter;
-        //问题
-        private String[] voiceQuestion = null;
-        private List<String> voiceQuestionList = new ArrayList<>();
-        //答案
-        private String[] voiceAnswer = null;
+    private VoiceQuestionAdapter questionAdapter;
+    //问题
+    private String[] voiceQuestion = null;
+    private List<String> voiceQuestionList = new ArrayList<>();
+    //答案
+    private String[] voiceAnswer = null;
 
-        // 语音听写对象
-        private SpeechRecognizer mIat;
-        // 语音合成对象
-        private SpeechSynthesizer mTts;
-        // 语音听写对象
-        // 引擎类型
-        private String mEngineType = SpeechConstant.TYPE_CLOUD;
-        // 默认发音人
-        private String voicer = "xiaoyan";
+    // 语音听写对象
+    private SpeechRecognizer mIat;
+    // 语音合成对象
+    private SpeechSynthesizer mTts;
+    // 语音听写对象
+    // 引擎类型
+    private String mEngineType = SpeechConstant.TYPE_CLOUD;
+    // 默认发音人
+    private String voicer = "xiaoyan";
 
-        private Toast mToast;
-        private SharedPreferences mSharedPreferences;
-        // 用HashMap存储听写结果
-        private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
+    private Toast mToast;
+    private SharedPreferences mSharedPreferences;
+    // 用HashMap存储听写结果
+    private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
+    private boolean isTurn = true;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_voice);
-        context = this;
-        initView();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_voice, container, false);
+        mContext = getContext();
+        initView(view);
         initData();
         initListener();
         initRecognizer();
+        return view;
     }
 
-    private void initView() {
-        (mMainFirst) = (TextView) findViewById(R.id.tv_main_first);
-        (mMainTwo) = (TextView) findViewById(R.id.tv_main_two);
-        (mMainThree) = (TextView) findViewById(R.id.tv_main_three);
-        (mMainFour) = (TextView) findViewById(R.id.tv_main_four);
-        (mQuestion) = (RecyclerView) findViewById(R.id.rv_question);
-        (mAnswerv) = (TextView) findViewById(R.id.tv_answer);
+    private void initView(View view) {
+        (mQuestion) = (RecyclerView) view.findViewById(R.id.rv_question);
+        (mAnswerv) = (TextView) view.findViewById(R.id.tv_answer);
 
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
-        mIat = SpeechRecognizer.createRecognizer(context, mInitListener);
+        mIat = SpeechRecognizer.createRecognizer(mContext, mInitListener);
         // 初始化合成对象
-        mTts = SpeechSynthesizer.createSynthesizer(context, mTtsInitListener);
+        mTts = SpeechSynthesizer.createSynthesizer(mContext, mTtsInitListener);
 
-        mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-        mSharedPreferences = getSharedPreferences(IatSettings.PREFER_NAME,
+        mToast = Toast.makeText(mContext, "", Toast.LENGTH_SHORT);
+        mSharedPreferences = mContext.getSharedPreferences(IatSettings.PREFER_NAME,
                 Activity.MODE_PRIVATE);
     }
 
     private void initData() {
-        LinearLayoutManager linearLayoutManager_list_question = new LinearLayoutManager(context);
+        LinearLayoutManager linearLayoutManager_list_question = new LinearLayoutManager(mContext);
         linearLayoutManager_list_question.setOrientation(LinearLayoutManager.VERTICAL);
         mQuestion.setLayoutManager(linearLayoutManager_list_question);
-        mQuestion.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-        questionAdapter = new VoiceQuestionAdapter(context);
+        mQuestion.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
+        questionAdapter = new VoiceQuestionAdapter(mContext);
         mQuestion.setAdapter(questionAdapter);
 
-        voiceQuestion = context.getResources().getStringArray(R.array.voice_question_array);
+        voiceQuestion = mContext.getResources().getStringArray(R.array.voice_question_array);
         voiceQuestionList = Arrays.asList(voiceQuestion);
 
-        voiceAnswer = context.getResources().getStringArray(R.array.voice_answer_array);
+        voiceAnswer = mContext.getResources().getStringArray(R.array.voice_answer_array);
 
         questionAdapter.refreshQuestion(voiceQuestionList);
         questionAdapter.setOnItemClickListener(new VoiceQuestionAdapter.onItemClickListener() {
@@ -126,7 +115,7 @@ public class VoiceActivity extends AppCompatActivity implements View.OnClickList
             public void onItemClick(View view, int position) {
                 if (null == mIat) {
                     // 创建单例失败，与 21001 错误为同样原因，参考 http://bbs.xfyun.cn/forum.php?mod=viewthread&tid=9688
-                    Toast.makeText(context, "创建对象失败，请确认 libmsc.so 放置正确，且有调用 createUtility 进行初始化", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "创建对象失败，请确认 libmsc.so 放置正确，且有调用 createUtility 进行初始化", Toast.LENGTH_LONG).show();
                     return;
                 }
                 mIat.cancel();
@@ -143,10 +132,6 @@ public class VoiceActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initListener() {
-        mMainFirst.setOnClickListener(this);
-        mMainTwo.setOnClickListener(this);
-        mMainThree.setOnClickListener(this);
-        mMainFour.setOnClickListener(this);
 
 
     }
@@ -158,7 +143,7 @@ public class VoiceActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onInit(int code) {
             if (code != ErrorCode.SUCCESS) {
-                Toast.makeText(context, "初始化失败,错误码：" + code, Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "初始化失败,错误码：" + code, Toast.LENGTH_LONG).show();
             } else {
                 // 初始化成功，之后可以调用startSpeaking方法
                 // 注：有的开发者在onCreate方法中创建完合成对象之后马上就调用startSpeaking进行合成，
@@ -167,28 +152,6 @@ public class VoiceActivity extends AppCompatActivity implements View.OnClickList
         }
     };
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_main_first:
-                JumpItent.jump(VoiceActivity.this, MainActivity.class);
-                finish();
-                break;
-            case R.id.tv_main_two:
-                JumpItent.jump(VoiceActivity.this, VideoActivity.class);
-                finish();
-                break;
-            case R.id.tv_main_three:
-//                JumpItent.jump(MainActivity.this, VideoActivity.class);
-                break;
-            case R.id.tv_main_four:
-                JumpItent.jump(VoiceActivity.this, TrainActivity.class);
-                finish();
-                break;
-
-        }
-    }
-
     int ret = 0; // 函数调用返回值
 
     /**
@@ -196,11 +159,16 @@ public class VoiceActivity extends AppCompatActivity implements View.OnClickList
      */
     private void initRecognizer() {
         // 移动数据分析，收集开始听写事件
-        FlowerCollector.onEvent(context, "iat_recognize");
+        FlowerCollector.onEvent(mContext, "iat_recognize");
 
         // 设置参数
         setParam();
-        ret = mIat.startListening(mRecognizerListener);
+        if (isTurn) {
+
+            ret = mIat.startListening(mRecognizerListener);
+        } else {
+            mIat.stopListening();
+        }
         if (ret != ErrorCode.SUCCESS) {
             showTip("听写失败,错误码：" + ret);
         } else {
@@ -214,7 +182,7 @@ public class VoiceActivity extends AppCompatActivity implements View.OnClickList
     public void doAnswer(String answer) {
 
         // 移动数据分析，收集开始合成事件
-        FlowerCollector.onEvent(context, "tts_play");
+        FlowerCollector.onEvent(mContext, "tts_play");
 
         // 设置参数
         setSynthesizerParam();
@@ -273,7 +241,7 @@ public class VoiceActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onInit(int code) {
             if (code != ErrorCode.SUCCESS) {
-                Toast.makeText(context, "初始化失败，错误码：" + code, Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "初始化失败，错误码：" + code, Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -463,17 +431,26 @@ public class VoiceActivity extends AppCompatActivity implements View.OnClickList
     };
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        Log.e("GG", "onpAUSE");
-        mRecognizerListener = null;
+    public void onResume() {
+        super.onResume();
+        isTurn = true;
+        initRecognizer();
     }
 
     @Override
-    protected void onDestroy() {
+    public void onStop() {
+        super.onStop();
+        isTurn = false;
+        mIat.stopListening();
+    }
+
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
 
-        if( null != mTts ){
+        isTurn = false;
+        if (null != mTts) {
             mTts.stopSpeaking();
             // 退出时释放连接
             mTts.destroy();
@@ -484,4 +461,25 @@ public class VoiceActivity extends AppCompatActivity implements View.OnClickList
             mIat.destroy();
         }
     }
+
+    //    /fragment切换时只走这个方法
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        if (hidden) {
+            Log.i("WWDZ", "一已切换到其他fragment" + hidden);
+            //   mAIUIListener=null;
+            isTurn = false;
+            mIat.cancel();
+            mTts.pauseSpeaking();
+        } else {
+            Log.i("WWDZ", "一回到当前fragment" + hidden);
+            isTurn = true;
+            initRecognizer();
+            mTts.isSpeaking();
+
+        }
+    }
 }
+

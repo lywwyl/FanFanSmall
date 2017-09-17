@@ -13,7 +13,7 @@ import com.example.dell.fangfangsmall.camera.ITakePresenter;
 import com.example.dell.fangfangsmall.camera.TakePresenter;
 
 /**
- * 进行拍照   
+ * 进行拍照
  *@author Guanluocang
  *created at 2017/9/13 11:29
 */
@@ -41,6 +41,8 @@ public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Cal
         Holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         mTakePresenter = new TakePresenter(this, Holder);
     }
+
+
 
     @Override
     protected void initData() {

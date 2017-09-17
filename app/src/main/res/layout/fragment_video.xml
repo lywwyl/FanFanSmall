@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/ic_main_background"
+    tools:context="com.example.dell.fangfangsmall.activity.VideoActivity">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_one"
+        android:layout_width="385px"
+        android:layout_height="190px"
+        android:layout_alignLeft="@+id/rl_three"
+        android:layout_alignStart="@+id/rl_three"
+        android:layout_alignTop="@+id/rl_two"
+        android:background="@mipmap/ic_voice_one"
+        android:gravity="center"
+        android:paddingLeft="100px"
+        android:paddingRight="63px"
+        android:paddingTop="10px">
+
+        <TextView
+            android:id="@+id/tv_video_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50px"
+            android:gravity="center_vertical"
+            android:lines="5"
+            android:text="机器人简介"
+            android:textColor="@color/color_white"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_two"
+        android:layout_width="428px"
+        android:layout_height="169px"
+        android:layout_marginLeft="90px"
+        android:layout_marginTop="14px"
+        android:layout_toRightOf="@id/rl_one"
+        android:background="@mipmap/ic_voice_two"
+        android:gravity="center"
+        android:paddingLeft="160px"
+        android:paddingRight="13px"
+        android:paddingTop="10px">
+
+        <TextView
+            android:id="@+id/tv_video_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50px"
+            android:gravity="center_vertical"
+            android:lines="5"
+            android:text="这是我们公司的介绍"
+            android:textColor="@color/color_white"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_three"
+        android:layout_width="380px"
+        android:layout_height="202px"
+        android:layout_below="@id/rl_one"
+        android:layout_marginLeft="64px"
+        android:layout_marginTop="10px"
+        android:background="@mipmap/ic_voice_three"
+        android:gravity="center"
+        android:paddingLeft="110px"
+        android:paddingRight="13px"
+        android:paddingTop="10px">
+
+        <TextView
+            android:id="@+id/tv_video_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50px"
+            android:gravity="center_vertical"
+            android:lines="5"
+            android:text="大家好，我是芳芳，我今天两岁了，我长得好看还可爱幺"
+            android:textColor="@color/color_white"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_four"
+        android:layout_width="391px"
+        android:layout_height="189px"
+        android:layout_below="@id/rl_two"
+        android:layout_marginLeft="132px"
+        android:layout_toRightOf="@id/rl_three"
+        android:background="@mipmap/ic_voice_four"
+        android:gravity="center"
+        android:paddingLeft="110px"
+        android:paddingRight="15px"
+        android:paddingTop="35px">
+
+        <TextView
+            android:id="@+id/tv_video_four"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50px"
+            android:gravity="center_vertical"
+            android:lines="5"
+            android:text="这里是我的服务范围"
+            android:textColor="@color/color_white"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_five"
+        android:layout_width="430px"
+        android:layout_height="162px"
+        android:layout_below="@id/rl_three"
+        android:layout_marginLeft="64px"
+        android:layout_marginTop="57px"
+        android:background="@mipmap/ic_voice_five"
+        android:gravity="center"
+        android:paddingLeft="150px"
+        android:paddingRight="30px"
+        android:paddingTop="20px">
+
+        <TextView
+            android:id="@+id/tv_video_five"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50px"
+            android:gravity="center_vertical"
+            android:lines="4"
+            android:text="我给大家看个搞笑的视频把！"
+            android:textColor="@color/color_white"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_six"
+        android:layout_width="577px"
+        android:layout_height="230px"
+        android:layout_below="@id/rl_four"
+        android:layout_marginLeft="390px"
+        android:layout_marginTop="34px"
+        android:background="@mipmap/ic_voice_six"
+        android:gravity="center"
+        android:paddingLeft="330px"
+        android:paddingRight="40px"
+        android:paddingTop="80px">
+
+        <TextView
+            android:id="@+id/tv_video_six"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:lines="4"
+            android:text="点点看，这里会有你意想不到的喔~"
+            android:textColor="@color/color_white"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_five"
+        android:layout_marginTop="21px"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_upwardPage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5px"
+            android:src="@mipmap/ic_left_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20px"
+            android:text="1"
+            android:textColor="@color/color_white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20px"
+            android:text="2"
+            android:textColor="@color/color_white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20px"
+            android:text="3"
+            android:textColor="@color/color_white"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_nextPage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20px"
+            android:padding="5px"
+            android:src="@mipmap/ic_right_icon" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="20px"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50px"
+        android:layout_marginTop="7px"
+        android:src="@mipmap/ic_mian_bottom_line" />
+</RelativeLayout>

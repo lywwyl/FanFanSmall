@@ -45,9 +45,6 @@ public class TakePresenter extends ITakePresenter implements Camera.PictureCallb
 
         isFirst = true;
     }
-
-
-
     @Override
     public void closeCamera() {
         if (null != mCamera) {

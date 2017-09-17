@@ -43,7 +43,6 @@ public class VideoDetailActivity extends AppCompatActivity implements View.OnCli
 
     private void initData() {
         upfile = getIntent().getStringExtra("Url");
-        //视频播放地址
         mJcVideo.setUp(upfile
                 , "我是芳芳");
 //        mJcVideo.setUp(upfile
@@ -68,5 +67,10 @@ public class VideoDetailActivity extends AppCompatActivity implements View.OnCli
                 finish();
                 break;
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }
