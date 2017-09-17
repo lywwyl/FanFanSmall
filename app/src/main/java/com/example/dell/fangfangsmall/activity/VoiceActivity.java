@@ -133,14 +133,14 @@ public class VoiceActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(context, "创建对象失败，请确认 libmsc.so 放置正确，且有调用 createUtility 进行初始化", Toast.LENGTH_LONG).show();
                     return;
                 }
-
-                mIat.stopListening();
+                mIat.cancel();
+//                mIat.stopListening();
 
                 mAnswerv.setText(voiceAnswer[position].toString());
                 doAnswer(voiceAnswer[position].toString());
 
                 //说完记得clear
-                mIatResults.clear();
+//                mIatResults.clear();
             }
         });
 
@@ -319,7 +319,7 @@ public class VoiceActivity extends AppCompatActivity implements View.OnClickList
 
         @Override
         public void onVolumeChanged(int volume, byte[] data) {
-            showTip("当前正在说话，音量大小：" + volume);
+//            showTip("当前正在说话，音量大小：" + volume);
 
 
         }
@@ -470,13 +470,22 @@ public class VoiceActivity extends AppCompatActivity implements View.OnClickList
     protected void onPause() {
         super.onPause();
         Log.e("GG", "onpAUSE");
-        mIat.stopListening();
         mRecognizerListener = null;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mIat.destroy();
+
+        if( null != mTts ){
+            mTts.stopSpeaking();
+            // 退出时释放连接
+            mTts.destroy();
+        }
+        if (null != mIat) {
+            // 退出时释放连接
+            mIat.cancel();
+            mIat.destroy();
+        }
     }
 }

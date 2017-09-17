@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -197,7 +198,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         JSONObject answerObj = jsonObject.getJSONObject("answer");
                                         finalText = answerObj.optString("text");
                                         Log.i("wcj", "--4--" + finalText);
-                                        mAnswer.setText(finalText);
+                                        mAnswer.setText("asdfasf ashdfioaksdfma sd");
+                                        mAnswer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+                                        mAnswer.setTextColor(ContextCompat.getColor(mContext, R.color.colorAccent));
                                         Log.e("Wcj+55555", mAnswer.getText().toString());
                                         doAnswer(finalText);
                                     } else if (jsonObject.has("rc") && "4".equals(jsonObject.getString("rc"))) {
@@ -205,7 +208,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         Log.e("GG", finalText);
                                         finalText = arrResult[new Random().nextInt(arrResult.length)];
                                         Log.i("wcj", "--5--" + finalText);
-                                        mAnswer.setText(finalText);
+                                        mAnswer.setText("35498pyihaisdfiu");
+                                        mAnswer.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
                                         Log.e("Wcj+666", mAnswer.getText().toString());
                                         doAnswer(finalText);
                                     }

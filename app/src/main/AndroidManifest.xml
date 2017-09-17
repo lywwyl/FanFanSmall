@@ -51,14 +51,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.VideoActivity"/>
-        <activity android:name=".activity.VoiceActivity"/>
-        <activity android:name=".activity.TrainActivity"/>
+        <activity android:name=".activity.VideoActivity" />
+        <activity android:name=".activity.VoiceActivity" />
+        <activity android:name=".activity.TrainActivity" />
         <activity android:name=".activity.TakePhotoActivity" />
-        <activity android:name=".activity.FaceExtractActivity"></activity>
-        <activity android:name=".activity.DetectImageActivity">
-
-        </activity>
+        <activity android:name=".activity.FaceExtractActivity" />
+        <activity android:name=".activity.DetectImageActivity" />
+        <activity android:name=".activity.VideoDetailActivity"></activity>
     </application>
 
 </manifest>
