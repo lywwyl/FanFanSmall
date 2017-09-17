@@ -8,21 +8,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.R;
-import com.example.dell.fangfangsmall.util.ConUtil;
 import com.example.dell.fangfangsmall.util.JumpItent;
-import com.example.dell.fangfangsmall.youtu.YoutuManager;
-import com.megvii.facepp.sdk.Facepp;
-import com.megvii.licensemanager.sdk.LicenseManager;
-
-import java.util.UUID;
 
 public class TrainActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView mMainFirst;//首页
@@ -82,10 +74,10 @@ public class TrainActivity extends AppCompatActivity implements View.OnClickList
                 JumpItent.jump(TrainActivity.this, TakePhotoActivity.class);
                 break;
             case R.id.rl_face:
-//                videoPermission();
-                Bundle bundle = new Bundle();
-                bundle.putString("AuthId", "zhangT");
-                JumpItent.jump(TrainActivity.this, VerificationActivity.class, bundle);
+                videoPermission();
+//                Bundle bundle = new Bundle();
+//                bundle.putString("AuthId", "zhangT");
+//                JumpItent.jump(TrainActivity.this, VerificationActivity.class, bundle);
                 break;
 
         }
@@ -124,27 +116,30 @@ public class TrainActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void verificationLisence() {
-        final LicenseManager licenseManager = new LicenseManager(TrainActivity.this);
-        licenseManager.setExpirationMillis(Facepp.getApiExpirationMillis(TrainActivity.this, ConUtil.getFileContent(TrainActivity.this, R.raw.megviifacepp_0_4_7_model)));
-        String uuid = UUID.randomUUID().toString();
-        uuid = Base64.encodeToString(uuid.getBytes(), Base64.DEFAULT);
-        long apiName = Facepp.getApiName();
-        licenseManager.setAuthTimeBufferMillis(0);
-        licenseManager.takeLicenseFromNetwork(uuid, YoutuManager.API_KEY, YoutuManager.API_SECRET, apiName,
-                LicenseManager.DURATION_30DAYS, "Landmark", "1", true, new LicenseManager.TakeLicenseCallback() {
-                    @Override
-                    public void onSuccess() {
-                        Log.e("GG", "onSuccess");
-                        Bundle bundle = new Bundle();
-                        bundle.putString("AuthId", "zhangT");
-                        JumpItent.jump(TrainActivity.this, VerificationActivity.class, bundle);
-                    }
 
-                    @Override
-                    public void onFailed(int i, byte[] bytes) {
-                        String s = new String(bytes);
-                        Log.e("", "onFailed" + i + "  " + s);
-                    }
-                });
+        Bundle bundle = new Bundle();
+        bundle.putString("AuthId", "zhangT");
+        JumpItent.jump(TrainActivity.this, VerificationActivity.class, bundle);
+//
+//        final LicenseManager licenseManager = new LicenseManager(TrainActivity.this);
+//        licenseManager.setExpirationMillis(Facepp.getApiExpirationMillis(TrainActivity.this, ConUtil.getFileContent(TrainActivity.this, R.raw.megviifacepp_0_4_7_model)));
+//        String uuid = UUID.randomUUID().toString();
+//        uuid = Base64.encodeToString(uuid.getBytes(), Base64.DEFAULT);
+//        long apiName = Facepp.getApiName();
+//        licenseManager.setAuthTimeBufferMillis(0);
+//        licenseManager.takeLicenseFromNetwork(uuid, YoutuManager.API_KEY, YoutuManager.API_SECRET, apiName,
+//                LicenseManager.DURATION_30DAYS, "Landmark", "1", true, new LicenseManager.TakeLicenseCallback() {
+//                    @Override
+//                    public void onSuccess() {
+//                        Log.e("GG", "onSuccess");
+//
+//                    }
+//
+//                    @Override
+//                    public void onFailed(int i, byte[] bytes) {
+//                        String s = new String(bytes);
+//                        Log.e("", "onFailed" + i + "  " + s);
+//                    }
+//                });
     }
 }
