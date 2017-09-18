@@ -31,6 +31,7 @@ import com.example.dell.fangfangsmall.asr.NlpControl;
 import com.example.dell.fangfangsmall.camera.FaceVerifPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
 import com.example.dell.fangfangsmall.face.yt.person.YtVerifyperson;
+import com.example.dell.fangfangsmall.view.VoiceLineView;
 import com.iflytek.aiui.AIUIConstant;
 import com.iflytek.aiui.AIUIEvent;
 import com.iflytek.aiui.AIUIListener;
@@ -80,6 +81,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     };
 
     private MainTwoActivity mainTwoActivity;
+    private VoiceLineView voicLineView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,6 +102,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         imFace = (ImageView) view.findViewById(R.id.im_face);
         cameraSurfaceView = (SurfaceView) view.findViewById(R.id.opengl_layout_surfaceview);
         mainTwoActivity = (MainTwoActivity) getActivity();
+        (voicLineView) = (VoiceLineView) view.findViewById(R.id.voicLine);
     }
 
     private void initData() {
@@ -363,6 +366,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         @Override
         public void onSpeakBegin() {
 //            showTip("开始播放");
+            voicLineView.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -397,6 +401,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         public void onCompleted(SpeechError error) {
             if (error == null) {
 //                showTip("播放完成");
+                voicLineView.setVisibility(View.GONE);
                 startAsr();
             } else if (error != null) {
 //                showTip(error.getPlainDescription(true));
