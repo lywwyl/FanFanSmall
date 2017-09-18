@@ -29,29 +29,34 @@
             android:textSize="17sp" />
 
         <RelativeLayout
+            android:id="@+id/relativeLayout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="23px"
-            android:layout_marginRight="116px">
+            android:layout_marginBottom="15px"
+            android:layout_marginRight="96px">
 
-            <com.example.dell.fangfangsmall.view.VoiceLineView
-                android:id="@+id/voicLine"
-                android:layout_width="100px"
-                android:layout_height="20px"
-                android:background="@android:color/holo_green_dark"
-                voiceView:fineness="three"
-                voiceView:lineSpeed="150"
-                voiceView:maxVolume="200"
-                voiceView:middleLine="@android:color/white"
-                voiceView:middleLineHeight="1dp"
-                voiceView:rectSpace="3.5dp"
-                voiceView:rectWidth="1px"
-                voiceView:sensibility="five"
-                voiceView:viewMode="line"
-                voiceView:voiceLine="@android:color/white" />
         </RelativeLayout>
+
+        <com.example.dell.fangfangsmall.view.VoiceLineView
+            android:id="@+id/voicLine"
+            android:layout_width="120px"
+            android:layout_height="25px"
+            android:layout_alignLeft="@+id/relativeLayout2"
+            android:layout_alignStart="@+id/relativeLayout2"
+            android:layout_alignTop="@+id/relativeLayout2"
+            android:visibility="gone"
+            voiceView:fineness="three"
+            voiceView:lineSpeed="150"
+            voiceView:maxVolume="150"
+            voiceView:middleLine="@color/color_white"
+            voiceView:middleLineHeight="1dp"
+            voiceView:rectSpace="3.5dp"
+            voiceView:rectWidth="1px"
+            voiceView:sensibility="five"
+            voiceView:viewMode="line"
+            voiceView:voiceLine="@color/color_white" />
 
 
     </RelativeLayout>
