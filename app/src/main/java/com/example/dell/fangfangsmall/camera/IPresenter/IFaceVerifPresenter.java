@@ -20,14 +20,6 @@ public abstract class IFaceVerifPresenter {
 
     public abstract void faceIdentifyFace(Handler handler, Bitmap bitmap);
 
-    public abstract void closeCamera();
-
-    public abstract void openCamera();
-
-    public abstract void doStartPreview();
-
-    public abstract void setMatrix(int width, int height);
-
     public abstract void compareFace(YtFaceIdentify ytFaceIdentify);
 
 
@@ -40,10 +32,6 @@ public abstract class IFaceVerifPresenter {
         void identifyNoFace();
 
         void verificationFail(int code, String msg);
-
-        void tranBitmap(Bitmap bitmap);
-
-        void comparefinish(String personId);
 
         Context getContext();
     }

@@ -14,31 +14,11 @@ public abstract class ITakePresenter {
         mBaseView = baseView;
     }
 
-    public abstract void closeCamera();
-
-    public abstract void openCamera();
-
-    public abstract void doStartPreview();
-
-    public abstract void setMatrix(int width, int height);
-
-    public abstract void cameraAutoFocus();
-
-    public abstract void cameraTakePicture();
-
     public abstract void startCountDownTimer();
 
     public abstract void stopCountDownTimer();
 
     public interface ITakeView {
-
-        void startPreviewFinish();
-
-        void autoFocusSuccess();
-
-        void pictureTakenSuccess();
-
-        void pictureTakenFail();
 
         void onTick(String l);
 

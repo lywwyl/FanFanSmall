@@ -29,7 +29,9 @@ import com.example.dell.fangfangsmall.FangFangSmallApplication;
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.activity.MainTwoActivity;
 import com.example.dell.fangfangsmall.asr.NlpControl;
+import com.example.dell.fangfangsmall.camera.CameraPresenter;
 import com.example.dell.fangfangsmall.camera.FaceVerifPresenter;
+import com.example.dell.fangfangsmall.camera.IPresenter.ICameraPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
 import com.iflytek.aiui.AIUIConstant;
@@ -47,7 +49,7 @@ import org.json.JSONObject;
 
 import java.util.Random;
 
-public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IFaceverifView, SurfaceHolder.Callback {
+public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IFaceverifView, SurfaceHolder.Callback, ICameraPresenter.ICameraView, View.OnClickListener {
 
     public static final int RESULT_CODE_STARTAUDIO = 100;
     private NlpControl nlpControl;
@@ -69,6 +71,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     private boolean faceVerifiOpen;
     private SurfaceView cameraSurfaceView;
     private FaceVerifPresenter mFaceVerifPresenter;
+    private CameraPresenter mCameraPresenter;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -107,28 +110,15 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         nlpControl.setmAIUIListener(mAIUIListener);
         nlpControl.init();
         mToast = Toast.makeText(mContext, "", Toast.LENGTH_SHORT);
-        SurfaceHolder Holder = cameraSurfaceView.getHolder(); // 获得SurfaceHolder对象
-        Holder.addCallback(this); // 为SurfaceView添加状态监听
-        Holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        mFaceVerifPresenter = new FaceVerifPresenter(this, Holder);
-
+        SurfaceHolder holder = cameraSurfaceView.getHolder(); // 获得SurfaceHolder对象
+        holder.addCallback(this); // 为SurfaceView添加状态监听
+        holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        mFaceVerifPresenter = new FaceVerifPresenter(this);
+        mCameraPresenter = new CameraPresenter(this, holder);
     }
 
     private void initListener() {
-        imFace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (faceVerifiOpen) {
-                    imFace.setBackgroundResource(R.mipmap.face_close);
-                    faceVerifiOpen = false;
-                    cameraSurfaceView.setVisibility(View.GONE);
-                } else {
-                    imFace.setBackgroundResource(R.mipmap.face_open);
-                    faceVerifiOpen = true;
-                    cameraSurfaceView.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        imFace.setOnClickListener(this);
     }
 
     /**
@@ -488,27 +478,56 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         }
     }
 
+    /**
+     * ********************************************zt
+     */
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        mFaceVerifPresenter.openCamera();
-        mFaceVerifPresenter.doStartPreview();
+        mCameraPresenter.openCamera();
+        mCameraPresenter.doStartPreview();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        mFaceVerifPresenter.setMatrix(width, height);
+        mCameraPresenter.setMatrix(width, height);
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        mFaceVerifPresenter.closeCamera();
+        mCameraPresenter.closeCamera();
     }
 
 
     @Override
     public void onPause() {
         super.onPause();
-        mFaceVerifPresenter.closeCamera();
+        mCameraPresenter.closeCamera();
+    }
+
+    @Override
+    public void previewFinish() {
+
+    }
+
+    @Override
+    public void pictureTakenSuccess() {
+
+    }
+
+    @Override
+    public void pictureTakenFail() {
+
+    }
+
+
+    @Override
+    public void autoFocusSuccess() {
+
+    }
+
+    @Override
+    public void tranBitmap(Bitmap bitmap, int num) {
+        mFaceVerifPresenter.faceIdentifyFace(mHandler, bitmap);
     }
 
     @Override
@@ -521,11 +540,15 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     @Override
     public void verificationSuccess(YtFaceIdentify ytFaceIdentify) {
         mFaceVerifPresenter.compareFace(ytFaceIdentify);
+
     }
 
     @Override
     public void identifyFace(String personId) {
         showToast("检测到您是：" + personId);
+        imFace.setBackgroundResource(R.mipmap.face_close);
+        faceVerifiOpen = false;
+        cameraSurfaceView.setVisibility(View.GONE);
     }
 
     @Override
@@ -543,16 +566,6 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     }
 
 
-    @Override
-    public void tranBitmap(Bitmap bitmap) {
-        mFaceVerifPresenter.faceIdentifyFace(mHandler, bitmap);
-    }
-
-    @Override
-    public void comparefinish(String personId) {
-
-    }
-
     public void showToast(final String resStr) {
 
         if (TextUtils.isEmpty(resStr)) {
@@ -565,5 +578,22 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
                 toast.show();
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.im_face:
+                if (faceVerifiOpen) {
+                    imFace.setBackgroundResource(R.mipmap.face_close);
+                    faceVerifiOpen = false;
+                    cameraSurfaceView.setVisibility(View.GONE);
+                } else {
+                    imFace.setBackgroundResource(R.mipmap.face_open);
+                    faceVerifiOpen = true;
+                    cameraSurfaceView.setVisibility(View.VISIBLE);
+                }
+                break;
+        }
     }
 }

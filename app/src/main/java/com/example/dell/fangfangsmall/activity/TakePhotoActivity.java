@@ -1,6 +1,7 @@
 package com.example.dell.fangfangsmall.activity;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.camera.BaseActivity;
+import com.example.dell.fangfangsmall.camera.CameraPresenter;
+import com.example.dell.fangfangsmall.camera.IPresenter.ICameraPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.ITakePresenter;
 import com.example.dell.fangfangsmall.camera.TakePresenter;
 
@@ -18,13 +21,14 @@ import com.example.dell.fangfangsmall.camera.TakePresenter;
  * @author Guanluocang
  *         created at 2017/9/13 11:29
  */
-public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Callback, View.OnClickListener, ITakePresenter.ITakeView {
+public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Callback, View.OnClickListener, ITakePresenter.ITakeView, ICameraPresenter.ICameraView {
 
     private SurfaceView cameraSurfaceView;
     private TextView tvTakePhoto;
     private TextView tvCountTime;
 
     private TakePresenter mTakePresenter;
+    private CameraPresenter mCameraPresenter;
 
     @Override
     protected int getLayoutId() {
@@ -37,10 +41,11 @@ public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Cal
         tvTakePhoto = (TextView) findViewById(R.id.tv_take_photo);
         tvCountTime = (TextView) findViewById(R.id.tv_countTime);
 
-        SurfaceHolder Holder = cameraSurfaceView.getHolder(); // 获得SurfaceHolder对象
-        Holder.addCallback(this); // 为SurfaceView添加状态监听
-        Holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        mTakePresenter = new TakePresenter(this, Holder);
+        SurfaceHolder holder = cameraSurfaceView.getHolder(); // 获得SurfaceHolder对象
+        holder.addCallback(this); // 为SurfaceView添加状态监听
+        holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        mTakePresenter = new TakePresenter(this);
+        mCameraPresenter = new CameraPresenter(this, holder);
     }
 
 
@@ -58,7 +63,7 @@ public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Cal
     @Override
     protected void onPause() {
         super.onPause();
-        mTakePresenter.closeCamera();
+        mCameraPresenter.closeCamera();
     }
 
     @Override
@@ -71,41 +76,46 @@ public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Cal
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_take_photo:
-                mTakePresenter.cameraTakePicture();
+                mCameraPresenter.cameraTakePicture();
                 break;
         }
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        mTakePresenter.openCamera();
-        mTakePresenter.doStartPreview();
+        mCameraPresenter.openCamera();
+        mCameraPresenter.doStartPreview();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        mTakePresenter.setMatrix(width, height);
+        mCameraPresenter.setMatrix(width, height);
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        mTakePresenter.closeCamera();
+        mCameraPresenter.closeCamera();
     }
 
 
     @Override
-    public void startPreviewFinish() {
+    public void autoFocusSuccess() {
+        mCameraPresenter.cameraTakePicture();
+    }
+
+    @Override
+    public void tranBitmap(Bitmap bitmap, int num) {
+
+    }
+
+    @Override
+    public void previewFinish() {
         mTakePresenter.startCountDownTimer();
     }
 
     @Override
-    public void autoFocusSuccess() {
-        mTakePresenter.cameraTakePicture();
-    }
-
-    @Override
     public void pictureTakenSuccess() {
-        Log.i("pictureTaken", "pictureTakenSuccess");
+        showToast("拍照完成");
     }
 
     @Override
@@ -121,7 +131,7 @@ public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Cal
 
     @Override
     public void onFinish() {
-        mTakePresenter.cameraTakePicture();
+        mCameraPresenter.cameraTakePicture();
     }
 
     @Override

@@ -2,26 +2,20 @@ package com.example.dell.fangfangsmall.camera.IPresenter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Handler;
-
-import com.example.dell.fangfangsmall.face.yt.person.YtVerifyperson;
 
 /**
- * Created by zhangyuanyuan on 2017/9/14.
+ * Created by zhangyuanyuan on 2017/9/18.
  */
 
 public abstract class ICameraPresenter {
 
 
-    protected ICameraView mBaseView;
+    private ICameraView mBaseView;
 
     public ICameraPresenter(ICameraView baseView) {
         mBaseView = baseView;
     }
 
-    public abstract void verificationFace(Handler handler, Bitmap bitmap);
-
-    public abstract void saveFace(Bitmap bitmap);
 
     public abstract void closeCamera();
 
@@ -31,27 +25,23 @@ public abstract class ICameraPresenter {
 
     public abstract void changeCamera();
 
-    public abstract void setVerifying(boolean verifying);
-
     public abstract void setMatrix(int width, int height);
 
-    public abstract void showDialog();
+    public abstract void cameraAutoFocus();
 
-    public interface ICameraView {
+    public abstract void cameraTakePicture();
 
-        void verificationSuccerr(YtVerifyperson ytVerifyperson);
+    public interface ICameraView{
 
-        void verificationFail(int code, String msg);
+        void previewFinish();
 
-        void setVerifyingTrue();
+        void pictureTakenSuccess();
 
-        void setVerifyingFalse();
+        void pictureTakenFail();
 
-        void tranBitmap(Bitmap bitmap);
+        void autoFocusSuccess();
 
-        void tranBitmapFosave(Bitmap bitmap);
-
-        void saveFinish();
+        void tranBitmap(Bitmap bitmap, int num);
 
         Context getContext();
     }

@@ -1,4 +1,4 @@
-package com.example.dell.fangfangsmall.camera;
+package com.example.dell.fangfangsmall.util;
 
 import android.app.Activity;
 import android.hardware.Camera;
