@@ -433,7 +433,7 @@ public class HomePageFragment extends Fragment {
 //            mAIUIListener = null;
             isTurn = true;
             nlpControl.stopVoiceNlp();
-            mTts.pauseSpeaking();
+            mTts.stopSpeaking();
 
         } else {
             isTurn = false;

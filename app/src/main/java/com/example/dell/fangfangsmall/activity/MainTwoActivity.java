@@ -9,12 +9,14 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.bean.Tab;
@@ -27,6 +29,8 @@ import com.example.dell.fangfangsmall.util.PermissionsChecker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainTwoActivity extends AppCompatActivity {
 
@@ -43,7 +47,7 @@ public class MainTwoActivity extends AppCompatActivity {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.CAMERA
     };
-
+    private boolean quit = false; //设置退出标识
     private PermissionsChecker mChecker;
     private boolean isRequireCheck; // 是否需要系统权限检测
     public static final int PERMISSIONS_GRANTED = 0; // 权限授权
@@ -51,6 +55,7 @@ public class MainTwoActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_CODE = 0; // 系统权限管理页面的参数
     private static final String PACKAGE_URL_SCHEME = "package:"; // 方案
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +69,31 @@ public class MainTwoActivity extends AppCompatActivity {
     private void initView() {
         (mFragmentTabHost) = (FragmentTabHost) findViewById(android.R.id.tabhost);
         (mFrameLayout) = (FrameLayout) findViewById(R.id.realtabcontent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!quit) { //询问退出程序
+            Toast.makeText(MainTwoActivity.this, "再按一次退出程序", Toast.LENGTH_LONG).show();
+            new Timer(true).schedule(new TimerTask() { //启动定时任务
+                @Override
+                public void run() {
+                    quit = false; //重置退出标识
+                }
+            }, 2000);
+            quit = true;
+        } else { //确认退出程序
+            super.onBackPressed();
+            finish();
+            //退出时杀掉所有进程
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("GG", "onDestory");
     }
 
     @Override
@@ -131,6 +161,7 @@ public class MainTwoActivity extends AppCompatActivity {
     private void allPermissionsGranted() {
 //        setResult(PERMISSIONS_GRANTED);
     }
+
     // 含有全部的权限
     private boolean hasAllPermissionsGranted(@NonNull int[] grantResults) {
         for (int grantResult : grantResults) {

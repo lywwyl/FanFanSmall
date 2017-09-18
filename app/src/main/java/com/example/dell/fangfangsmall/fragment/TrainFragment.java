@@ -104,4 +104,14 @@ public class TrainFragment extends Fragment implements View.OnClickListener {
         JumpItent.jump(getActivity(), VerificationActivity.class, bundle);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 }

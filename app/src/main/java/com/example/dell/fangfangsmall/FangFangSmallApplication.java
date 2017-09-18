@@ -12,6 +12,7 @@ import com.iflytek.cloud.SpeechUtility;
 
 public class FangFangSmallApplication extends Application {
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -20,7 +21,7 @@ public class FangFangSmallApplication extends Application {
          * 讯飞初始化
          * 原始app_id = 595c594c
          */
-        SpeechUtility.createUtility(getApplicationContext(), SpeechConstant.APPID +"=59b8fefd"+ "," + SpeechConstant.ENGINE_MODE + "=" + SpeechConstant.MODE_MSC);
+        SpeechUtility.createUtility(getApplicationContext(), SpeechConstant.APPID + "=59b8fefd" + "," + SpeechConstant.ENGINE_MODE + "=" + SpeechConstant.MODE_MSC);
 
     }
 
@@ -34,5 +35,6 @@ public class FangFangSmallApplication extends Application {
     public static FangFangSmallApplication from(Context context) {
         return (FangFangSmallApplication) context.getApplicationContext();
     }
+
 
 }
