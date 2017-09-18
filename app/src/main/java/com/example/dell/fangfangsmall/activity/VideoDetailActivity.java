@@ -43,15 +43,11 @@ public class VideoDetailActivity extends AppCompatActivity implements View.OnCli
 
     private void initData() {
         upfile = getIntent().getStringExtra("Url");
-        mJcVideo.setUp(upfile
-                , "我是芳芳");
-//        mJcVideo.setUp(upfile
-//                , JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, title);
-//        //视频暂未播放静止页面
+        mJcVideo.setUp(upfile, "");
+        //视频暂未播放静止页面
 //        Picasso.with(VideoDetailActivity.this)
-//                .load( pic)
+//                .load(Config.pic_base_url + pic)
 //                .into(mJcVideo.thumbImageView);
-//
 //        JCVideoPlayer.setJcUserAction(new MyUserActionStandard());
     }
 
@@ -62,7 +58,6 @@ public class VideoDetailActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.iv_top_back:
                 finish();
                 break;
@@ -70,7 +65,8 @@ public class VideoDetailActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
+        mJcVideo.releaseAllVideos();
     }
 }
