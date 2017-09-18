@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 
 import com.example.dell.fangfangsmall.face.yt.YtFaceids;
+import com.example.dell.fangfangsmall.face.yt.YtGroupids;
 import com.example.dell.fangfangsmall.face.yt.YtPersonids;
 import com.example.dell.fangfangsmall.face.yt.person.YtAddperson;
 import com.example.dell.fangfangsmall.face.yt.person.YtDelperson;
@@ -13,15 +14,18 @@ import com.example.dell.fangfangsmall.face.yt.person.YtSetperson;
 import com.example.dell.fangfangsmall.face.yt.person.YtVerifyperson;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtDelface;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtDetectFace;
+import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceInfoResult;
 import com.example.dell.fangfangsmall.youtu.callback.SimpleCallback;
 import com.example.dell.fangfangsmall.youtu.thread.AddFaceThread;
 import com.example.dell.fangfangsmall.youtu.thread.DelFaceThread;
 import com.example.dell.fangfangsmall.youtu.thread.DelpersonThread;
 import com.example.dell.fangfangsmall.youtu.thread.DetectFaceThread;
+import com.example.dell.fangfangsmall.youtu.thread.FaceIdentifyThread;
 import com.example.dell.fangfangsmall.youtu.thread.FaceVerifyThread;
 import com.example.dell.fangfangsmall.youtu.thread.GetFaceIdsThread;
 import com.example.dell.fangfangsmall.youtu.thread.GetFaceInfoThread;
+import com.example.dell.fangfangsmall.youtu.thread.GetGroupThread;
 import com.example.dell.fangfangsmall.youtu.thread.GetPersonIdsThread;
 import com.example.dell.fangfangsmall.youtu.thread.GetinfoThread;
 import com.example.dell.fangfangsmall.youtu.thread.ModifyThread;
@@ -36,6 +40,26 @@ import java.util.List;
  */
 
 public class PersonManager {
+
+    /**
+     * 获取appid下所有组
+     * @param handler
+     * @param simpleCallback
+     */
+    public static void getGroup(Handler handler, SimpleCallback<YtGroupids> simpleCallback){
+        GetGroupThread getGroupThread = new GetGroupThread(handler, simpleCallback);
+        new Thread(getGroupThread).start();
+    }
+    /**
+     * 识别一张人脸图片在一个group中，返回最相似的五个人的信息
+     * @param handler
+     * @param bitmap
+     * @param simpleCallback
+     */
+    public static void faceIdentify(Handler handler, Bitmap bitmap, SimpleCallback<YtFaceIdentify> simpleCallback){
+        FaceIdentifyThread faceIdentifyThread = new FaceIdentifyThread(handler, bitmap, simpleCallback);
+        new Thread(faceIdentifyThread).start();
+    }
 
     /**
      * 人脸属性分析 检测给定图片(Image)中的所有人脸(Face)的位置和相应的面部属性。位置包括(x, y, w, h)，

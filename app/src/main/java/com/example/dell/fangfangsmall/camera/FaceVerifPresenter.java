@@ -14,18 +14,25 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.media.FaceDetector;
+import android.os.Build;
 import android.os.Handler;
-import android.util.Log;
+import android.support.annotation.RequiresApi;
+import android.util.ArrayMap;
 import android.view.SurfaceHolder;
 
 import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
-import com.example.dell.fangfangsmall.face.yt.person.YtVerifyperson;
+import com.example.dell.fangfangsmall.face.yt.person.face.IdentifyItem;
+import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
 import com.example.dell.fangfangsmall.youtu.PersonManager;
 import com.example.dell.fangfangsmall.youtu.callback.SimpleCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhangyuanyuan on 2017/9/18.
@@ -37,8 +44,6 @@ public class FaceVerifPresenter extends IFaceVerifPresenter implements Camera.Pr
 
     private SurfaceHolder mHolder;
 
-    private String mAuthId = "zhangT";
-
     private Camera mCamera;
     private int mCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
     private int previewWidth = 640;
@@ -47,7 +52,7 @@ public class FaceVerifPresenter extends IFaceVerifPresenter implements Camera.Pr
     private Matrix mScaleMatrix = new Matrix();
     private int orientionOfCamera;
 
-    private boolean isVerifying = false;
+    private long curTime;
 
     public FaceVerifPresenter(IFaceverifView baseView, SurfaceHolder surfaceHolder) {
         super(baseView);
@@ -57,37 +62,50 @@ public class FaceVerifPresenter extends IFaceVerifPresenter implements Camera.Pr
 
 
     @Override
-    public void verificationFace(Handler handler, Bitmap baseBitmap) {
+    public void faceIdentifyFace(Handler handler, Bitmap baseBitmap) {
+        curTime = System.currentTimeMillis();
         Bitmap copyBitmap = bitmapSaturation(baseBitmap);
-        PersonManager.faceVerify(handler, mAuthId, copyBitmap, new SimpleCallback<YtVerifyperson>((Activity) mFaceverifView.getContext()) {
+        PersonManager.faceIdentify(handler, copyBitmap, new SimpleCallback<YtFaceIdentify>((Activity) mFaceverifView.getContext()) {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
-            public void onBefore() {
-                isVerifying = true;
-            }
-
-            @Override
-            public void onSuccess(YtVerifyperson ytVerifyperson) {
-                mFaceverifView.verificationSuccerr(ytVerifyperson);
-                mFaceverifView.setVerifyingFalse();
+            public void onSuccess(YtFaceIdentify ytFaceIdentify) {
+                mFaceverifView.verificationSuccess(ytFaceIdentify);
             }
 
             @Override
             public void onFail(int code, String msg) {
                 mFaceverifView.verificationFail(code, msg);
-                mFaceverifView.setVerifyingFalse();
-            }
-
-            @Override
-            public void onError(Exception e) {
-                super.onError(e);
-                mFaceverifView.setVerifyingFalse();
-            }
-
-            @Override
-            public void onEnd() {
-                mFaceverifView.setVerifyingFalse();
             }
         });
+//        PersonManager.faceVerify(handler, mAuthId, copyBitmap, new SimpleCallback<YtVerifyperson>((Activity) mFaceverifView.getContext()) {
+//            @Override
+//            public void onBefore() {
+//                isVerifying = true;
+//            }
+//
+//            @Override
+//            public void onSuccess(YtVerifyperson ytVerifyperson) {
+//                mFaceverifView.verificationSuccerr(ytVerifyperson);
+//                mFaceverifView.setVerifyingFalse();
+//            }
+//
+//            @Override
+//            public void onFail(int code, String msg) {
+//                mFaceverifView.verificationFail(code, msg);
+//                mFaceverifView.setVerifyingFalse();
+//            }
+//
+//            @Override
+//            public void onError(Exception e) {
+//                super.onError(e);
+//                mFaceverifView.setVerifyingFalse();
+//            }
+//
+//            @Override
+//            public void onEnd() {
+//                mFaceverifView.setVerifyingFalse();
+//            }
+//        });
     }
 
     private Bitmap bitmapSaturation(Bitmap baseBitmap) {
@@ -181,13 +199,58 @@ public class FaceVerifPresenter extends IFaceVerifPresenter implements Camera.Pr
     }
 
     @Override
-    public void setVerifying(boolean verifying) {
-        isVerifying = verifying;
-    }
-
-    @Override
     public void setMatrix(int width, int height) {
         mScaleMatrix.setScale(width / (float) previewHeight, height / (float) previewWidth);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void compareFace(YtFaceIdentify ytFaceIdentify) {
+        ArrayMap<IdentifyItem, Integer> countMap = new ArrayMap<IdentifyItem, Integer>();
+
+        ArrayList<IdentifyItem> identifyItems = ytFaceIdentify.getCandidates();
+        if (identifyItems != null && identifyItems.size() > 0) {
+            for(int i = 0; i< identifyItems.size(); i++) {
+                IdentifyItem identifyItem = identifyItems.get(i);
+
+                if(countMap.containsKey(identifyItem)){
+                    countMap.put(identifyItem, countMap.get(identifyItem) + 1);
+                }else{
+                    countMap.put(identifyItem, 1);
+                }
+            }
+
+            ArrayMap<Integer, List<IdentifyItem>> resultMap = new ArrayMap<Integer, List<IdentifyItem>>();
+            List<Integer> tempList = new ArrayList<Integer>();
+
+            Iterator iterator = countMap.entrySet().iterator();
+            while (iterator.hasNext()){
+                Map.Entry<IdentifyItem, Integer>  entry= (Map.Entry<IdentifyItem, Integer>) iterator.next();
+
+                IdentifyItem key = entry.getKey();
+                int value = entry.getValue();
+
+                if(resultMap.containsKey(value)){
+                    List list = (List)resultMap.get(value);
+                    list.add(key);
+                }else{
+                    List<IdentifyItem> list = new ArrayList<IdentifyItem>();
+                    list.add(key);
+                    resultMap.put(value, list);
+                    tempList.add(value);
+                }
+            }
+
+            Collections.sort(tempList);
+
+            int size = tempList.size();
+            List<IdentifyItem> list = resultMap.get(tempList.get(size - 1));
+            IdentifyItem identifyItem = list.get(0);
+
+            mFaceverifView.identifyFace(identifyItem.getPerson_id());
+        }else{
+            mFaceverifView.identifyNoFace();
+        }
     }
 
     @Override
@@ -236,12 +299,11 @@ public class FaceVerifPresenter extends IFaceVerifPresenter implements Camera.Pr
 
         FaceDetector.Face[] faces = new FaceDetector.Face[10];
         int faceNumber = detector.findFaces(copyBitmap, faces);
-        Log.e("faceNumber", faceNumber+"");
+//        Log.e("faceNumber", faceNumber+"");
         if (faceNumber > 0) {
-            if (!isVerifying) {
-                isVerifying = true;
-                mFaceverifView.tranBitmap(faceBitmap);
-            }
+                if (System.currentTimeMillis() - curTime > 10000) {
+                    mFaceverifView.tranBitmap(faceBitmap);
+                }
         }
 
         copyBitmap.recycle();

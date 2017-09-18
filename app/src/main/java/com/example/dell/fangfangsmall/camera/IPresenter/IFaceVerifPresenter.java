@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 
-import com.example.dell.fangfangsmall.face.yt.person.YtVerifyperson;
+import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
 
 /**
  * Created by zhangyuanyuan on 2017/9/18.
@@ -18,7 +18,7 @@ public abstract class IFaceVerifPresenter {
         mBaseView = baseView;
     }
 
-    public abstract void verificationFace(Handler handler, Bitmap bitmap);
+    public abstract void faceIdentifyFace(Handler handler, Bitmap bitmap);
 
     public abstract void closeCamera();
 
@@ -26,22 +26,24 @@ public abstract class IFaceVerifPresenter {
 
     public abstract void doStartPreview();
 
-    public abstract void setVerifying(boolean verifying);
-
     public abstract void setMatrix(int width, int height);
+
+    public abstract void compareFace(YtFaceIdentify ytFaceIdentify);
 
 
     public interface IFaceverifView {
 
-        void verificationSuccerr(YtVerifyperson ytVerifyperson);
+        void verificationSuccess(YtFaceIdentify ytFaceIdentify);
+
+        void identifyFace(String personId);
+
+        void identifyNoFace();
 
         void verificationFail(int code, String msg);
 
-        void setVerifyingTrue();
-
-        void setVerifyingFalse();
-
         void tranBitmap(Bitmap bitmap);
+
+        void comparefinish(String personId);
 
         Context getContext();
     }

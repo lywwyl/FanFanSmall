@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -30,7 +31,7 @@ import com.example.dell.fangfangsmall.activity.MainTwoActivity;
 import com.example.dell.fangfangsmall.asr.NlpControl;
 import com.example.dell.fangfangsmall.camera.FaceVerifPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
-import com.example.dell.fangfangsmall.face.yt.person.YtVerifyperson;
+import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
 import com.iflytek.aiui.AIUIConstant;
 import com.iflytek.aiui.AIUIEvent;
 import com.iflytek.aiui.AIUIListener;
@@ -72,9 +73,6 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case 1:
-                    mFaceVerifPresenter.setVerifying(false);
-                    break;
             }
         }
     };
@@ -519,36 +517,40 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public void verificationSuccerr(YtVerifyperson ytVerifyperson) {
-        showToast("相似度为 ： " + ytVerifyperson.getConfidence());
-        mHandler.sendEmptyMessageDelayed(1, 1000);
+    public void verificationSuccess(YtFaceIdentify ytFaceIdentify) {
+        mFaceVerifPresenter.compareFace(ytFaceIdentify);
+    }
+
+    @Override
+    public void identifyFace(String personId) {
+        showToast("检测到您是：" + personId);
+    }
+
+    @Override
+    public void identifyNoFace() {
+        showToast("没有检测到，您未注册");
     }
 
     @Override
     public void verificationFail(int code, String msg) {
-        if (code == -1101) {
+        if(code == -1101){
             showToast("正对摄像头，保证画面清晰");
-        } else {
-
+        }else{
             showToast(msg);
         }
-        mHandler.sendEmptyMessageDelayed(1, 1000);
     }
 
-    @Override
-    public void setVerifyingTrue() {
-        mFaceVerifPresenter.setVerifying(true);
-    }
-
-    @Override
-    public void setVerifyingFalse() {
-        mHandler.sendEmptyMessageDelayed(1, 1000);
-    }
 
     @Override
     public void tranBitmap(Bitmap bitmap) {
-        mFaceVerifPresenter.verificationFace(mHandler, bitmap);
+        mFaceVerifPresenter.faceIdentifyFace(mHandler, bitmap);
+    }
+
+    @Override
+    public void comparefinish(String personId) {
+
     }
 
     public void showToast(final String resStr) {
