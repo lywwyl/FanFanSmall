@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.R;
+import com.example.dell.fangfangsmall.activity.MainTwoActivity;
 import com.example.dell.fangfangsmall.adapter.VoiceQuestionAdapter;
 import com.example.dell.fangfangsmall.util.IatSettings;
 import com.example.dell.fangfangsmall.util.JsonParser;
@@ -70,6 +71,8 @@ public class VoiceFragment extends Fragment {
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
     private boolean isTurn = true;
 
+    private MainTwoActivity mainTwoActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -94,6 +97,7 @@ public class VoiceFragment extends Fragment {
         mToast = Toast.makeText(mContext, "", Toast.LENGTH_SHORT);
         mSharedPreferences = mContext.getSharedPreferences(IatSettings.PREFER_NAME,
                 Activity.MODE_PRIVATE);
+        mainTwoActivity = (MainTwoActivity) getActivity();
     }
 
     private void initData() {
@@ -433,32 +437,39 @@ public class VoiceFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        isTurn = true;
-        initRecognizer();
+        if (mainTwoActivity.mFragmentTabHost.getCurrentTab() == 2) {
+            isTurn = true;
+            initRecognizer();
+        }
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        isTurn = false;
-        mIat.stopListening();
+        if (mainTwoActivity.mFragmentTabHost.getCurrentTab() == 2) {
+            isTurn = false;
+            mIat.stopListening();
+        }
+
     }
 
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        isTurn = false;
-        if (null != mTts) {
-            mTts.stopSpeaking();
-            // 退出时释放连接
-            mTts.destroy();
-        }
-        if (null != mIat) {
-            // 退出时释放连接
-            mIat.cancel();
-            mIat.destroy();
+        if (mainTwoActivity.mFragmentTabHost.getCurrentTab() == 2) {
+            isTurn = false;
+            if (null != mTts) {
+                mTts.stopSpeaking();
+                // 退出时释放连接
+                mTts.destroy();
+            }
+            if (null != mIat) {
+                // 退出时释放连接
+                mIat.cancel();
+                mIat.destroy();
+            }
         }
     }
 

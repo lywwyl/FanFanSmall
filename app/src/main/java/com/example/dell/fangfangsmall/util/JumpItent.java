@@ -9,16 +9,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
-
-import com.example.dell.fangfangsmall.R;
-import com.example.dell.fangfangsmall.activity.VerificationActivity;
-import com.example.dell.fangfangsmall.youtu.YoutuManager;
-import com.megvii.facepp.sdk.Facepp;
-import com.megvii.licensemanager.sdk.LicenseManager;
-
-import java.util.UUID;
 
 /**
 *description:封装的Intent页面跳转工具类
@@ -127,31 +117,6 @@ public class JumpItent {
         Intent intent = new Intent(action, uri);
         intent.putExtra(REQUEST_CODE, requestCode);
         activity.startActivityForResult(intent, requestCode);
-    }
-
-    public static void jumpVerification(final Activity activity, final String authId) {
-            final LicenseManager licenseManager = new LicenseManager(activity);
-            licenseManager.setExpirationMillis(Facepp.getApiExpirationMillis(activity, ConUtil.getFileContent(activity, R.raw.megviifacepp_0_4_7_model)));
-            String uuid = UUID.randomUUID().toString();
-            uuid = Base64.encodeToString(uuid.getBytes(), Base64.DEFAULT);
-            long apiName = Facepp.getApiName();
-            licenseManager.setAuthTimeBufferMillis(0);
-            licenseManager.takeLicenseFromNetwork(uuid, YoutuManager.API_KEY, YoutuManager.API_SECRET, apiName,
-                    LicenseManager.DURATION_30DAYS, "Landmark", "1", true, new LicenseManager.TakeLicenseCallback() {
-                        @Override
-                        public void onSuccess() {
-                            Log.e("", "onSuccess");
-                            Intent intent = new Intent(activity, VerificationActivity.class);
-                            intent.putExtra("AuthId", authId);
-                            activity.startActivity(intent);
-                        }
-
-                        @Override
-                        public void onFailed(int i, byte[] bytes) {
-                            Log.e("", "onFailed" + i + "  " + new String(bytes));
-                        }
-                    });
-
     }
 
 }

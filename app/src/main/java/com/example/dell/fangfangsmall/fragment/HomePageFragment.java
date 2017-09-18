@@ -3,23 +3,34 @@ package com.example.dell.fangfangsmall.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.FangFangSmallApplication;
 import com.example.dell.fangfangsmall.R;
+import com.example.dell.fangfangsmall.activity.MainTwoActivity;
 import com.example.dell.fangfangsmall.asr.NlpControl;
+import com.example.dell.fangfangsmall.camera.FaceVerifPresenter;
+import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
+import com.example.dell.fangfangsmall.face.yt.person.YtVerifyperson;
 import com.iflytek.aiui.AIUIConstant;
 import com.iflytek.aiui.AIUIEvent;
 import com.iflytek.aiui.AIUIListener;
@@ -35,7 +46,7 @@ import org.json.JSONObject;
 
 import java.util.Random;
 
-public class HomePageFragment extends Fragment {
+public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IFaceverifView, SurfaceHolder.Callback {
 
     public static final int RESULT_CODE_STARTAUDIO = 100;
     private NlpControl nlpControl;
@@ -53,6 +64,23 @@ public class HomePageFragment extends Fragment {
     private Context mContext;
     private boolean isTurn = false;
 
+    private ImageView imFace;
+    private boolean faceVerifiOpen;
+    private SurfaceView cameraSurfaceView;
+    private FaceVerifPresenter mFaceVerifPresenter;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    mFaceVerifPresenter.setVerifying(false);
+                    break;
+            }
+        }
+    };
+
+    private MainTwoActivity mainTwoActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,6 +97,9 @@ public class HomePageFragment extends Fragment {
     private void initView(View view) {
         (mQuestion) = (TextView) view.findViewById(R.id.tv_main_question);
         (mAnswer) = (TextView) view.findViewById(R.id.tv_main_answer);
+        imFace = (ImageView) view.findViewById(R.id.im_face);
+        cameraSurfaceView = (SurfaceView) view.findViewById(R.id.opengl_layout_surfaceview);
+        mainTwoActivity = (MainTwoActivity) getActivity();
     }
 
     private void initData() {
@@ -78,10 +109,28 @@ public class HomePageFragment extends Fragment {
         nlpControl.setmAIUIListener(mAIUIListener);
         nlpControl.init();
         mToast = Toast.makeText(mContext, "", Toast.LENGTH_SHORT);
+        SurfaceHolder Holder = cameraSurfaceView.getHolder(); // 获得SurfaceHolder对象
+        Holder.addCallback(this); // 为SurfaceView添加状态监听
+        Holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        mFaceVerifPresenter = new FaceVerifPresenter(this, Holder);
 
     }
 
     private void initListener() {
+        imFace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (faceVerifiOpen) {
+                    imFace.setBackgroundResource(R.mipmap.face_close);
+                    faceVerifiOpen = false;
+                    cameraSurfaceView.setVisibility(View.GONE);
+                } else {
+                    imFace.setBackgroundResource(R.mipmap.face_open);
+                    faceVerifiOpen = true;
+                    cameraSurfaceView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     /**
@@ -386,41 +435,39 @@ public class HomePageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("WWDZ", "onResume");
-        isTurn = false;
-        startAsr();
-        mTts.isSpeaking();
+        if (mainTwoActivity.mFragmentTabHost.getCurrentTab() == 0) {
+            Log.i("WWDZ", "onResume");
+            isTurn = false;
+            startAsr();
+            mTts.isSpeaking();
+        }
 
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.i("WWDZ", "onStop");
-        isTurn = true;
-        nlpControl.stopVoiceNlp();
-        mTts.pauseSpeaking();
+        if (mainTwoActivity.mFragmentTabHost.getCurrentTab() == 0) {
+            Log.i("WWDZ", "onStop");
+            isTurn = true;
+            nlpControl.stopVoiceNlp();
+            mTts.pauseSpeaking();
+        }
+
 
     }
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        Log.e("GG", "onPause");
-//        //结束
-//        mTts.stopSpeaking();
-//        nlpControl.stopVoiceNlp();
-//
-//    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        isTurn = true;
+        if (mainTwoActivity.mFragmentTabHost.getCurrentTab() == 0) {
+            isTurn = true;
             mTts.pauseSpeaking();
             // 退出时释放连接
 //            mTts.destroy();
             nlpControl.stopVoiceNlp();
 //            mAIUIListener = null;
+        }
     }
 
     //    /fragment切换时只走这个方法
@@ -441,5 +488,80 @@ public class HomePageFragment extends Fragment {
             mTts.isSpeaking();
 
         }
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        mFaceVerifPresenter.openCamera();
+        mFaceVerifPresenter.doStartPreview();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        mFaceVerifPresenter.setMatrix(width, height);
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+        mFaceVerifPresenter.closeCamera();
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mFaceVerifPresenter.closeCamera();
+    }
+
+    @Override
+    public Context getContext() {
+        return mContext;
+    }
+
+
+    @Override
+    public void verificationSuccerr(YtVerifyperson ytVerifyperson) {
+        showToast("相似度为 ： " + ytVerifyperson.getConfidence());
+        mHandler.sendEmptyMessageDelayed(1, 1000);
+    }
+
+    @Override
+    public void verificationFail(int code, String msg) {
+        if (code == -1101) {
+            showToast("正对摄像头，保证画面清晰");
+        } else {
+
+            showToast(msg);
+        }
+        mHandler.sendEmptyMessageDelayed(1, 1000);
+    }
+
+    @Override
+    public void setVerifyingTrue() {
+        mFaceVerifPresenter.setVerifying(true);
+    }
+
+    @Override
+    public void setVerifyingFalse() {
+        mHandler.sendEmptyMessageDelayed(1, 1000);
+    }
+
+    @Override
+    public void tranBitmap(Bitmap bitmap) {
+        mFaceVerifPresenter.verificationFace(mHandler, bitmap);
+    }
+
+    public void showToast(final String resStr) {
+
+        if (TextUtils.isEmpty(resStr)) {
+            return;
+        }
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast toast = Toast.makeText(mContext, resStr, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
     }
 }

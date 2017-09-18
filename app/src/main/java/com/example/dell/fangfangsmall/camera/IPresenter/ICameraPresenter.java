@@ -1,4 +1,4 @@
-package com.example.dell.fangfangsmall.camera;
+package com.example.dell.fangfangsmall.camera.IPresenter;
 
 import android.content.Context;
 import android.graphics.Bitmap;

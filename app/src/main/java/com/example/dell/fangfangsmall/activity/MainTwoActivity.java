@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -36,8 +35,7 @@ public class MainTwoActivity extends AppCompatActivity {
 
 
     private LayoutInflater mInflater;
-    private FragmentTabHost mFragmentTabHost;
-    private FrameLayout mFrameLayout;
+    public FragmentTabHost mFragmentTabHost;
 
     private List<Tab> mTabs = new ArrayList<>();
     static final String[] PERMISSIONS = new String[]{
@@ -68,7 +66,6 @@ public class MainTwoActivity extends AppCompatActivity {
 
     private void initView() {
         (mFragmentTabHost) = (FragmentTabHost) findViewById(android.R.id.tabhost);
-        (mFrameLayout) = (FrameLayout) findViewById(R.id.realtabcontent);
     }
 
     @Override

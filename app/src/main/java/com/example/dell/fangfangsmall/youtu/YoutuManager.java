@@ -21,12 +21,14 @@ import java.util.List;
 
 public class YoutuManager {
 
-    public static String API_KEY = "FM3u-dkiHH558E1y336Dr8pSRVXE139D";
-    public static String API_SECRET = "3dMDIFc_Y2JjEKzY2gSxaBP98f7l2yiW";
+    private static List<String> mGroupId;
+    public static String GROUP_ID = "autheneication";
 
     public static String APP_ID = "10098751";
     public static String SECRET_ID = "AKIDLVQ6XjvMnzxf6HcrGQKyLRHrBxUmZdCV";
     public static String SECRET_KEY = "C9qIVTCfuue9PQCiz2rRlriKhphKirkN";
+
+
 
     public static int EXPIRED_SECONDS = 2592000;
 
@@ -56,6 +58,12 @@ public class YoutuManager {
         YoutuSign.appSign(APP_ID, SECRET_ID, SECRET_KEY,
                 System.currentTimeMillis() / 1000 + EXPIRED_SECONDS, mySign);
         sign = mySign.toString();
+    }
+
+    public static List<String> getmGroupId() {
+        mGroupId = new ArrayList<String>();
+        mGroupId.add(GROUP_ID);
+        return mGroupId;
     }
 
     /*!
@@ -323,6 +331,35 @@ public class YoutuManager {
      * @param bitmap_arr 人脸图片列表
     */
     public JSONObject AddFace(String person_id, List<Bitmap> bitmap_arr)
+            throws IOException, JSONException, KeyManagementException, NoSuchAlgorithmException {
+
+        JSONObject data = new JSONObject();
+        List<String> images = new ArrayList<String>();
+        for (Bitmap bitmap : bitmap_arr) {
+            String imageData = BitmapUtils.bitmapToBase64(bitmap);
+            images.add(imageData);
+        }
+
+        data.put("images", new JSONArray(images));
+
+        data.put("person_id", person_id);
+
+        JSONObject respose = SendRequest(data, "api/addface");
+
+        return respose;
+    }
+
+    /*
+     * 添加一组人脸
+     * @param person_id
+     * @param bitmap_arr
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     * @throws KeyManagementException
+     * @throws NoSuchAlgorithmException
+     */
+    public JSONObject AddFaces(String person_id, List<Bitmap> bitmap_arr)
             throws IOException, JSONException, KeyManagementException, NoSuchAlgorithmException {
 
         JSONObject data = new JSONObject();

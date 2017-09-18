@@ -9,14 +9,15 @@ import android.widget.TextView;
 
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.camera.BaseActivity;
-import com.example.dell.fangfangsmall.camera.ITakePresenter;
+import com.example.dell.fangfangsmall.camera.IPresenter.ITakePresenter;
 import com.example.dell.fangfangsmall.camera.TakePresenter;
 
 /**
  * 进行拍照
- *@author Guanluocang
- *created at 2017/9/13 11:29
-*/
+ *
+ * @author Guanluocang
+ *         created at 2017/9/13 11:29
+ */
 public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Callback, View.OnClickListener, ITakePresenter.ITakeView {
 
     private SurfaceView cameraSurfaceView;
@@ -43,7 +44,6 @@ public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Cal
     }
 
 
-
     @Override
     protected void initData() {
         tvTakePhoto.setOnClickListener(this);
@@ -62,8 +62,14 @@ public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Cal
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTakePresenter.stopCountDownTimer();
+    }
+
+    @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_take_photo:
                 mTakePresenter.cameraTakePicture();
                 break;

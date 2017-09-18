@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.camera.BaseActivity;
 import com.example.dell.fangfangsmall.camera.CameraPresenter;
-import com.example.dell.fangfangsmall.camera.ICameraPresenter;
+import com.example.dell.fangfangsmall.camera.IPresenter.ICameraPresenter;
 import com.example.dell.fangfangsmall.face.yt.person.YtVerifyperson;
 import com.example.dell.fangfangsmall.view.DrawSurfaceView;
 

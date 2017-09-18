@@ -1,4 +1,4 @@
-package com.example.dell.fangfangsmall.camera;
+package com.example.dell.fangfangsmall.camera.IPresenter;
 
 import android.content.Context;
 
@@ -27,6 +27,8 @@ public abstract class ITakePresenter {
     public abstract void cameraTakePicture();
 
     public abstract void startCountDownTimer();
+
+    public abstract void stopCountDownTimer();
 
     public interface ITakeView {
 

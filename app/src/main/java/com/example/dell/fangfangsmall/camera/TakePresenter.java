@@ -10,6 +10,7 @@ import android.hardware.Camera;
 import android.os.CountDownTimer;
 import android.view.SurfaceHolder;
 
+import com.example.dell.fangfangsmall.camera.IPresenter.ITakePresenter;
 import com.example.dell.fangfangsmall.util.BitmapUtils;
 
 import java.io.IOException;
@@ -45,6 +46,7 @@ public class TakePresenter extends ITakePresenter implements Camera.PictureCallb
 
         isFirst = true;
     }
+
     @Override
     public void closeCamera() {
         if (null != mCamera) {
@@ -138,7 +140,7 @@ public class TakePresenter extends ITakePresenter implements Camera.PictureCallb
 
     @Override
     public void startCountDownTimer() {
-        if(isFirst){
+        if (isFirst) {
             countDownTimer = new CountDownTimer(3000, 1000) {
                 @Override
                 public void onTick(long l) {
@@ -156,6 +158,13 @@ public class TakePresenter extends ITakePresenter implements Camera.PictureCallb
         }
     }
 
+    @Override
+    public void stopCountDownTimer() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+    }
+
 
     @Override
     public void onPictureTaken(byte[] bytes, Camera camera) {
@@ -169,9 +178,9 @@ public class TakePresenter extends ITakePresenter implements Camera.PictureCallb
         Bitmap saveBitmap = Bitmap.createBitmap(previewBitmap, 0, 0, previewBitmap.getWidth(), previewBitmap.getHeight(), matrix, true);
 
         boolean save = BitmapUtils.saveBitmapToFile(saveBitmap, "PICTURETAKEN", System.currentTimeMillis() + ".jpg");
-        if(save){
+        if (save) {
             mTakeView.pictureTakenSuccess();
-        }else{
+        } else {
             mTakeView.pictureTakenFail();
         }
     }
