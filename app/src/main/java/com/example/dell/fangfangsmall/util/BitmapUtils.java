@@ -18,13 +18,15 @@ import android.util.Log;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class BitmapUtils {
 
     private static String mSdRootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-    private static String projectPath = mSdRootPath + File.separator + "delivery" + File.separator;
+    public static String projectPath = mSdRootPath + File.separator + "delivery" + File.separator;
 
     public static void deleteBitmapDir(String dirName) {
         File dirFile = new File(projectPath + dirName);
@@ -77,6 +79,25 @@ public class BitmapUtils {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static Bitmap transformFiletoBitmap(String path) {
+        File file = new File(path);
+        if(!file.exists()){
+            return null;
+        }
+
+        FileInputStream  fileInputStream = null;
+
+        try {
+            fileInputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 2;
+        return BitmapFactory.decodeStream(fileInputStream, null, options);
     }
 
     /**

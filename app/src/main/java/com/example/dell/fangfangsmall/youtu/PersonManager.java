@@ -18,6 +18,7 @@ import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceInfoResult;
 import com.example.dell.fangfangsmall.youtu.callback.SimpleCallback;
 import com.example.dell.fangfangsmall.youtu.thread.AddFaceThread;
+import com.example.dell.fangfangsmall.youtu.thread.AddFacefopathThread;
 import com.example.dell.fangfangsmall.youtu.thread.DelFaceThread;
 import com.example.dell.fangfangsmall.youtu.thread.DelpersonThread;
 import com.example.dell.fangfangsmall.youtu.thread.DetectFaceThread;
@@ -158,6 +159,18 @@ public class PersonManager {
     public static void addFaces(Handler mHandler, String personId, List<Bitmap> bitmaps, SimpleCallback<YtAddperson> simpleCallback){
         AddFaceThread addFaceThread = new AddFaceThread(mHandler, personId, bitmaps, simpleCallback);
         new Thread(addFaceThread).start();
+    }
+
+    /**
+     * 添加一组人脸
+     * @param mHandler
+     * @param personId
+     * @param paths
+     * @param simpleCallback
+     */
+    public static void addFacefoPath(Handler mHandler, String personId, List<String> paths, SimpleCallback<YtAddperson> simpleCallback){
+        AddFacefopathThread addFaceFopathThread = new AddFacefopathThread(mHandler, personId, paths, simpleCallback);
+        new Thread(addFaceFopathThread).start();
     }
 
     /**
