@@ -17,6 +17,8 @@ import com.example.dell.fangfangsmall.camera.IPresenter.IVerificationPresenter;
 import com.example.dell.fangfangsmall.camera.VerificationPresenter;
 import com.example.dell.fangfangsmall.view.DrawSurfaceView;
 
+import java.util.List;
+
 
 public class VerificationActivity extends BaseActivity implements IVerificationPresenter.IVerifcationView, ICameraPresenter.ICameraView,SurfaceHolder.Callback, View.OnClickListener {
 
@@ -119,6 +121,47 @@ public class VerificationActivity extends BaseActivity implements IVerificationP
     @Override
     public void saveFinish() {
         showToast("保存完成");
+    }
+
+    @Override
+    public void newPerson(Bitmap bitmap) {
+        mVerificationPresenter.foundPerson(mHandler, bitmap);
+    }
+
+    @Override
+    public void addFace(List<String> paths) {
+        mVerificationPresenter.uploadFaceBitmap(mHandler, paths);
+    }
+
+    @Override
+    public void newpersonSuccess(String faceId) {
+        showToast("添加人脸成功");
+    }
+
+    @Override
+    public void saveFirstFail() {
+
+    }
+
+    @Override
+    public void newpersonFail(int code, String msg) {
+        if(code == -1313){
+            showToast("请正对摄像头");
+        }else if(code == -1302){
+            showToast("个体已存在");
+        }else{
+            showToast(msg);
+        }
+    }
+
+    @Override
+    public void uploadBitmapFinish(int c) {
+        showToast("成功添加了" + c+"张人脸");
+    }
+
+    @Override
+    public void uploadBitmapFail(int code, String msg) {
+        showToast(msg);
     }
 
 

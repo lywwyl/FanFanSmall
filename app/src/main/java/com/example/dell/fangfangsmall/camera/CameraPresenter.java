@@ -90,7 +90,7 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
                 parameters.setPictureFormat(PixelFormat.JPEG);
                 List<Camera.Size> pictures = parameters.getSupportedPictureSizes();
                 Camera.Size size = pictures.get(pictures.size() - 1);
-                parameters.setPictureSize(size.width, size.height);
+//                parameters.setPictureSize(size.width, size.height);
                 List<String> focusModes = parameters.getSupportedFocusModes();
                 if (focusModes.contains("continuous-video")) {
                     parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
@@ -187,6 +187,9 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
 
         detector = new FaceDetector(previewBitmap.getWidth(), previewBitmap.getHeight(), 10);
         orientionOfCamera = 360 - orientionOfCamera;
+        if(orientionOfCamera == 360){
+            orientionOfCamera = 0;
+        }
         switch (orientionOfCamera) {
             case 0:
                 detector = new FaceDetector(width, height, 10);
@@ -239,7 +242,7 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
         Bitmap previewBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         Matrix matrix = new Matrix();
         matrix.postRotate(0.0f, previewBitmap.getWidth() / 2, previewBitmap.getHeight() / 2);
-        matrix.setRotate(-90);
+//        matrix.setRotate(-90);
         Bitmap saveBitmap = Bitmap.createBitmap(previewBitmap, 0, 0, previewBitmap.getWidth(), previewBitmap.getHeight(), matrix, true);
 
         boolean save = BitmapUtils.saveBitmapToFile(saveBitmap, "PICTURETAKEN", System.currentTimeMillis() + ".jpg");
