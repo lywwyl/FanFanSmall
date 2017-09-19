@@ -65,11 +65,9 @@
         android:id="@+id/im_face"
         android:layout_width="60px"
         android:layout_height="60px"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="328dp"
-        android:layout_marginStart="328dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="38px"
+        android:layout_marginTop="30px"
         android:src="@mipmap/face_close" />
 
     <SurfaceView
@@ -131,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="123px"
             android:layout_marginTop="39px"
-            android:text="FANG FANG"
+            android:text="FAN FAN"
             android:textColor="@color/color_white" />
 
         <View
