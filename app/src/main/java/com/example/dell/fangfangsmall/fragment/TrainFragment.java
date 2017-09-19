@@ -2,6 +2,7 @@ package com.example.dell.fangfangsmall.fragment;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.R;
+import com.example.dell.fangfangsmall.activity.ManageActivity;
 import com.example.dell.fangfangsmall.activity.TakePhotoActivity;
 import com.example.dell.fangfangsmall.activity.VerificationActivity;
 import com.example.dell.fangfangsmall.util.JumpItent;
@@ -24,6 +26,7 @@ public class TrainFragment extends Fragment implements View.OnClickListener {
 
     private RelativeLayout mTakephoto;//拍照
     private RelativeLayout mFace;//人脸提取
+    private RelativeLayout mManage;
     public static final int RESULT_CODE_STARTVIDEO = 200;
     public static final int RESULT_CODE_STARTAUDIO = 100;
     private Context mContext;
@@ -44,11 +47,13 @@ public class TrainFragment extends Fragment implements View.OnClickListener {
     private void initView(View view) {
         (mTakephoto) = (RelativeLayout) view.findViewById(R.id.rl_takephoto);
         (mFace) = (RelativeLayout) view.findViewById(R.id.rl_face);
+        mManage = (RelativeLayout) view.findViewById(R.id.rl_manage);
     }
 
     private void initListener() {
         mTakephoto.setOnClickListener(this);
         mFace.setOnClickListener(this);
+        mManage.setOnClickListener(this);
     }
 
     @Override
@@ -60,7 +65,9 @@ public class TrainFragment extends Fragment implements View.OnClickListener {
             case R.id.rl_face:
                 videoPermission();
                 break;
-
+            case R.id.rl_manage:
+                startActivity(new Intent(getActivity(), ManageActivity.class));
+                break;
         }
     }
 
