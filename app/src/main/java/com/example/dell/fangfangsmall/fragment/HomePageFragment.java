@@ -90,7 +90,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         initView(view);
         initData();
         initListener();
-        audioPermission();
+//        audioPermission();
         return view;
     }
 
@@ -135,7 +135,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     }
 
     /**
-     * 初始化监听。
+     * 初始化监听。语音合成
      */
     private InitListener mTtsInitListener = new InitListener() {
         @Override
@@ -171,6 +171,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
      * 发送语音
      */
     void startAsr() {
+        Log.e("GG", "startStr");
         if (isTurn) {
             Log.i("WWDZ", "已经跳转");
         } else {
@@ -207,6 +208,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         public void onEvent(AIUIEvent event) {
             switch (event.eventType) {
                 case AIUIConstant.EVENT_WAKEUP:
+                    Log.e("GG", "进入识别状态");
                     showTip("进入识别状态");
                     break;
 
@@ -239,7 +241,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
                                         //被语音语义识别，返回结果
                                         JSONObject answerObj = jsonObject.getJSONObject("answer");
                                         finalText = answerObj.optString("text");
-                                        Log.i("wcj", "--4--" + finalText);
+                                        Log.e("GG", finalText);
                                         mAnswer.setText(finalText);
                                         doAnswer(finalText);
                                     } else if (jsonObject.has("rc") && "4".equals(jsonObject.getString("rc"))) {
@@ -261,7 +263,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
 
                 case AIUIConstant.EVENT_ERROR: {
                     showTip("error");
-                    Log.e("GG", "on event: " + event.eventType);
+                    Log.e("GG", "on event:error " + event.eventType);
                 }
                 break;
 
@@ -277,12 +279,13 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
                 break;
 
                 case AIUIConstant.EVENT_START_RECORD: {
-//                    Log.i(TAG, "on event: " + event.eventType);
+                    Log.e("GG", "开始录音");
                     showTip("开始录音");
                 }
                 break;
 
                 case AIUIConstant.EVENT_STOP_RECORD: {
+                    Log.e("GG", "停止录音");
                     showTip("停止录音");
 //                    L.i("GG", "停止录音");
 //                    startAsr();
@@ -294,11 +297,13 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
 
                     if (AIUIConstant.STATE_IDLE == mAIUIState) {
                         // 闲置状态，AIUI未开启
-                        showTip("STATE_IDLE");
+                        Log.e("GG", "闲置状态，AIUI未开启");
                     } else if (AIUIConstant.STATE_READY == mAIUIState) {
                         // AIUI已就绪，等待唤醒
-                        showTip("STATE_READY");
+                        Log.e("GG", "AIUI已就绪，等待唤醒");
+                        startAsr();
                     } else if (AIUIConstant.STATE_WORKING == mAIUIState) {
+                        Log.e("GG", "STATE_WORKING");
                         // AIUI工作中，可进行交互
                         showTip("STATE_WORKING");
 //                        L.i("GG", "STATE_WORKING");
@@ -399,6 +404,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         public void onCompleted(SpeechError error) {
             if (error == null) {
 //                showTip("播放完成");
+                Log.e("GG", "播放完毕 重新初始化");
                 voicLineView.setVisibility(View.GONE);
                 startAsr();
             } else if (error != null) {
@@ -439,7 +445,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     public void onResume() {
         super.onResume();
         if (mainTwoActivity.mFragmentTabHost.getCurrentTab() == 0) {
-            Log.i("WWDZ", "onResume");
+            Log.e("GG", "onResume");
             isTurn = false;
             startAsr();
             mTts.isSpeaking();
@@ -451,7 +457,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     public void onStop() {
         super.onStop();
         if (mainTwoActivity.mFragmentTabHost.getCurrentTab() == 0) {
-            Log.i("WWDZ", "onStop");
+            Log.e("GG", "onStop");
             isTurn = true;
             nlpControl.stopVoiceNlp();
             mTts.pauseSpeaking();
@@ -540,9 +546,9 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
 
     @Override
     public void verificationFail(int code, String msg) {
-        if(code == -1101){
+        if (code == -1101) {
             showToast("正对摄像头，保证画面清晰");
-        }else{
+        } else {
             showToast(msg);
         }
     }

@@ -109,11 +109,11 @@ public class MainTwoActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        Tab tab_home = new Tab(HomePageFragment.class, R.string.main_first);
-        Tab tab_video = new Tab(VideoFragment.class, R.string.main_two);
+        Tab tab_home = new Tab(HomePageFragment.class, R.string.main_first, 0);
+        Tab tab_video = new Tab(VideoFragment.class, R.string.main_two, 0);
 
-        Tab tab_voice = new Tab(VoiceFragment.class, R.string.main_three);
-        Tab tab_train = new Tab(TrainFragment.class, R.string.main_four);
+        Tab tab_voice = new Tab(VoiceFragment.class, R.string.main_three, 0);
+        Tab tab_train = new Tab(TrainFragment.class, R.string.main_four, 0);
         mTabs.add(tab_home);
         mTabs.add(tab_video);
         mTabs.add(tab_voice);
@@ -142,6 +142,8 @@ public class MainTwoActivity extends AppCompatActivity {
 
         View view = mInflater.inflate(R.layout.tab_item, null);
         TextView text = (TextView) view.findViewById(R.id.iv_title);
+//        ImageView iv_image = (ImageView) view.findViewById(R.id.iv_image);
+//        iv_image.setImageResource(tab.getImage());
 
         text.setText(tab.getTitle());
 
