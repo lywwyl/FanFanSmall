@@ -94,6 +94,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         initData();
         initListener();
         audioPermission();
+
         return view;
     }
 
