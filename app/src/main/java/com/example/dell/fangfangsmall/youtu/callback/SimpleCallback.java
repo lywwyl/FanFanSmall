@@ -38,7 +38,7 @@ public abstract class SimpleCallback<T> extends Callback<T> {
         if(spotsDialog == null){
             spotsDialog = new Dialog(activity);
         }
-        spotsDialog.show();
+//        spotsDialog.show();
     }
 
     private void dismissDialog(){
