@@ -55,6 +55,12 @@ public class FaceVerifPresenter extends IFaceVerifPresenter {
             public void onFail(int code, String msg) {
                 mFaceverifView.verificationFail(code, msg);
             }
+
+            @Override
+            public void onEnd() {
+                super.onEnd();
+                curTime = System.currentTimeMillis();
+            }
         });
 //        PersonManager.faceVerify(handler, mAuthId, copyBitmap, new SimpleCallback<YtVerifyperson>((Activity) mFaceverifView.getContext()) {
 //            @Override

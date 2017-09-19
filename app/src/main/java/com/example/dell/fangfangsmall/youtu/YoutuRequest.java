@@ -126,7 +126,9 @@ public class YoutuRequest {
         reader.close();
         connection.disconnect();
         JSONObject respose = new JSONObject(resposeBuffer.toString());
-        Log.e("", respose.toString());
+        Log.e("youtu", "-----------------------------------------------------------------");
+        Log.e("youtu", respose.toString());
+        Log.e("youtu", "-----------------------------------------------------------------");
         return respose;
 
     }
