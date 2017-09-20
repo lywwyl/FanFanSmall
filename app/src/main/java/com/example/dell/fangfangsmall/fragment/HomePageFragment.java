@@ -147,7 +147,6 @@ public class HomePageFragment extends Fragment  implements IFaceVerifPresenter.I
     @Override
     public void verificationSuccess(YtFaceIdentify ytFaceIdentify) {
         mFaceVerifPresenter.compareFace(ytFaceIdentify);
-
     }
 
     @Override

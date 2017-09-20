@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,6 +103,8 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
     private VoiceFragment voiceFragment;
     private VideoFragment videoFragment;
 
+    private boolean isFirst;
+
     /**
      *
      */
@@ -129,7 +132,14 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         } else {
             isRequireCheck = true;
         }
+        if (isFirst){
+            judgeState();
+        }
+        isFirst = true;
 
+    }
+
+    private void judgeState() {
         if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE)) {
             stopAiuiListener();
             startRecognizerListener();
@@ -142,7 +152,6 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
             stopAiuiListener();
             startRecognizerListener();
         }
-
     }
 
     @Override
@@ -151,6 +160,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         if (mTts.isSpeaking()) {
             mTts.stopSpeaking();
         }
+        stopListener();
     }
 
     @Override
@@ -545,18 +555,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
     /**************************/
     @Override
     public void onCompleted() {
-        if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE)) {
-            stopAiuiListener();
-            startRecognizerListener();
-        } else if (mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
-            stopRecognizerListener();
-            startAiuiListener();
-        } else if (mySpeechType.equals(MySpeech.SPEECH_NULL)) {
-            stopListener();
-        } else if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)) {
-            stopAiuiListener();
-            startRecognizerListener();
-        }
+        judgeState();
     }
 
     @Override
@@ -575,8 +574,18 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE)) {
             refVoicePage(result);
         } else if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)) {
-            refVideoPage(result);
+            if (!TextUtils.isEmpty(result)){
+                Log.d("Video+++",result);
+                refVideoPage(result);
+            }
         }
+    }
+
+    @Override
+    public void onErrInfo() {
+        stopAiuiListener();
+        initIat();
+//        startRecognizerListener();
     }
 
 }

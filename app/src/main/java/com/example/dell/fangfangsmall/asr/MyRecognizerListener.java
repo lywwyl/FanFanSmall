@@ -1,6 +1,7 @@
 package com.example.dell.fangfangsmall.asr;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.dell.fangfangsmall.util.JsonParser;
 import com.iflytek.cloud.RecognizerListener;
@@ -43,7 +44,11 @@ public class MyRecognizerListener implements RecognizerListener {
 
     @Override
     public void onError(SpeechError speechError) {
-
+        Log.e("SpeechError",speechError.getErrorCode()+"");
+        Log.e("SpeechError",speechError.toString()+"");
+        if (null != recognListener){
+            recognListener.onErrInfo();
+        }
     }
 
     @Override
@@ -55,5 +60,6 @@ public class MyRecognizerListener implements RecognizerListener {
 
     public interface RecognListener{
         void onResult(String result);
+        void onErrInfo();
     }
 }
