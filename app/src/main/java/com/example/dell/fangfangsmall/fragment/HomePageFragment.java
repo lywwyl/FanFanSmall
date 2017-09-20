@@ -49,6 +49,8 @@ import com.iflytek.sunflower.FlowerCollector;
 import org.json.JSONObject;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IFaceverifView, SurfaceHolder.Callback, ICameraPresenter.ICameraView, View.OnClickListener {
 
@@ -84,6 +86,11 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     private MainTwoActivity mainTwoActivity;
     private VoiceLineView voicLineView;
 
+
+    //计时器
+    private Timer mTimer;
+    private TimerTask mTimeTask;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -104,6 +111,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         cameraSurfaceView = (SurfaceView) view.findViewById(R.id.opengl_layout_surfaceview);
         mainTwoActivity = (MainTwoActivity) getActivity();
         (voicLineView) = (VoiceLineView) view.findViewById(R.id.voicLine);
+        mTimer = new Timer();
     }
 
     private void initData() {
@@ -271,14 +279,13 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
                 case AIUIConstant.EVENT_START_RECORD: {
                     Log.e("GG", "开始录音");
                     showTip("开始录音");
+                    mTimeTask.cancel();
                 }
                 break;
 
                 case AIUIConstant.EVENT_STOP_RECORD: {
                     Log.e("GG", "停止录音");
                     showTip("停止录音");
-//                    L.i("GG", "停止录音");
-//                    startAsr();
                 }
                 break;
 
@@ -291,12 +298,19 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
                     } else if (AIUIConstant.STATE_READY == mAIUIState) {
                         // AIUI已就绪，等待唤醒
                         Log.e("GG", "AIUI已就绪，等待唤醒");
-                        startAsr();
+                        mTimeTask = new TimerTask() {
+                            @Override
+                            public void run() {
+                                //执行
+                                startAsr();
+                                Log.i("GG", "timer.schedule");
+                            }
+                        };
+                        mTimer.schedule(mTimeTask, 1000 * 2);
+
                     } else if (AIUIConstant.STATE_WORKING == mAIUIState) {
-                        Log.e("GG", "STATE_WORKING");
                         // AIUI工作中，可进行交互
                         showTip("STATE_WORKING");
-//                        L.i("GG", "STATE_WORKING");
                     }
                 }
                 break;
@@ -360,6 +374,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         public void onSpeakBegin() {
 //            showTip("开始播放");
             voicLineView.setVisibility(View.VISIBLE);
+            mTimeTask.cancel();
         }
 
         @Override
@@ -393,12 +408,10 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         @Override
         public void onCompleted(SpeechError error) {
             if (error == null) {
-//                showTip("播放完成");
                 Log.e("GG", "播放完毕 重新初始化");
                 voicLineView.setVisibility(View.GONE);
                 startAsr();
             } else if (error != null) {
-//                showTip(error.getPlainDescription(true));
             }
         }
 
@@ -406,9 +419,9 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         public void onEvent(int eventType, int arg1, int arg2, Bundle obj) {
             // 以下代码用于获取与云端的会话id，当业务出错时将会话id提供给技术支持人员，可用于查询会话日志，定位出错原因
             // 若使用本地能力，会话id为null
-            //	if (SpeechEvent.EVENT_SESSION_ID == eventType) {
-            //		String sid = obj.getString(SpeechEvent.KEY_EVENT_SESSION_ID);
-            //		Log.d(TAG, "session id =" + sid);
+            //	if (SpeechEvent.EVENT_SESSION_IDSpeechEvent.KEY_EVENT_SESSION_ID);
+            //		Log.d(TAG, "session id =" + sid == eventType) {
+            //		String sid = obj.getString();
             //	}
         }
     };
@@ -593,7 +606,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.im_face:
                 if (faceVerifiOpen) {
                     imFace.setBackgroundResource(R.mipmap.face_close);

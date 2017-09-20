@@ -59,7 +59,6 @@ public class VoiceFragment extends Fragment {
     private SpeechRecognizer mIat;
     // 语音合成对象
     private SpeechSynthesizer mTts;
-    // 语音听写对象
     // 引擎类型
     private String mEngineType = SpeechConstant.TYPE_CLOUD;
     // 默认发音人

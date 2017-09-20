@@ -120,7 +120,7 @@ public class VoiceLineView extends View {
             paint.setAntiAlias(true);
         }
         canvas.save();
-        canvas.drawRect(0, getHeight() / 2 - middleLineHeight / 2, getWidth(), getHeight() / 2 + middleLineHeight / 2, paint);
+//        canvas.drawRect(0, getHeight() / 2 - middleLineHeight / 2, getWidth(), getHeight() / 2 + middleLineHeight / 2, paint);
         canvas.restore();
     }
 
