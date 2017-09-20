@@ -14,8 +14,6 @@ import android.widget.TextView;
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.activity.MainTwoActivity;
 import com.example.dell.fangfangsmall.adapter.VoiceQuestionAdapter;
-import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechSynthesizer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,12 +32,6 @@ public class VoiceFragment extends Fragment {
     //答案
     private String[] voiceAnswer = null;
 
-    // 语音合成对象
-    private SpeechSynthesizer mTts;
-    // 引擎类型
-    private String mEngineType = SpeechConstant.TYPE_CLOUD;
-    // 默认发音人
-    private String voicer = "xiaoyan";
     private OnDoAnswerListener onDoAnswerListener;
 
     public void setOnDoAnswerListener(OnDoAnswerListener onDoAnswerListener) {
@@ -69,13 +61,11 @@ public class VoiceFragment extends Fragment {
         initListener();
         return view;
     }
-
     private void initView(View view) {
         (mQuestion) = (RecyclerView) view.findViewById(R.id.rv_question);
         (mAnswerv) = (TextView) view.findViewById(R.id.tv_answer);
 
     }
-
     private void initData() {
         LinearLayoutManager linearLayoutManager_list_question = new LinearLayoutManager(getActivity());
         linearLayoutManager_list_question.setOrientation(LinearLayoutManager.VERTICAL);
@@ -93,21 +83,19 @@ public class VoiceFragment extends Fragment {
 
 
     }
-
     //
     private void initListener() {
         questionAdapter.setOnItemClickListener(new VoiceQuestionAdapter.onItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 mAnswerv.setText(voiceAnswer[position].toString());
-                if (onDoAnswerListener != null) {
+                if(onDoAnswerListener != null){
                     onDoAnswerListener.doAnswer(voiceAnswer[position].toString());
                 }
             }
         });
 
     }
-
     public void printResult(String text) {
         String result = "";
         for (int i = 0; i < voiceQuestion.length; i++) {
@@ -120,7 +108,7 @@ public class VoiceFragment extends Fragment {
                 result = "抱歉，我没有听懂您说什么";
             }
         }
-        if (onDoAnswerListener != null) {
+        if(onDoAnswerListener != null){
             onDoAnswerListener.doAnswer(result);
         }
 

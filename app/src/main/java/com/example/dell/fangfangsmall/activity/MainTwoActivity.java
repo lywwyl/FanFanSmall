@@ -34,31 +34,21 @@ import com.example.dell.fangfangsmall.fragment.VideoFragment;
 import com.example.dell.fangfangsmall.fragment.VoiceFragment;
 import com.example.dell.fangfangsmall.util.FragmentTabHost;
 import com.example.dell.fangfangsmall.util.IatSettings;
-import com.example.dell.fangfangsmall.util.JsonParser;
 import com.example.dell.fangfangsmall.util.PermissionsChecker;
 import com.iflytek.aiui.AIUIAgent;
 import com.iflytek.aiui.AIUIConstant;
-import com.iflytek.aiui.AIUIEvent;
-import com.iflytek.aiui.AIUIListener;
 import com.iflytek.aiui.AIUIMessage;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
-import com.iflytek.cloud.RecognizerListener;
-import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechSynthesizer;
-import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.sunflower.FlowerCollector;
-
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -111,6 +101,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
     private HomePageFragment homePageFragment;
     private VoiceFragment voiceFragment;
     private VideoFragment videoFragment;
+
     /**
      *
      */
@@ -125,6 +116,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         mChecker = new PermissionsChecker(this);
         isRequireCheck = true;
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -138,12 +130,25 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
             isRequireCheck = true;
         }
 
+        if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE)) {
+            stopAiuiListener();
+            startRecognizerListener();
+        } else if (mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
+            stopRecognizerListener();
+            startAiuiListener();
+        } else if (mySpeechType.equals(MySpeech.SPEECH_NULL)) {
+            stopListener();
+        } else if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)) {
+            stopAiuiListener();
+            startRecognizerListener();
+        }
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if(mTts.isSpeaking()) {
+        if (mTts.isSpeaking()) {
             mTts.stopSpeaking();
         }
     }
@@ -154,6 +159,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         stopListener();
         Log.e("GG", "onDestory");
     }
+
     @Override
     public void onBackPressed() {
         if (!quit) { //询问退出程序
@@ -180,11 +186,11 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
     }
 
     private void initData() {
-        Tab tab_home = new Tab(HomePageFragment.class, R.string.main_first,0);
-        Tab tab_video = new Tab(VideoFragment.class, R.string.main_two,0);
+        Tab tab_home = new Tab(HomePageFragment.class, R.string.main_first, 0);
+        Tab tab_video = new Tab(VideoFragment.class, R.string.main_two, 0);
 
-        Tab tab_voice = new Tab(VoiceFragment.class, R.string.main_three,0);
-        Tab tab_train = new Tab(TrainFragment.class, R.string.main_four,0);
+        Tab tab_voice = new Tab(VoiceFragment.class, R.string.main_three, 0);
+        Tab tab_train = new Tab(TrainFragment.class, R.string.main_four, 0);
         mTabs.add(tab_home);
         mTabs.add(tab_video);
         mTabs.add(tab_voice);
@@ -206,22 +212,22 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         mFragmentTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
-                if(mTts.isSpeaking()) {
+                if (mTts.isSpeaking()) {
                     mTts.stopSpeaking();
                 }
                 if (tabId.equals(getString(R.string.main_first))) {
                     stopRecognizerListener();
                     startAiuiListener();
                     mySpeechType = MySpeech.SPEECH_AIUI;
-                }else if(tabId.equals(getString(R.string.main_three))){
+                } else if (tabId.equals(getString(R.string.main_three))) {
                     stopAiuiListener();
                     startRecognizerListener();
                     mySpeechType = MySpeech.SPEECH_RECOGNIZER_VOICE;
-                }else if(tabId.equals(getString(R.string.main_two))){
+                } else if (tabId.equals(getString(R.string.main_two))) {
                     stopAiuiListener();
                     startRecognizerListener();
                     mySpeechType = MySpeech.SPEECH_RECOGNIZER_VIDEO;
-                }else{
+                } else {
                     stopListener();
                 }
             }
@@ -271,7 +277,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
 
 //         打开AIUI内部录音机，开始录音
         String paramss = "sample_rate=16000,data_type=audio";
-        AIUIMessage writeMsg = new AIUIMessage( AIUIConstant.CMD_START_RECORD, 0, 0, paramss, null );
+        AIUIMessage writeMsg = new AIUIMessage(AIUIConstant.CMD_START_RECORD, 0, 0, paramss, null);
         mAIUIAgent.sendMessage(writeMsg);
     }
 
@@ -327,6 +333,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
 
     /**
      * 合成语音
+     *
      * @param answer
      */
     public void doAnswer(String answer) {
@@ -339,6 +346,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         stopAiuiListener();
         stopRecognizerListener();
     }
+
     private void startAiuiListener() {
         AIUIMessage aiuiMessage1 = new AIUIMessage(AIUIConstant.CMD_START, 0, 0, null, null);
         mAIUIAgent.sendMessage(aiuiMessage1);
@@ -347,10 +355,11 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         mAIUIAgent.sendMessage(aiuiMessage);
 
         String paramss = "sample_rate=16000,data_type=audio";
-        AIUIMessage writeMsg = new AIUIMessage( AIUIConstant.CMD_START_RECORD, 0, 0, paramss, null );
+        AIUIMessage writeMsg = new AIUIMessage(AIUIConstant.CMD_START_RECORD, 0, 0, paramss, null);
         mAIUIAgent.sendMessage(writeMsg);
         //        setAiuiCountDown();
     }
+
     private void stopAiuiListener() {
         stopAiuiTask();
         AIUIMessage aiuiMessage = new AIUIMessage(AIUIConstant.CMD_STOP, 0, 0, null, null);
@@ -364,6 +373,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         mIat.startListening(recognizerListener);
 
     }
+
     private void stopRecognizerListener() {
         stopRecognizerTask();
         mIat.startListening(null);
@@ -371,7 +381,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
     }
 
     private void setAiuiCountDown() {
-        if(aiuiTimerTask != null) {
+        if (aiuiTimerTask != null) {
             aiuiTimerTask = new TimerTask() {
                 @Override
                 public void run() {
@@ -379,18 +389,20 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
                 }
             };
             aiuiTimer.schedule(aiuiTimerTask, 1000 * 2);
-        }else{
+        } else {
             stopAiuiTask();
         }
     }
+
     private void stopAiuiTask() {
-        if(aiuiTimerTask != null) {
+        if (aiuiTimerTask != null) {
             aiuiTimerTask.cancel();
             aiuiTimerTask = null;
         }
     }
+
     private void setRecognizerCountDown() {
-        if(recognizerTimerTask != null) {
+        if (recognizerTimerTask != null) {
             recognizerTimerTask = new TimerTask() {
                 @Override
                 public void run() {
@@ -399,12 +411,13 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
                 }
             };
             recognizerTimer.schedule(recognizerTimerTask, 1000 * 2);
-        }else {
+        } else {
             stopRecognizerTask();
         }
     }
+
     private void stopRecognizerTask() {
-        if(recognizerTimerTask != null) {
+        if (recognizerTimerTask != null) {
             recognizerTimerTask.cancel();
             recognizerTimerTask = null;
         }
@@ -413,6 +426,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
 
     /**
      * 点击首页item设置
+     *
      * @param question
      * @param finalText
      */
@@ -446,7 +460,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         }
     }
 
-    private void refVideoPage(String result){
+    private void refVideoPage(String result) {
         if (videoFragment == null) {
 
 
@@ -523,19 +537,23 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         }
     }
 
+    public void videoPageRestart(){
+        startRecognizerListener();
+    }
+
 
     /**************************/
     @Override
     public void onCompleted() {
-        if(mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE)) {
+        if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE)) {
             stopAiuiListener();
             startRecognizerListener();
-        }else if(mySpeechType.equals(MySpeech.SPEECH_AIUI)){
+        } else if (mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
             stopRecognizerListener();
             startAiuiListener();
-        }else if(mySpeechType.equals(MySpeech.SPEECH_NULL)){
+        } else if (mySpeechType.equals(MySpeech.SPEECH_NULL)) {
             stopListener();
-        } else if(mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)) {
+        } else if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)) {
             stopAiuiListener();
             startRecognizerListener();
         }
@@ -554,10 +572,11 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
 
     @Override
     public void onResult(String result) {
-        if(mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE)) {
+        if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE)) {
             refVoicePage(result);
-        }else  if(mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)){
+        } else if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)) {
             refVideoPage(result);
         }
     }
+
 }
