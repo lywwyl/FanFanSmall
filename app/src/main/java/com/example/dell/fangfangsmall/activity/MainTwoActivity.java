@@ -449,6 +449,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
     private void refVideoPage(String result){
         if (videoFragment == null) {
 
+
             Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.main_two));
             if (fragment != null) {
                 videoFragment = (VideoFragment) fragment;
