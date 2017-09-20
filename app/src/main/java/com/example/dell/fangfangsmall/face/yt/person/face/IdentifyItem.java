@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by zhangyuanyuan on 2017/9/18.
  */
 
-public class IdentifyItem implements Serializable{
+public class IdentifyItem implements Serializable {
 
 
     private String person_id;
@@ -44,5 +44,20 @@ public class IdentifyItem implements Serializable{
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        } else {
+            if (obj instanceof IdentifyItem) {
+                IdentifyItem identifyItem = (IdentifyItem) obj;
+                if (identifyItem.person_id.equals(this.person_id)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

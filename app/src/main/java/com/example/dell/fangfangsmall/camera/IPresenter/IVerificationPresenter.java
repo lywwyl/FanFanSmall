@@ -37,7 +37,7 @@ public abstract class IVerificationPresenter {
 
         void addFace(List<String> paths);
 
-        void newpersonSuccess(String faceId);
+        void newpersonSuccess(String personId);
 
         void saveFirstFail();
 
