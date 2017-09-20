@@ -20,7 +20,8 @@ import com.example.dell.fangfangsmall.view.DrawSurfaceView;
 import java.util.List;
 
 
-public class VerificationActivity extends BaseActivity implements IVerificationPresenter.IVerifcationView, ICameraPresenter.ICameraView,SurfaceHolder.Callback, View.OnClickListener {
+public class VerificationActivity extends BaseActivity implements IVerificationPresenter.IVerifcationView, ICameraPresenter.ICameraView,
+        SurfaceHolder.Callback, View.OnClickListener {
 
     private SurfaceView cameraSurfaceView;
     private DrawSurfaceView drawSufaceView;
@@ -134,7 +135,7 @@ public class VerificationActivity extends BaseActivity implements IVerificationP
     }
 
     @Override
-    public void newpersonSuccess(String faceId) {
+    public void newpersonSuccess(String personId) {
         showToast("添加人脸成功");
     }
 

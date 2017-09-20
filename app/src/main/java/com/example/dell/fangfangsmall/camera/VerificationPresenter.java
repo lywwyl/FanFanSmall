@@ -14,6 +14,7 @@ import com.example.dell.fangfangsmall.face.yt.person.YtAddperson;
 import com.example.dell.fangfangsmall.face.yt.person.YtNewperson;
 import com.example.dell.fangfangsmall.listener.OnConfimListener;
 import com.example.dell.fangfangsmall.util.BitmapUtils;
+import com.example.dell.fangfangsmall.util.PreferencesUtils;
 import com.example.dell.fangfangsmall.view.AddInfoDialog;
 import com.example.dell.fangfangsmall.youtu.PersonManager;
 import com.example.dell.fangfangsmall.youtu.callback.SimpleCallback;
@@ -28,6 +29,7 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
     private IVerifcationView mVerifcationView;
 
     private String mAuthId;
+    private String mCurrentTimeStr;
 
     private AddInfoDialog addInfoDialog;
 
@@ -56,11 +58,11 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
         if (System.currentTimeMillis() - curTime > 2000) {
 
             if (curCount == 0) {
-                if(!isnewPerson){
+                if (!isnewPerson) {
                     boolean save = BitmapUtils.saveBitmapToFile(bitmap, mAuthId, curCount + ".jpg");
-                    if(save) {
+                    if (save) {
                         mVerifcationView.newPerson(bitmap);
-                    }else{
+                    } else {
                         mVerifcationView.saveFirstFail();
                     }
                 }
@@ -68,11 +70,11 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
             if (!isFirst) {
                 if (curCount < 10) {
                     boolean save = BitmapUtils.saveBitmapToFile(bitmap, mAuthId, curCount + ".jpg");
-                    if(save) {
+                    if (save) {
                         mPaths.add(BitmapUtils.projectPath + mAuthId + File.separator + curCount + ".jpg");
                         mVerifcationView.saveCount(curCount, "");
                         curCount++;
-                    }else{
+                    } else {
                         mVerifcationView.saveFirstFail();
                     }
                 } else if (curCount == 10) {
@@ -102,7 +104,8 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
         Bitmap copyBitmap = BitmapUtils.ImageCrop(bitmap, 2, 2, true);
 //        Bitmap copyBitmap = bitmapSaturation(bitmap);
 //        BitmapUtils.saveBitmapToFile(copyBitmap, "111", "copyBitmap.jpg");
-        PersonManager.newperson(handler, mAuthId, copyBitmap, new SimpleCallback<YtNewperson>((Activity) mVerifcationView.getContext()) {
+        final String currentTimeStr = String.valueOf(System.currentTimeMillis());
+        PersonManager.newperson(handler, currentTimeStr, copyBitmap, new SimpleCallback<YtNewperson>((Activity) mVerifcationView.getContext()) {
             @Override
             public void onBefore() {
                 super.onBefore();
@@ -111,10 +114,12 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
 
             @Override
             public void onSuccess(YtNewperson ytNewperson) {
-                String faceId = ytNewperson.getFace_id();
-                    isFirst = false;
-                    curCount++;
-                    mVerifcationView.newpersonSuccess(faceId);
+                PreferencesUtils.putString(mVerifcationView.getContext(), currentTimeStr, mAuthId);
+
+                mCurrentTimeStr = ytNewperson.getPerson_id();
+                isFirst = false;
+                curCount++;
+                mVerifcationView.newpersonSuccess(mCurrentTimeStr);
             }
 
             @Override
@@ -156,12 +161,13 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
 
     @Override
     public void uploadFaceBitmap(Handler handler, List<String> paths) {
-        PersonManager.addFacefoPath(handler, mAuthId, paths, new SimpleCallback<YtAddperson>((Activity) mVerifcationView.getContext()) {
+
+        PersonManager.addFacefoPath(handler, mCurrentTimeStr, paths, new SimpleCallback<YtAddperson>((Activity) mVerifcationView.getContext()) {
             @Override
             public void onSuccess(YtAddperson ytAddperson) {//-1312 对个体添加了几乎相同的人脸
                 List<Integer> integerList = ytAddperson.getRet_codes();
                 int c = 0;
-                for(int i = 0; i < integerList.size(); i++){
+                for (int i = 0; i < integerList.size(); i++) {
                     if (integerList.get(i) == 0) {
 
                         c++;
@@ -186,7 +192,7 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
 
     @Override
     public void onConfim(String content) {
-        if(content.contains(" ")) {
+        if (content.contains(" ")) {
             return;
         }
         mAuthId = content;

@@ -15,6 +15,7 @@ import android.util.ArrayMap;
 import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
 import com.example.dell.fangfangsmall.face.yt.person.face.IdentifyItem;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
+import com.example.dell.fangfangsmall.util.PreferencesUtils;
 import com.example.dell.fangfangsmall.youtu.PersonManager;
 import com.example.dell.fangfangsmall.youtu.callback.SimpleCallback;
 
@@ -31,37 +32,49 @@ public class FaceVerifPresenter extends IFaceVerifPresenter {
 
     private long curTime;
 
+    private boolean isIdentify;
+
     public FaceVerifPresenter(IFaceverifView baseView) {
         super(baseView);
         mFaceverifView = baseView;
         curTime = System.currentTimeMillis();
+        isIdentify = false;
     }
 
 
     @Override
     public void faceIdentifyFace(Handler handler, Bitmap baseBitmap) {
-        if (System.currentTimeMillis() - curTime < 2000) {
-            return;
+        if(!isIdentify) {
+            if (System.currentTimeMillis() - curTime < 2000) {
+                return;
+            }
+            Bitmap copyBitmap = bitmapSaturation(baseBitmap);
+            PersonManager.faceIdentify(handler, copyBitmap, new SimpleCallback<YtFaceIdentify>((Activity) mFaceverifView.getContext()) {
+                @Override
+                public void onBefore() {
+                    isIdentify = true;
+                }
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                @Override
+                public void onSuccess(YtFaceIdentify ytFaceIdentify) {
+                    mFaceverifView.verificationSuccess(ytFaceIdentify);
+                }
+                @Override
+                public void onFail(int code, String msg) {
+                    mFaceverifView.verificationFail(code, msg);
+                    isIdentify = false;
+                }
+                @Override
+                public void onEnd() {
+                    curTime = System.currentTimeMillis();
+                    isIdentify = false;
+                }
+                @Override
+                public void onError(Exception e) {
+                    isIdentify = false;
+                }
+            });
         }
-        Bitmap copyBitmap = bitmapSaturation(baseBitmap);
-        PersonManager.faceIdentify(handler, copyBitmap, new SimpleCallback<YtFaceIdentify>((Activity) mFaceverifView.getContext()) {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onSuccess(YtFaceIdentify ytFaceIdentify) {
-                mFaceverifView.verificationSuccess(ytFaceIdentify);
-            }
-
-            @Override
-            public void onFail(int code, String msg) {
-                mFaceverifView.verificationFail(code, msg);
-            }
-
-            @Override
-            public void onEnd() {
-                super.onEnd();
-                curTime = System.currentTimeMillis();
-            }
-        });
 //        PersonManager.faceVerify(handler, mAuthId, copyBitmap, new SimpleCallback<YtVerifyperson>((Activity) mFaceverifView.getContext()) {
 //            @Override
 //            public void onBefore() {
@@ -153,10 +166,15 @@ public class FaceVerifPresenter extends IFaceVerifPresenter {
             int size = tempList.size();
             List<IdentifyItem> list = resultMap.get(tempList.get(size - 1));
             IdentifyItem identifyItem = list.get(0);
+            String person =  identifyItem.getPerson_id();
+            String name = PreferencesUtils.getString(mFaceverifView.getContext(), person);
+            if(name != null){
 
-            mFaceverifView.identifyFace(identifyItem.getPerson_id());
+                mFaceverifView.identifyFace(name);
+            }
         } else {
             mFaceverifView.identifyNoFace();
+            isIdentify = false;
         }
     }
 

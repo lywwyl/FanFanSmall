@@ -27,7 +27,9 @@ import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
 import com.example.dell.fangfangsmall.view.VoiceLineView;
 
-public class HomePageFragment extends Fragment  implements IFaceVerifPresenter.IFaceverifView, SurfaceHolder.Callback, ICameraPresenter.ICameraView, View.OnClickListener {
+public class HomePageFragment extends Fragment  implements IFaceVerifPresenter.IFaceverifView, SurfaceHolder.Callback,
+        ICameraPresenter.ICameraView, View.OnClickListener {
+
     private TextView mQuestion;//问题
     private TextView mAnswer;//答案
     private ImageView imFace;
