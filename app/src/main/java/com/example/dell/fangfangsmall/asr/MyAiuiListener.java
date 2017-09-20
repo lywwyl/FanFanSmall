@@ -101,15 +101,17 @@ public class MyAiuiListener implements AIUIListener {
 
                 break;
             case AIUIConstant.EVENT_STATE:     // 状态事件
-//                mAIUIState = event.arg1;
-//                if (AIUIConstant.STATE_IDLE == mAIUIState) {
-//                    showTip("STATE_IDLE");
-//                } else if (AIUIConstant.STATE_READY == mAIUIState) {
-//                    showTip("STATE_READY");
-//                    setAiuiCountDown();
-//                } else if (AIUIConstant.STATE_WORKING == mAIUIState) {
-//                    showTip("STATE_WORKING");
-//                }
+                int mAIUIState = event.arg1;
+                if (AIUIConstant.STATE_IDLE == mAIUIState) {
+                    Log.e("EVENT_STATE", "STATE_IDLE");
+                } else if (AIUIConstant.STATE_READY == mAIUIState) {
+                    Log.e("EVENT_STATE", "STATE_READY");
+                    if(aiListener != null) {
+                        aiListener.onAIUIDowm();
+                    }
+                } else if (AIUIConstant.STATE_WORKING == mAIUIState) {
+                    Log.e("EVENT_STATE", "STATE_WORKING");
+                }
                 break;
             case AIUIConstant.EVENT_CMD_RETURN: {
                 if (AIUIConstant.CMD_UPLOAD_LEXICON == event.arg1) {
@@ -127,5 +129,6 @@ public class MyAiuiListener implements AIUIListener {
     public interface AiListener{
         void onDoAnswer(String question, String finalText);
         void  onError();
+        void onAIUIDowm();
     }
 }

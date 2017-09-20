@@ -46,8 +46,16 @@ public class MyRecognizerListener implements RecognizerListener {
     public void onError(SpeechError speechError) {
         Log.e("SpeechError",speechError.getErrorCode()+"");
         Log.e("SpeechError",speechError.toString()+"");
-        if (null != recognListener){
-            recognListener.onErrInfo();
+        if (10118 == speechError.getErrorCode()){
+            if (null != recognListener){
+                recognListener.onRecognDown();
+            }
+        }else if (20006 == speechError.getErrorCode()) {
+            if (null != recognListener) {
+                recognListener.onErrInfo();
+            }
+        }else if(10114 == speechError.getErrorCode()){
+
         }
     }
 
@@ -61,5 +69,6 @@ public class MyRecognizerListener implements RecognizerListener {
     public interface RecognListener{
         void onResult(String result);
         void onErrInfo();
+        void onRecognDown();
     }
 }
