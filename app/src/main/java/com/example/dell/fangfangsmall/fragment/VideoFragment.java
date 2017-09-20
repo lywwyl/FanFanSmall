@@ -102,4 +102,8 @@ public class VideoFragment extends Fragment implements View.OnClickListener {
     public void onStop() {
         super.onStop();
     }
+
+    public void printResult(String text) {
+        Toast.makeText(getActivity(),text,Toast.LENGTH_SHORT).show();
+    }
 }
