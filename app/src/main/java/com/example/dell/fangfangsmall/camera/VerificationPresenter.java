@@ -53,7 +53,7 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
 
             return;
         }
-        if (System.currentTimeMillis() - curTime > 5000) {
+        if (System.currentTimeMillis() - curTime > 2000) {
 
             if (curCount == 0) {
                 if(!isnewPerson){
@@ -66,7 +66,7 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
                 }
             }
             if (!isFirst) {
-                if (curCount < 5) {
+                if (curCount < 10) {
                     boolean save = BitmapUtils.saveBitmapToFile(bitmap, mAuthId, curCount + ".jpg");
                     if(save) {
                         mPaths.add(BitmapUtils.projectPath + mAuthId + File.separator + curCount + ".jpg");
@@ -75,7 +75,7 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
                     }else{
                         mVerifcationView.saveFirstFail();
                     }
-                } else if (curCount == 5) {
+                } else if (curCount == 10) {
                     if (mPaths != null && mPaths.size() > 0) {
                         mVerifcationView.addFace(mPaths);
                     }
@@ -98,7 +98,10 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
 
     @Override
     public void foundPerson(Handler handler, final Bitmap bitmap) {
-        Bitmap copyBitmap = bitmapSaturation(bitmap);
+//        BitmapUtils.saveBitmapToFile(bitmap, "111", "bitmap.jpg");
+        Bitmap copyBitmap = BitmapUtils.ImageCrop(bitmap, 2, 2, true);
+//        Bitmap copyBitmap = bitmapSaturation(bitmap);
+//        BitmapUtils.saveBitmapToFile(copyBitmap, "111", "copyBitmap.jpg");
         PersonManager.newperson(handler, mAuthId, copyBitmap, new SimpleCallback<YtNewperson>((Activity) mVerifcationView.getContext()) {
             @Override
             public void onBefore() {
@@ -117,19 +120,20 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
             @Override
             public void onFail(int code, String msg) {
                 mVerifcationView.newpersonFail(code, msg);
-                isnewPerson = true;
+                isnewPerson = false;
             }
 
             @Override
             public void onEnd() {
                 super.onEnd();
-                isnewPerson = true;
+                isnewPerson = false;
             }
 
             @Override
             public void onError(Exception e) {
                 super.onError(e);
-                isnewPerson = true;
+                mVerifcationView.newpersonFail(-1, "foundPerson错误");
+                isnewPerson = false;
             }
         });
     }
@@ -169,7 +173,12 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
             @Override
             public void onFail(int code, String msg) {
                 mVerifcationView.uploadBitmapFail(code, msg);
-                isnewPerson = false;
+            }
+
+            @Override
+            public void onError(Exception e) {
+                super.onError(e);
+                mVerifcationView.uploadBitmapFail(-1, "错误addFacefoPath");
             }
         });
     }
@@ -177,6 +186,9 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
 
     @Override
     public void onConfim(String content) {
+        if(content.contains(" ")) {
+            return;
+        }
         mAuthId = content;
         curCount = 0;
         mPaths.clear();

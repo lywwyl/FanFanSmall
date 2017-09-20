@@ -1,6 +1,5 @@
 package com.example.dell.fangfangsmall.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,9 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,10 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dell.fangfangsmall.FangFangSmallApplication;
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.activity.MainTwoActivity;
-import com.example.dell.fangfangsmall.asr.NlpControl;
 import com.example.dell.fangfangsmall.camera.CameraPresenter;
 import com.example.dell.fangfangsmall.camera.FaceVerifPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.ICameraPresenter;
@@ -38,13 +33,10 @@ import com.example.dell.fangfangsmall.view.VoiceLineView;
 import com.iflytek.aiui.AIUIConstant;
 import com.iflytek.aiui.AIUIEvent;
 import com.iflytek.aiui.AIUIListener;
-import com.iflytek.cloud.ErrorCode;
-import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SynthesizerListener;
-import com.iflytek.sunflower.FlowerCollector;
 
 import org.json.JSONObject;
 
@@ -55,7 +47,6 @@ import java.util.TimerTask;
 public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IFaceverifView, SurfaceHolder.Callback, ICameraPresenter.ICameraView, View.OnClickListener {
 
     public static final int RESULT_CODE_STARTAUDIO = 100;
-    private NlpControl nlpControl;
     private int mAIUIState = AIUIConstant.STATE_IDLE;
     //语音识别内容
     private String finalText = "";
@@ -67,9 +58,6 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
 
     private TextView mQuestion;//问题
     private TextView mAnswer;//答案
-    private Context mContext;
-    private boolean isTurn = false;
-
     private ImageView imFace;
     private boolean faceVerifiOpen;
     private SurfaceView cameraSurfaceView;
@@ -82,7 +70,6 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
             }
         }
     };
-
     private MainTwoActivity mainTwoActivity;
     private VoiceLineView voicLineView;
 
@@ -96,11 +83,9 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
-        mContext = getActivity();
         initView(view);
         initData();
         initListener();
-//        audioPermission();
         return view;
     }
 
@@ -116,11 +101,6 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
 
     private void initData() {
         // 初始化合成对象
-        mTts = SpeechSynthesizer.createSynthesizer(mContext, mTtsInitListener);
-        nlpControl = new NlpControl(FangFangSmallApplication.from(mContext));
-        nlpControl.setmAIUIListener(mAIUIListener);
-        nlpControl.init();
-        mToast = Toast.makeText(mContext, "", Toast.LENGTH_SHORT);
         SurfaceHolder holder = cameraSurfaceView.getHolder(); // 获得SurfaceHolder对象
         holder.addCallback(this); // 为SurfaceView添加状态监听
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -132,49 +112,12 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         imFace.setOnClickListener(this);
     }
 
-    /**
-     * 初始化监听。语音合成
-     */
-    private InitListener mTtsInitListener = new InitListener() {
-        @Override
-        public void onInit(int code) {
-            if (code != ErrorCode.SUCCESS) {
-                Toast.makeText(mContext, "初始化失败,错误码：" + code, Toast.LENGTH_LONG).show();
-            } else {
-                // 初始化成功，之后可以调用startSpeaking方法
-                // 注：有的开发者在onCreate方法中创建完合成对象之后马上就调用startSpeaking进行合成，
-                // 正确的做法是将onCreate中的startSpeaking调用移至这里
-            }
-        }
-    };
-
-    /**
-     * 音频权限
-     */
-    public void audioPermission() {
-        if (PackageManager.PERMISSION_GRANTED == ContextCompat.
-                checkSelfPermission(mContext, android.Manifest.permission.RECORD_AUDIO)) {
-            startAsr();
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                //提示用户开户权限音频
-                String[] perms = {"android.permission.RECORD_AUDIO"};
-                ActivityCompat.requestPermissions((Activity) mContext, perms, RESULT_CODE_STARTAUDIO);
-            }
-        }
-
-    }
 
     /**
      * 发送语音
      */
     void startAsr() {
         Log.e("GG", "startStr");
-        if (isTurn) {
-            Log.i("WWDZ", "已经跳转");
-        } else {
-            nlpControl.startVoiceNlp();
-        }
     }
 
 
@@ -184,15 +127,9 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     public void doAnswer(String answer) {
 
         // 移动数据分析，收集开始合成事件
-        FlowerCollector.onEvent(mContext, "tts_play");
 
         // 设置参数
         setSynthesizerParam();
-        if (isTurn) {
-            Log.i("WWDZ", "已经跳转");
-        } else {
-            int code = mTts.startSpeaking(answer, mTtsListener);
-        }
 
 
     }
@@ -436,7 +373,6 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
             case RESULT_CODE_STARTAUDIO:
                 boolean albumAccepted_audio = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 if (!albumAccepted_audio) {
-                    Toast.makeText(mContext, "请开启应用音频权限", Toast.LENGTH_LONG).show();
                 } else {
                     startAsr();
                 }
@@ -449,7 +385,6 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         super.onResume();
         if (mainTwoActivity.mFragmentTabHost.getCurrentTab() == 0) {
             Log.e("GG", "onResume");
-            isTurn = false;
             startAsr();
             mTts.isSpeaking();
         }
@@ -461,8 +396,6 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         super.onStop();
         if (mainTwoActivity.mFragmentTabHost.getCurrentTab() == 0) {
             Log.e("GG", "onStop");
-            isTurn = true;
-            nlpControl.stopVoiceNlp();
             mTts.pauseSpeaking();
         }
 
@@ -473,11 +406,9 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     public void onDestroy() {
         super.onDestroy();
         if (mainTwoActivity.mFragmentTabHost.getCurrentTab() == 0) {
-            isTurn = true;
             mTts.pauseSpeaking();
             // 退出时释放连接
 //            mTts.destroy();
-            nlpControl.stopVoiceNlp();
 //            mAIUIListener = null;
         }
     }
@@ -490,16 +421,18 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
 
         if (hidden) {
 //            mAIUIListener = null;
-            isTurn = true;
-            nlpControl.stopVoiceNlp();
             mTts.stopSpeaking();
 
         } else {
-            isTurn = false;
             startAsr();
             mTts.isSpeaking();
 
         }
+    }
+
+    public void setTestView(String question, String finalText) {
+        mQuestion.setText(question);
+        mAnswer.setText(finalText);
     }
 
     /**
@@ -556,7 +489,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
 
     @Override
     public Context getContext() {
-        return mContext;
+        return getActivity();
     }
 
 
@@ -598,7 +531,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                Toast toast = Toast.makeText(mContext, resStr, Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getActivity(), resStr, Toast.LENGTH_SHORT);
                 toast.show();
             }
         });
