@@ -52,6 +52,7 @@ public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Cal
     @Override
     protected void initData() {
         tvTakePhoto.setOnClickListener(this);
+        tvTakePhoto.setEnabled(false);
     }
 
     @Override
@@ -77,6 +78,7 @@ public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Cal
         switch (view.getId()) {
             case R.id.tv_take_photo:
                 mCameraPresenter.cameraTakePicture();
+                tvTakePhoto.setEnabled(false);
                 break;
         }
     }
@@ -115,6 +117,7 @@ public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Cal
 
     @Override
     public void pictureTakenSuccess() {
+        tvTakePhoto.setEnabled(true);
         showToast("拍照完成");
     }
 
@@ -132,6 +135,7 @@ public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Cal
     @Override
     public void onFinish() {
         mCameraPresenter.cameraTakePicture();
+        tvTakePhoto.setEnabled(true);
     }
 
     @Override

@@ -25,7 +25,7 @@ import java.util.List;
  * Created by zhangyuanyuan on 2017/9/18.
  */
 
-public class CameraPresenter extends ICameraPresenter implements Camera.PreviewCallback, Camera.PictureCallback {
+public class CameraPresenter extends ICameraPresenter implements Camera.PreviewCallback, Camera.PictureCallback ,Camera.ShutterCallback{
 
 
     private ICameraView mCameraView;
@@ -154,8 +154,10 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
 
     @Override
     public void cameraTakePicture() {
-        isPreviewing = false;
-        mCamera.takePicture(null, null, this);
+//        isPreviewing = false;
+        if(isPreviewing && (mCamera != null)) {
+            mCamera.takePicture(this, null, this);
+        }
     }
 
     public void setCameraId() {
@@ -236,22 +238,35 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
 
     @Override
     public void onPictureTaken(byte[] bytes, Camera camera) {
-        camera.startPreview();
-        isPreviewing = true;
+        Bitmap saveBitmap = null;
+        if (null != bytes) {
+            mCamera.stopPreview();
+            isPreviewing = false;
 
-        Bitmap previewBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        Matrix matrix = new Matrix();
-        matrix.postRotate(0.0f, previewBitmap.getWidth() / 2, previewBitmap.getHeight() / 2);
+            Bitmap previewBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Matrix matrix = new Matrix();
+            matrix.postRotate(0.0f, previewBitmap.getWidth() / 2, previewBitmap.getHeight() / 2);
 //        matrix.setRotate(-90);
-        Bitmap saveBitmap = Bitmap.createBitmap(previewBitmap, 0, 0, previewBitmap.getWidth(), previewBitmap.getHeight(), matrix, true);
+            saveBitmap = Bitmap.createBitmap(previewBitmap, 0, 0, previewBitmap.getWidth(), previewBitmap.getHeight(), matrix, true);
 
-        boolean save = BitmapUtils.saveBitmapToFile(saveBitmap, "PICTURETAKEN", System.currentTimeMillis() + ".jpg");
+        }
+        if (null != saveBitmap){
+            boolean save = BitmapUtils.saveBitmapToFile(saveBitmap, "PICTURETAKEN", System.currentTimeMillis() + ".jpg");
         if (save) {
             mCameraView.pictureTakenSuccess();
         } else {
             mCameraView.pictureTakenFail();
         }
+
+    }
+
+        camera.startPreview();
+        isPreviewing = true;
     }
 
 
+    @Override
+    public void onShutter() {
+
+    }
 }

@@ -242,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
                     mySpeechType = MySpeech.SPEECH_RECOGNIZER_VIDEO;
                 } else {
                     stopListener();
+                    mySpeechType = MySpeech.SPEECH_NULL;
                 }
             }
         });
