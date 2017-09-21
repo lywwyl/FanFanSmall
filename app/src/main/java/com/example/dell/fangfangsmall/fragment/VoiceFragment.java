@@ -12,8 +12,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.dell.fangfangsmall.R;
-import com.example.dell.fangfangsmall.activity.MainTwoActivity;
+import com.example.dell.fangfangsmall.activity.MainActivity;
 import com.example.dell.fangfangsmall.adapter.VoiceQuestionAdapter;
+import com.example.dell.fangfangsmall.view.VoiceLineView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +35,8 @@ public class VoiceFragment extends Fragment {
 
     private OnDoAnswerListener onDoAnswerListener;
 
+    private VoiceLineView voicLineView;
+
     public void setOnDoAnswerListener(OnDoAnswerListener onDoAnswerListener) {
         this.onDoAnswerListener = onDoAnswerListener;
     }
@@ -46,7 +49,7 @@ public class VoiceFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            onDoAnswerListener = (MainTwoActivity) activity;
+            onDoAnswerListener = (MainActivity) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnHeadlineSelectedListener");
         }
@@ -64,6 +67,7 @@ public class VoiceFragment extends Fragment {
     private void initView(View view) {
         (mQuestion) = (RecyclerView) view.findViewById(R.id.rv_question);
         (mAnswerv) = (TextView) view.findViewById(R.id.tv_answer);
+        (voicLineView) = (VoiceLineView) view.findViewById(R.id.voicLine);
 
     }
     private void initData() {
@@ -96,6 +100,11 @@ public class VoiceFragment extends Fragment {
         });
 
     }
+
+    public void setVoiceViewVisibilty(boolean visibilty) {
+        voicLineView.setVisibility(visibilty ? View.VISIBLE : View.GONE);
+    }
+
     public void printResult(String text) {
         String result = "";
         for (int i = 0; i < voiceQuestion.length; i++) {

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.R;
-import com.example.dell.fangfangsmall.activity.MainTwoActivity;
+import com.example.dell.fangfangsmall.activity.MainActivity;
 import com.example.dell.fangfangsmall.activity.VideoDetailActivity;
 import com.example.dell.fangfangsmall.util.JumpItent;
 
@@ -162,7 +162,7 @@ public class VideoFragment extends Fragment implements View.OnClickListener {
                     doVideoDetail(i);
                     break;
                 } else {
-                    ((MainTwoActivity) getActivity()).videoPageRestart();
+                    ((MainActivity) getActivity()).videoPageRestart();
                 }
             }
         } else {
@@ -172,7 +172,7 @@ public class VideoFragment extends Fragment implements View.OnClickListener {
                     doVideoDetail(i);
                     break;
                 } else {
-                    ((MainTwoActivity) getActivity()).videoPageRestart();
+                    ((MainActivity) getActivity()).videoPageRestart();
                 }
             }
         }

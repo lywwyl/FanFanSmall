@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.OnDoAnswerListener, MySynthesizerListener.SynListener,
+public class MainActivity extends AppCompatActivity implements VoiceFragment.OnDoAnswerListener, MySynthesizerListener.SynListener,
         MyAiuiListener.AiListener, MyRecognizerListener.RecognListener {
 
 
@@ -80,8 +80,11 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
     private static final String PACKAGE_URL_SCHEME = "package:"; // 方案
 
 
+    //语音合成
     private SpeechSynthesizer mTts;
+    //AIUI
     private AIUIAgent mAIUIAgent;
+    //语音听写
     private SpeechRecognizer mIat;
 
     private int mAIUIState = AIUIConstant.STATE_IDLE;
@@ -132,7 +135,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         } else {
             isRequireCheck = true;
         }
-        if (isFirst){
+        if (isFirst) {
             judgeState();
         }
         isFirst = true;
@@ -173,7 +176,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
     @Override
     public void onBackPressed() {
         if (!quit) { //询问退出程序
-            Toast.makeText(MainTwoActivity.this, "再按一次退出程序", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_LONG).show();
             new Timer(true).schedule(new TimerTask() { //启动定时任务
                 @Override
                 public void run() {
@@ -256,7 +259,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         aiuiTimer = new Timer();
 
         synthesizerListener = new MySynthesizerListener(this);
-        aiuiListener = new MyAiuiListener(MainTwoActivity.this, this);
+        aiuiListener = new MyAiuiListener(MainActivity.this, this);
         recognizerListener = new MyRecognizerListener(this);
         initTts();
         initAiui();
@@ -300,7 +303,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
             @Override
             public void onInit(int code) {
                 if (code != ErrorCode.SUCCESS) {
-                    Toast.makeText(MainTwoActivity.this, "初始化失败，错误码：" + code, Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "初始化失败，错误码：" + code, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -329,7 +332,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
             @Override
             public void onInit(int code) {
                 if (code != ErrorCode.SUCCESS) {
-                    Toast.makeText(MainTwoActivity.this, "初始化失败,错误码：" + code, Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "初始化失败,错误码：" + code, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -571,7 +574,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         }
     }
 
-    public void videoPageRestart(){
+    public void videoPageRestart() {
         startRecognizerListener();
     }
 
@@ -580,6 +583,30 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
     @Override
     public void onCompleted() {
         judgeState();
+        if (mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
+            if (homePageFragment != null) {
+                homePageFragment.setVoiceViewVisibilty(false);
+            }
+        } else if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE)) {
+            if (voiceFragment != null) {
+                voiceFragment.setVoiceViewVisibilty(false);
+                startRecognizerListener();
+            }
+        }
+    }
+
+    @Override
+    public void onSpeakBegin() {
+        if (mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
+            if (homePageFragment != null) {
+                homePageFragment.setVoiceViewVisibilty(true);
+            }
+        } else if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE)) {
+            if (voiceFragment != null) {
+                voiceFragment.setVoiceViewVisibilty(true);
+                stopRecognizerListener();
+            }
+        }
     }
 
     @Override
@@ -590,7 +617,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
 
     @Override
     public void onError() {
-        if(mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
+        if (mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
             initAiui();
         }
     }
@@ -599,7 +626,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
     public void onAIUIDowm() {
         showStr("onAIUIDowm");
         Log.e("onAIUIDowm", "onAIUIDowm");
-        if(mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
+        if (mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
             setAiuiCountDown();
         }
     }
@@ -609,8 +636,8 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE)) {
             refVoicePage(result);
         } else if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)) {
-            if (!TextUtils.isEmpty(result)){
-                Log.d("Video+++",result);
+            if (!TextUtils.isEmpty(result)) {
+                Log.d("Video+++", result);
                 refVideoPage(result);
             }
         }
@@ -619,7 +646,7 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
     @Override
     public void onErrInfo() {
         showStr("recogn错误 20006");
-        if(mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE) || mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)) {
+        if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE) || mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)) {
             stopAiuiListener();
             if (mIat == null) {
                 initIat();
@@ -634,12 +661,12 @@ public class MainTwoActivity extends AppCompatActivity implements VoiceFragment.
         showStr("recogn错误 10018");
         Log.e("onRecognDown", "onRecognDown");
 //        setRecognizerCountDown();
-        if(mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE) || mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)) {
+        if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE) || mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)) {
             startRecognizerListener();
         }
     }
 
-    public void showStr(String string){
+    public void showStr(String string) {
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
     }
 }

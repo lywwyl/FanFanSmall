@@ -53,7 +53,7 @@
         <activity android:name=".activity.TakePhotoActivity" />
         <activity android:name=".activity.VideoDetailActivity" />
         <activity android:name=".activity.VerificationActivity" />
-        <activity android:name=".activity.MainTwoActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

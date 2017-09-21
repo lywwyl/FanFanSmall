@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.R;
-import com.example.dell.fangfangsmall.activity.MainTwoActivity;
+import com.example.dell.fangfangsmall.activity.MainActivity;
 import com.example.dell.fangfangsmall.camera.CameraPresenter;
 import com.example.dell.fangfangsmall.camera.FaceVerifPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.ICameraPresenter;
@@ -27,7 +27,7 @@ import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
 import com.example.dell.fangfangsmall.view.VoiceLineView;
 
-public class HomePageFragment extends Fragment  implements IFaceVerifPresenter.IFaceverifView, SurfaceHolder.Callback,
+public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IFaceverifView, SurfaceHolder.Callback,
         ICameraPresenter.ICameraView, View.OnClickListener {
 
     private TextView mQuestion;//问题
@@ -44,7 +44,7 @@ public class HomePageFragment extends Fragment  implements IFaceVerifPresenter.I
             }
         }
     };
-    private MainTwoActivity mainTwoActivity;
+    private MainActivity mainActivity;
     private VoiceLineView voicLineView;
 
     @Override
@@ -63,7 +63,7 @@ public class HomePageFragment extends Fragment  implements IFaceVerifPresenter.I
         (mAnswer) = (TextView) view.findViewById(R.id.tv_main_answer);
         imFace = (ImageView) view.findViewById(R.id.im_face);
         cameraSurfaceView = (SurfaceView) view.findViewById(R.id.opengl_layout_surfaceview);
-        mainTwoActivity = (MainTwoActivity) getActivity();
+        mainActivity = (MainActivity) getActivity();
         (voicLineView) = (VoiceLineView) view.findViewById(R.id.voicLine);
     }
 
@@ -83,6 +83,10 @@ public class HomePageFragment extends Fragment  implements IFaceVerifPresenter.I
     public void setTestView(String question, String finalText) {
         mQuestion.setText(question);
         mAnswer.setText(finalText);
+    }
+
+    public void setVoiceViewVisibilty(boolean visibilty) {
+        voicLineView.setVisibility(visibilty ? View.VISIBLE : View.GONE);
     }
 
     /**

@@ -17,7 +17,9 @@ public class MySynthesizerListener implements SynthesizerListener {
 
     @Override
     public void onSpeakBegin() {
-
+        if (synListener != null) {
+            synListener.onSpeakBegin();
+        }
     }
 
     @Override
@@ -43,7 +45,7 @@ public class MySynthesizerListener implements SynthesizerListener {
     @Override
     public void onCompleted(SpeechError speechError) {
         if (speechError == null) {
-            if(synListener != null){
+            if (synListener != null) {
                 synListener.onCompleted();
             }
         }
@@ -56,7 +58,9 @@ public class MySynthesizerListener implements SynthesizerListener {
 
     private SynListener synListener;
 
-    public interface SynListener{
+    public interface SynListener {
         void onCompleted();
+
+        void onSpeakBegin();
     }
 }
