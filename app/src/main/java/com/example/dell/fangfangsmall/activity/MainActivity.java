@@ -108,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
 
     private boolean isFirst;
 
+    private boolean isTalking;
+
     /**
      *
      */
@@ -366,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     }
 
     private void startAiuiListener() {
-        showStr("启动AiuiListener");
+//        showStr("启动AiuiListener");
         AIUIMessage aiuiMessage1 = new AIUIMessage(AIUIConstant.CMD_START, 0, 0, null, null);
         mAIUIAgent.sendMessage(aiuiMessage1);
 
@@ -376,11 +378,15 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
         String paramss = "sample_rate=16000,data_type=audio";
         AIUIMessage writeMsg = new AIUIMessage(AIUIConstant.CMD_START_RECORD, 0, 0, paramss, null);
         mAIUIAgent.sendMessage(writeMsg);
+//        if (aiuiTimerTask != null) {
+//            stopAiuiListener();
+//        }
         //        setAiuiCountDown();
+        aiuiTimerTask = null;
     }
 
     private void stopAiuiListener() {
-        showStr("停止AiuiListener");
+//        showStr("停止AiuiListener");
         stopAiuiTask();
         String paramss = "sample_rate=16000,data_type=audio";
         AIUIMessage writeMsg = new AIUIMessage(AIUIConstant.CMD_STOP_RECORD, 0, 0, paramss, null);
@@ -393,35 +399,38 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
      * 开始语音识别
      */
     private void startRecognizerListener() {
-        showStr("启动recognizerListener");
+//        showStr("启动recognizerListener");
         mIat.startListening(recognizerListener);
+//        stopRecognizerListener();
     }
 
     private void stopRecognizerListener() {
-        showStr("停止RecognizerListener");
+//        showStr("停止RecognizerListener");
         stopRecognizerTask();
         mIat.startListening(null);
         mIat.stopListening();
     }
 
     private void setAiuiCountDown() {
-        if (aiuiTimerTask == null) {
-            aiuiTimerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showStr("aiui两秒后我执行了");
-                            startAiuiListener();
-                        }
-                    });
+        if (isTalking == false) {
+            if (aiuiTimerTask == null) {
+                aiuiTimerTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showStr("aiui两秒后我执行了");
+                                startAiuiListener();
+                            }
+                        });
 
-                }
-            };
-            aiuiTimer.schedule(aiuiTimerTask, 1000 * 2);
-        } else {
-            stopAiuiTask();
+                    }
+                };
+                aiuiTimer.schedule(aiuiTimerTask, 1000 * 2);
+            } else {
+                stopAiuiTask();
+            }
         }
     }
 
@@ -583,6 +592,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     /**************************/
     @Override
     public void onCompleted() {
+        isTalking = false;
         judgeState();
         if (mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
             if (homePageFragment != null) {
@@ -598,6 +608,8 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
 
     @Override
     public void onSpeakBegin() {
+        isTalking = true;
+        stopAiuiTask();
         if (mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
             if (homePageFragment != null) {
                 homePageFragment.setVoiceViewVisibilty(true);

@@ -7,4 +7,6 @@
     <color name="color_dialog">#0076ff</color>
     <color name="color_three">#333333</color>
     <color name="color_line">#F4F4F4</color>
+    <color name="color_login_stroke">#CDCFD4</color>
+    <color name="color_login_bg">#ECEEF3</color>
 </resources>

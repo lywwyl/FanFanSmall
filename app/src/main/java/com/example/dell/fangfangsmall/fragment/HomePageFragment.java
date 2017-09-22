@@ -1,5 +1,6 @@
 package com.example.dell.fangfangsmall.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -19,13 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.R;
-import com.example.dell.fangfangsmall.activity.MainActivity;
 import com.example.dell.fangfangsmall.camera.CameraPresenter;
 import com.example.dell.fangfangsmall.camera.FaceVerifPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.ICameraPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
 import com.example.dell.fangfangsmall.view.VoiceLineView;
+import com.yuntongxun.ecsdk.voip.video.ECOpenGlView;
 
 public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IFaceverifView, SurfaceHolder.Callback,
         ICameraPresenter.ICameraView, View.OnClickListener {
@@ -44,8 +45,11 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
             }
         }
     };
-    private MainActivity mainActivity;
     private VoiceLineView voicLineView;
+
+    //视频View
+    private ECOpenGlView mRemoteVideoView, mLocalVideoView;
+    private TextView mTip;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,13 +62,24 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         return view;
     }
 
+
     private void initView(View view) {
         (mQuestion) = (TextView) view.findViewById(R.id.tv_main_question);
         (mAnswer) = (TextView) view.findViewById(R.id.tv_main_answer);
         imFace = (ImageView) view.findViewById(R.id.im_face);
         cameraSurfaceView = (SurfaceView) view.findViewById(R.id.opengl_layout_surfaceview);
-        mainActivity = (MainActivity) getActivity();
         (voicLineView) = (VoiceLineView) view.findViewById(R.id.voicLine);
+
+        (mRemoteVideoView) = (ECOpenGlView) view.findViewById(R.id.remote_video_view);
+        mRemoteVideoView.setGlType(ECOpenGlView.RenderType.RENDER_REMOTE);
+        mRemoteVideoView.setAspectMode(ECOpenGlView.AspectMode.CROP);
+
+        (mLocalVideoView) = (ECOpenGlView) view.findViewById(R.id.local_video_view);
+        mLocalVideoView.setGlType(ECOpenGlView.RenderType.RENDER_PREVIEW);
+        mLocalVideoView.setAspectMode(ECOpenGlView.AspectMode.CROP);
+
+        (mTip) = (TextView) view.findViewById(R.id.tv_tip);
+
     }
 
     private void initData() {
@@ -74,6 +89,8 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         mFaceVerifPresenter = new FaceVerifPresenter(this);
         mCameraPresenter = new CameraPresenter(this, holder);
+
+//        mPresenter.attachGlView(mLocalVideoView, mRemoteVideoView);
     }
 
     private void initListener() {
@@ -85,6 +102,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         mAnswer.setText(finalText);
     }
 
+    @SuppressLint("WrongConstant")
     public void setVoiceViewVisibilty(boolean visibilty) {
         voicLineView.setVisibility(visibilty ? View.VISIBLE : View.GONE);
     }
@@ -153,6 +171,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         mFaceVerifPresenter.compareFace(ytFaceIdentify);
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public void identifyFace(String personId) {
         showToast("检测到您是：" + personId);
@@ -184,12 +203,13 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                Toast toast = Toast.makeText(getActivity(), resStr, Toast.LENGTH_SHORT);
+                @SuppressLint("WrongConstant") Toast toast = Toast.makeText(getActivity(), resStr, Toast.LENGTH_SHORT);
                 toast.show();
             }
         });
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

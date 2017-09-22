@@ -34,9 +34,12 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile files('libs/Msc.jar')
-    compile 'fm.jiecao:jiecaovideoplayer:3.0_preview'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.FacePlusPlus:MegviiLicMgr-Android-SDK:0.3.0'
     //    compile project(':sdk')
     compile 'com.google.code.gson:gson:2.8.1'
+    compile project(':jcvideoplayer-lib')
+    compile files('libs/YTX_Android_Full_SDK_v5.3.2r.jar')
+    compile project(':mvp_modle')
+    compile files('libs/YTX_Android_Full_SDK_v5.4.0r.jar')
 }

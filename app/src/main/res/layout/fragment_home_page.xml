@@ -61,6 +61,43 @@
         android:layout_marginTop="30px"
         android:src="@mipmap/face_close" />
 
+    <FrameLayout
+        android:id="@+id/glView_frameLayout"
+        android:layout_width="300px"
+        android:layout_height="400px"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/im_face"
+        android:layout_marginRight="20px"
+        android:layout_marginTop="20px"
+        android:visibility="gone">
+
+
+        <com.yuntongxun.ecsdk.voip.video.ECOpenGlView
+            android:id="@+id/remote_video_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.yuntongxun.ecsdk.voip.video.ECOpenGlView
+            android:id="@+id/local_video_view"
+            android:layout_width="100dp"
+            android:layout_height="140dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="6dp"
+            android:padding="2dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="18sp" />
+
+    </FrameLayout>
+
     <SurfaceView
         android:id="@+id/opengl_layout_surfaceview"
         android:layout_width="300px"

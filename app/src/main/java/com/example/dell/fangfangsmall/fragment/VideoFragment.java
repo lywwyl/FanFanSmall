@@ -101,16 +101,16 @@ public class VideoFragment extends Fragment implements View.OnClickListener {
                 JumpItent.jump(getActivity(), VideoDetailActivity.class, bundle);
                 break;
             case R.id.iv_nextPage:
-                Toast.makeText(getActivity(), "下一页", Toast.LENGTH_LONG).show();
                 if (oneCount == 0) {
+                    Toast.makeText(getActivity(), "下一页", Toast.LENGTH_LONG).show();
                     doData(twoPageContent);
                     oneCount++;
                 }
                 Log.e("GG", oneCount + "");
                 break;
             case R.id.iv_upwardPage:
-                Toast.makeText(getActivity(), "上一页", Toast.LENGTH_LONG).show();
                 if (oneCount == 1) {
+                    Toast.makeText(getActivity(), "上一页", Toast.LENGTH_LONG).show();
                     doData(onePageContent);
                     oneCount--;
                 }

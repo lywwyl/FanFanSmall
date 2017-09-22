@@ -9,6 +9,7 @@ import com.example.dell.fangfangsmall.R;
 
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 
+
 /**
  * 视频播放详情
  *
@@ -43,7 +44,8 @@ public class VideoDetailActivity extends AppCompatActivity implements View.OnCli
 
     private void initData() {
         upfile = getIntent().getStringExtra("Url");
-        mJcVideo.setUp(upfile, "");
+        mJcVideo.setUp(upfile, JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+        mJcVideo.startVideo();
         //视频暂未播放静止页面
 //        Picasso.with(VideoDetailActivity.this)
 //                .load(Config.pic_base_url + pic)

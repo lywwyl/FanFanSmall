@@ -30,10 +30,10 @@ public class VerificationActivity extends BaseActivity implements IVerificationP
     private VerificationPresenter mVerificationPresenter;
     private CameraPresenter mCameraPresenter;
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
             }
         }
     };
@@ -122,6 +122,7 @@ public class VerificationActivity extends BaseActivity implements IVerificationP
     @Override
     public void saveFinish() {
         showToast("保存完成");
+        finish();
     }
 
     @Override
@@ -146,18 +147,18 @@ public class VerificationActivity extends BaseActivity implements IVerificationP
 
     @Override
     public void newpersonFail(int code, String msg) {
-        if(code == -1313){
+        if (code == -1313) {
             showToast("请正对摄像头");
-        }else if(code == -1302){
+        } else if (code == -1302) {
             showToast("个体已存在");
-        }else{
+        } else {
             showToast(msg);
         }
     }
 
     @Override
     public void uploadBitmapFinish(int c) {
-        showToast("成功添加了" + c+"张人脸");
+        showToast("成功添加了" + c + "张人脸");
     }
 
     @Override
@@ -184,7 +185,7 @@ public class VerificationActivity extends BaseActivity implements IVerificationP
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_add_info:
                 mVerificationPresenter.showDialog();
                 break;
