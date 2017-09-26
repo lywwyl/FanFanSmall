@@ -14,6 +14,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +27,9 @@ import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
 import com.example.dell.fangfangsmall.homevideo.HomeVideoCallActivity;
 import com.example.dell.fangfangsmall.util.JumpItent;
+import com.example.dell.fangfangsmall.util.SendToRobot;
 import com.example.dell.fangfangsmall.view.VoiceLineView;
+import com.yuntongxun.ecsdk.voip.video.ECOpenGlView;
 
 public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IFaceverifView, SurfaceHolder.Callback,
         ICameraPresenter.ICameraView, View.OnClickListener {
@@ -43,6 +46,11 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     private VoiceLineView voicLineView;
     private ImageView iv_robot;
 
+    //视频View
+    private ECOpenGlView mRemoteVideoView, mLocalVideoView;
+    private TextView mTip;
+    private Button bt_torobro;
+    private String toRobot;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,6 +59,16 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
         mContext = getActivity();
         initView(view);
+        final SendToRobot sendto = new SendToRobot();
+//toRobot=" xiaoyan";
+//        bt_torobro= (Button) view.findViewById(R.id.bt_torobro);
+//        bt_torobro.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i("WWDZ","发送了");
+//                sendto.SendRobot(toRobot,"SmartChat");
+//            }
+//        });
         initData();
         initListener();
         return view;
@@ -213,6 +231,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
                     cameraSurfaceView.setVisibility(View.VISIBLE);
                 }
                 break;
+
         }
     }
 

@@ -34,9 +34,13 @@ import com.example.dell.fangfangsmall.fragment.HomePageFragment;
 import com.example.dell.fangfangsmall.fragment.TrainFragment;
 import com.example.dell.fangfangsmall.fragment.VideoFragment;
 import com.example.dell.fangfangsmall.fragment.VoiceFragment;
+import com.example.dell.fangfangsmall.login.SingleLogin;
 import com.example.dell.fangfangsmall.util.FragmentTabHost;
 import com.example.dell.fangfangsmall.util.IatSettings;
 import com.example.dell.fangfangsmall.util.PermissionsChecker;
+import com.example.dell.fangfangsmall.util.ReceiveMessage;
+import com.example.dell.fangfangsmall.util.SerialControl;
+import com.example.dell.fangfangsmall.util.SerialHelper;
 import com.iflytek.aiui.AIUIAgent;
 import com.iflytek.aiui.AIUIConstant;
 import com.iflytek.aiui.AIUIMessage;
@@ -47,16 +51,17 @@ import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.sunflower.FlowerCollector;
 import com.yuntongxun.ecsdk.ECDevice;
-
+import com.yuntongxun.ecsdk.ECMessage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements VoiceFragment.OnDoAnswerListener, MySynthesizerListener.SynListener,
-        MyAiuiListener.AiListener, MyRecognizerListener.RecognListener {
+        MyAiuiListener.AiListener, MyRecognizerListener.RecognListener,ReceiveMessage {
 
 
     private String mySpeechType;
@@ -98,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     private MySynthesizerListener synthesizerListener;
     private MyAiuiListener aiuiListener;
     private MyRecognizerListener recognizerListener;
-
+private SingleLogin receiveMessage;
     private Timer aiuiTimer;
     private TimerTask aiuiTimerTask;
     private Timer recognizerTimer;
@@ -111,7 +116,8 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     private boolean isFirst;
 
     private boolean isTalking;
-
+    private String talker;
+private SerialControl ComA;//串口;
     /**
      *
      */
@@ -121,10 +127,18 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_two);
         initView();
+        openCom();
         initData();
         initSpeech();
         mChecker = new PermissionsChecker(this);
         isRequireCheck = true;
+    }
+
+    private void openCom() {
+        ComA = new SerialControl();
+        ComA.setPort("/dev/ttyACM0");
+        ComA.setBaudRate("9600");
+        OpenComPort(ComA);
     }
 
     @Override
@@ -174,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     protected void onDestroy() {
         super.onDestroy();
         stopListener();
+        CloseComPort(ComA);
         Log.e("GG", "onDestory");
     }
 
@@ -270,6 +285,8 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
         synthesizerListener = new MySynthesizerListener(this);
         aiuiListener = new MyAiuiListener(MainActivity.this, this);
         recognizerListener = new MyRecognizerListener(this);
+//        receiveMessage= new SingleLogin(this);
+        SingleLogin.getInstance(this, "").setReceive(this);
         initTts();
         initAiui();
         initIat();
@@ -347,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
         });
         mTts.setParameter(SpeechConstant.PARAMS, null);
         mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
-        mTts.setParameter(SpeechConstant.VOICE_NAME, "xiaoyan");
+        mTts.setParameter(SpeechConstant.VOICE_NAME, talker);
         mTts.setParameter(SpeechConstant.SPEED, "50");
         mTts.setParameter(SpeechConstant.PITCH, "50");
         mTts.setParameter(SpeechConstant.VOLUME, "50");
@@ -363,6 +380,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
      * @param answer
      */
     public void doAnswer(String answer) {
+        Log.i("WWDZ","answer : "+answer+"synthesizerListener: "+synthesizerListener);
         FlowerCollector.onEvent(this, "tts_play");
         mTts.startSpeaking(answer, synthesizerListener);
 
@@ -614,6 +632,8 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
 
     @Override
     public void onSpeakBegin() {
+
+       // sendPortData(ComA, "A50C80F1AA");
         isTalking = true;
         stopAiuiTask();
         if (mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
@@ -687,5 +707,64 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
 
     public void showStr(String string) {
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void OnReceivedMessage(ECMessage msg) {
+        Log.i("WWDZ","msg.getUserData():"+ msg.getUserData());
+        if(msg.getUserData().equals("Motion")){
+   String motion= msg.getBody().toString();
+            ReceiveMotion(motion);
+        }else  if (msg.getUserData().equals("SmartChat")){
+            talker="aismengchun";
+            initTts();
+            ReceiveChat(msg);
+
+        }
+
+    }
+
+    private void ReceiveMotion(String motion) {
+        sendPortData(ComA, "A50C80"+motion+"AA");
+    }
+
+    private void ReceiveChat(ECMessage msg) {
+        doAnswer("你好");
+        msg.getBody();
+
+        Log.i("WWDZ", "main是——"+msg.getBody());
+        sendPortData(ComA, "A50C80F1AA");
+    }
+
+
+    //----------------------------------------------------串口发送
+    private void sendPortData(SerialHelper ComPort,String sOut){
+        if (ComPort!=null && ComPort.isOpen())
+        {
+
+            ComPort.sendHex(sOut);
+
+        }
+    }
+    //----------------------------------------------------关闭串口
+    private void CloseComPort(SerialHelper ComPort){
+        if (ComPort!=null){
+            ComPort.stopSend();
+            ComPort.close();
+        }
+    }
+    //----------------------------------------------------打开串口
+    private void OpenComPort(SerialHelper ComPort){
+        try
+        {
+            ComPort.open();
+        } catch (SecurityException e) {
+            Log.i("TAG","打开串口失败:没有串口读/写权限!");
+        } catch (IOException e) {
+            Log.i("TAG","打开串口失败:未知错误!");
+        } catch (InvalidParameterException e) {
+            Log.i("TAG","打开串口失败:参数错误!");
+        }
     }
 }
