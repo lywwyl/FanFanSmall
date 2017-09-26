@@ -12,7 +12,7 @@ import com.ocean.mvp.library.view.BaseFragment;
  * Created by zhangyuanyuan on 2017/7/10.
  */
 
-public abstract class ControlBaseFragment<T extends ControlBasePresenter> extends BaseFragment {
+public abstract class ControlBaseFragment<T extends ControlBaseFragmentPresenter> extends BaseFragment {
 
     protected T mPresenter;
 
@@ -47,7 +47,7 @@ public abstract class ControlBaseFragment<T extends ControlBasePresenter> extend
 
     @Override
     protected void onViewCreateBefore() {
-        mPresenter.onViewCreateBefore();
+//        mPresenter.onViewCreateBefore();
     }
 
 

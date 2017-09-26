@@ -14,7 +14,7 @@ import com.ocean.mvp.library.view.BaseActivity;
  * Created by zhangyuanyuan on 2017/7/10.
  */
 
-public abstract class ControlBaseActivity<T extends ControlBasePresenter> extends BaseActivity {
+public abstract class ControlBaseActivity<T extends ControlBaseActivityPresenter> extends BaseActivity {
 
     protected T mPresenter;
 

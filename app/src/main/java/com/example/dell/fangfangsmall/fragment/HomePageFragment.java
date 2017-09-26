@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -25,12 +24,14 @@ import com.example.dell.fangfangsmall.camera.FaceVerifPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.ICameraPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
+import com.example.dell.fangfangsmall.homevideo.HomeVideoCallActivity;
+import com.example.dell.fangfangsmall.util.JumpItent;
 import com.example.dell.fangfangsmall.view.VoiceLineView;
-import com.yuntongxun.ecsdk.voip.video.ECOpenGlView;
 
 public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IFaceverifView, SurfaceHolder.Callback,
         ICameraPresenter.ICameraView, View.OnClickListener {
 
+    private Context mContext;
     private TextView mQuestion;//问题
     private TextView mAnswer;//答案
     private ImageView imFace;
@@ -38,47 +39,37 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     private SurfaceView cameraSurfaceView;
     private FaceVerifPresenter mFaceVerifPresenter;
     private CameraPresenter mCameraPresenter;
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-            }
-        }
-    };
+    private Handler mHandler;
     private VoiceLineView voicLineView;
+    private ImageView iv_robot;
 
-    //视频View
-    private ECOpenGlView mRemoteVideoView, mLocalVideoView;
-    private TextView mTip;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
+        mContext = getActivity();
         initView(view);
         initData();
         initListener();
         return view;
     }
 
-
     private void initView(View view) {
+
         (mQuestion) = (TextView) view.findViewById(R.id.tv_main_question);
         (mAnswer) = (TextView) view.findViewById(R.id.tv_main_answer);
         imFace = (ImageView) view.findViewById(R.id.im_face);
         cameraSurfaceView = (SurfaceView) view.findViewById(R.id.opengl_layout_surfaceview);
         (voicLineView) = (VoiceLineView) view.findViewById(R.id.voicLine);
-
-        (mRemoteVideoView) = (ECOpenGlView) view.findViewById(R.id.remote_video_view);
-        mRemoteVideoView.setGlType(ECOpenGlView.RenderType.RENDER_REMOTE);
-        mRemoteVideoView.setAspectMode(ECOpenGlView.AspectMode.CROP);
-
-        (mLocalVideoView) = (ECOpenGlView) view.findViewById(R.id.local_video_view);
-        mLocalVideoView.setGlType(ECOpenGlView.RenderType.RENDER_PREVIEW);
-        mLocalVideoView.setAspectMode(ECOpenGlView.AspectMode.CROP);
-
-        (mTip) = (TextView) view.findViewById(R.id.tv_tip);
+        (iv_robot) = (ImageView) view.findViewById(R.id.iv_robot);
+        iv_robot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JumpItent.jump(getActivity(), HomeVideoCallActivity.class);
+            }
+        });
 
     }
 
@@ -90,7 +81,6 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         mFaceVerifPresenter = new FaceVerifPresenter(this);
         mCameraPresenter = new CameraPresenter(this, holder);
 
-//        mPresenter.attachGlView(mLocalVideoView, mRemoteVideoView);
     }
 
     private void initListener() {
@@ -125,7 +115,6 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         mCameraPresenter.closeCamera();
     }
-
 
     @Override
     public void onPause() {
@@ -226,4 +215,6 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
                 break;
         }
     }
+
+
 }

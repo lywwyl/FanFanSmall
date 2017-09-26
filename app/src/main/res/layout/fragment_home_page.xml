@@ -52,6 +52,16 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tv_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text=""
+        android:textColor="#fff"
+        android:textSize="18sp" />
+
     <ImageView
         android:id="@+id/im_face"
         android:layout_width="60px"
@@ -69,13 +79,14 @@
         android:layout_below="@+id/im_face"
         android:layout_marginRight="20px"
         android:layout_marginTop="20px"
-        android:visibility="gone">
+        android:visibility="visible">
 
 
         <com.yuntongxun.ecsdk.voip.video.ECOpenGlView
             android:id="@+id/remote_video_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
         <com.yuntongxun.ecsdk.voip.video.ECOpenGlView
             android:id="@+id/local_video_view"
@@ -86,15 +97,6 @@
             android:layout_marginLeft="6dp"
             android:padding="2dp"
             android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/tv_tip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:textColor="#fff"
-            android:textSize="18sp" />
 
     </FrameLayout>
 
@@ -133,6 +135,7 @@
         android:src="@mipmap/ic_mian_bottom_line" />
 
     <ImageView
+        android:id="@+id/iv_robot"
         android:layout_width="129px"
         android:layout_height="189px"
         android:layout_alignParentBottom="true"

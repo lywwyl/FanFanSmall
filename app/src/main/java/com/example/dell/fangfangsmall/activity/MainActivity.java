@@ -2,6 +2,7 @@ package com.example.dell.fangfangsmall.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -45,6 +46,7 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.sunflower.FlowerCollector;
+import com.yuntongxun.ecsdk.ECDevice;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -198,6 +200,10 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     /****************************************/
     private void initView() {
         (mFragmentTabHost) = (FragmentTabHost) findViewById(android.R.id.tabhost);
+        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        ECDevice.setPendingIntent(pendingIntent);
     }
 
     private void initData() {

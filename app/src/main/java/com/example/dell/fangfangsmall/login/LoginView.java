@@ -6,13 +6,14 @@ import android.widget.TextView;
 
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.base.ControlBaseActivity;
+import com.yuntongxun.ecsdk.ECDevice;
 
 
 /**
  * Created by dell on 2017/8/1.
  */
 
-public class LoginView extends ControlBaseActivity<LoginPresenter> implements ILoginView, View.OnClickListener {
+public class LoginView extends ControlBaseActivity<LoginActivityPresenter> implements ILoginView, View.OnClickListener {
 
     @Override
     public Context getContext() {
@@ -20,8 +21,8 @@ public class LoginView extends ControlBaseActivity<LoginPresenter> implements IL
     }
 
     @Override
-    public LoginPresenter createPresenter() {
-        return new LoginPresenter(this);
+    public LoginActivityPresenter createPresenter() {
+        return new LoginActivityPresenter(this);
     }
 
     @Override
@@ -66,6 +67,9 @@ public class LoginView extends ControlBaseActivity<LoginPresenter> implements IL
         mLogin.setText(text);
     }
 
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ECDevice.unInitial();
+    }
 }

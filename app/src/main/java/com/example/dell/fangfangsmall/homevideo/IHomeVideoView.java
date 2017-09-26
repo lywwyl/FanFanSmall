@@ -10,4 +10,6 @@ public interface IHomeVideoView extends UiView {
 
     void setTopText(String text);
 
+    void setRemoteVisiable(boolean visiable);
+
 }
