@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'org.greenrobot.greendao'
 android {
     compileSdkVersion 25
     buildToolsVersion "26.0.1"
@@ -24,6 +24,12 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
+    greendao {
+        schemaVersion 1//<--数据库的版本，用于升级时候进行更改
+//        daoPackage 'com.fsp.greendao.gen'//这个是生成代码保存的包名
+//        targetGenDir 'src/main/java'//保存到java代码路径
+    }
+
 }
 
 dependencies {
@@ -42,4 +48,5 @@ dependencies {
     compile project(':jcvideoplayer-lib')
     compile project(':mvp_modle')
     compile files('libs/YTX_Android_Full_SDK_v5.3.2r.jar')
+    compile 'org.greenrobot:greendao:3.2.2'
 }

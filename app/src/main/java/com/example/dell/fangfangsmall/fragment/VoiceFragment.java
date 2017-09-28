@@ -1,5 +1,6 @@
 package com.example.dell.fangfangsmall.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,10 +15,11 @@ import android.widget.TextView;
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.activity.MainActivity;
 import com.example.dell.fangfangsmall.adapter.VoiceQuestionAdapter;
+import com.example.dell.fangfangsmall.dao.UserDao;
+import com.example.dell.fangfangsmall.dao.UserInfo;
 import com.example.dell.fangfangsmall.view.VoiceLineView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 //
@@ -28,10 +30,11 @@ public class VoiceFragment extends Fragment {
     //
     private VoiceQuestionAdapter questionAdapter;
     //问题
-    private String[] voiceQuestion = null;
-    private List<String> voiceQuestionList = new ArrayList<>();
+//    private String[] voiceQuestion = null;
+
+    private List<UserInfo> userInfoArrayList = new ArrayList<>();
     //答案
-    private String[] voiceAnswer = null;
+//    private String[] voiceAnswer = null;
 
     private OnDoAnswerListener onDoAnswerListener;
 
@@ -64,12 +67,14 @@ public class VoiceFragment extends Fragment {
         initListener();
         return view;
     }
+
     private void initView(View view) {
         (mQuestion) = (RecyclerView) view.findViewById(R.id.rv_question);
         (mAnswerv) = (TextView) view.findViewById(R.id.tv_answer);
         (voicLineView) = (VoiceLineView) view.findViewById(R.id.voicLine);
 
     }
+
     private void initData() {
         LinearLayoutManager linearLayoutManager_list_question = new LinearLayoutManager(getActivity());
         linearLayoutManager_list_question.setOrientation(LinearLayoutManager.VERTICAL);
@@ -78,46 +83,58 @@ public class VoiceFragment extends Fragment {
         questionAdapter = new VoiceQuestionAdapter(getActivity());
         mQuestion.setAdapter(questionAdapter);
 
-        voiceQuestion = getActivity().getResources().getStringArray(R.array.voice_question_array);
-        voiceQuestionList = Arrays.asList(voiceQuestion);
 
-        voiceAnswer = getActivity().getResources().getStringArray(R.array.voice_answer_array);
+        queryListData();
+//        voiceQuestion = getActivity().getResources().getStringArray(R.array.voice_question_array);
+//        voiceQuestionList = Arrays.asList(voiceQuestion);
 
-        questionAdapter.refreshQuestion(voiceQuestionList);
+//        voiceAnswer = getActivity().getResources().getStringArray(R.array.voice_answer_array);
+//        questionAdapter.refreshQuestion(voiceQuestionList);
 
 
     }
+
+    /**
+     * 查询数据
+     */
+    private void queryListData() {
+        userInfoArrayList = UserDao.getInstance().queryUserByType("Data");
+        questionAdapter.refreshQuestion(userInfoArrayList);
+        //  Toast.makeText(getActivity(), "查询到" + lists.size() + "条数据", Toast.LENGTH_SHORT).show();
+    }
+
     //
     private void initListener() {
         questionAdapter.setOnItemClickListener(new VoiceQuestionAdapter.onItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                mAnswerv.setText(voiceAnswer[position].toString());
-                if(onDoAnswerListener != null){
-                    onDoAnswerListener.doAnswer(voiceAnswer[position].toString());
+                mAnswerv.setText(userInfoArrayList.get(position).getContent());
+                if (onDoAnswerListener != null) {
+                    onDoAnswerListener.doAnswer(userInfoArrayList.get(position).getContent());
                 }
             }
         });
 
     }
 
+    @SuppressLint("WrongConstant")
     public void setVoiceViewVisibilty(boolean visibilty) {
         voicLineView.setVisibility(visibilty ? View.VISIBLE : View.GONE);
     }
 
     public void printResult(String text) {
         String result = "";
-        for (int i = 0; i < voiceQuestion.length; i++) {
+        for (int i = 0; i < userInfoArrayList.size(); i++) {
 
-            if (text.equals(voiceQuestion[i].toString())) {
-                mAnswerv.setText(voiceAnswer[i].toString());
-                result = voiceAnswer[i].toString();
+            if (text.equals(userInfoArrayList.get(i).getQuestion().toString())) {
+                mAnswerv.setText(userInfoArrayList.get(i).getContent());
+                result = userInfoArrayList.get(i).getContent().toString();
                 break;
             } else {
                 result = "抱歉，我没有听懂您说什么";
             }
         }
-        if(onDoAnswerListener != null){
+        if (onDoAnswerListener != null) {
             onDoAnswerListener.doAnswer(result);
         }
 

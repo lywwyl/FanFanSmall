@@ -50,8 +50,12 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.sunflower.FlowerCollector;
+import com.ocean.mvp.library.utils.L;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECMessage;
+import com.yuntongxun.ecsdk.im.ECTextMessageBody;
+import com.yuntongxun.ecsdk.im.ECUserStateMessageBody;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidParameterException;
@@ -61,7 +65,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements VoiceFragment.OnDoAnswerListener, MySynthesizerListener.SynListener,
-        MyAiuiListener.AiListener, MyRecognizerListener.RecognListener,ReceiveMessage {
+        MyAiuiListener.AiListener, MyRecognizerListener.RecognListener, ReceiveMessage {
 
 
     private String mySpeechType;
@@ -103,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     private MySynthesizerListener synthesizerListener;
     private MyAiuiListener aiuiListener;
     private MyRecognizerListener recognizerListener;
-private SingleLogin receiveMessage;
+    private SingleLogin receiveMessage;
     private Timer aiuiTimer;
     private TimerTask aiuiTimerTask;
     private Timer recognizerTimer;
@@ -117,7 +121,8 @@ private SingleLogin receiveMessage;
 
     private boolean isTalking;
     private String talker;
-private SerialControl ComA;//串口;
+    private SerialControl ComA;//串口;
+
     /**
      *
      */
@@ -380,10 +385,9 @@ private SerialControl ComA;//串口;
      * @param answer
      */
     public void doAnswer(String answer) {
-        Log.i("WWDZ","answer : "+answer+"synthesizerListener: "+synthesizerListener);
+        Log.i("WWDZ", "answer : " + answer + "synthesizerListener: " + synthesizerListener);
         FlowerCollector.onEvent(this, "tts_play");
         mTts.startSpeaking(answer, synthesizerListener);
-
     }
 
     private void stopListener() {
@@ -633,7 +637,7 @@ private SerialControl ComA;//串口;
     @Override
     public void onSpeakBegin() {
 
-       // sendPortData(ComA, "A50C80F1AA");
+        // sendPortData(ComA, "A50C80F1AA");
         isTalking = true;
         stopAiuiTask();
         if (mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
@@ -712,59 +716,74 @@ private SerialControl ComA;//串口;
 
     @Override
     public void OnReceivedMessage(ECMessage msg) {
-        Log.i("WWDZ","msg.getUserData():"+ msg.getUserData());
-        if(msg.getUserData().equals("Motion")){
-   String motion= msg.getBody().toString();
+        /**
+         *
+         * 根据自定义的类型 去做相对应的操作
+         * */
+        if (msg.getUserData().equals("Motion")) {
+            String motion = msg.getBody().toString();
             ReceiveMotion(motion);
-        }else  if (msg.getUserData().equals("SmartChat")){
-            talker="aismengchun";
+        } else if (msg.getUserData().equals("SmartChat")) {//发音人
+            ECTextMessageBody stateBody = (ECTextMessageBody) msg.getBody();
+            String state = stateBody.getMessage();
+            talker = state;
             initTts();
+        } else if (msg.getUserData().equals("text")) {//文本
             ReceiveChat(msg);
+        } else if (msg.getUserData().equals("AutoAction")) {//自由运动开关
+            //自由运动
+            ReceiveChat(msg);
+        } else if (msg.getUserData().equals("controll")) {//前后左右控制
 
+        } else if (msg.getUserData().equals("VoiceSwitch")) {//语音开关
+            //自由运动
+            ReceiveChat(msg);
         }
 
     }
 
     private void ReceiveMotion(String motion) {
-        sendPortData(ComA, "A50C80"+motion+"AA");
+        sendPortData(ComA, "A50C80" + motion + "AA");
     }
 
     private void ReceiveChat(ECMessage msg) {
-        doAnswer("你好");
-        msg.getBody();
-
-        Log.i("WWDZ", "main是——"+msg.getBody());
-        sendPortData(ComA, "A50C80F1AA");
+        ECTextMessageBody stateBody = (ECTextMessageBody) msg.getBody();
+        String state = stateBody.getMessage();
+        L.e("GG", state + "");
+        if (!isTalking) {
+            doAnswer(state);
+        }
+//        sendPortData(ComA, "A50C80F1AA");
     }
 
 
     //----------------------------------------------------串口发送
-    private void sendPortData(SerialHelper ComPort,String sOut){
-        if (ComPort!=null && ComPort.isOpen())
-        {
+    private void sendPortData(SerialHelper ComPort, String sOut) {
+        if (ComPort != null && ComPort.isOpen()) {
 
             ComPort.sendHex(sOut);
 
         }
     }
+
     //----------------------------------------------------关闭串口
-    private void CloseComPort(SerialHelper ComPort){
-        if (ComPort!=null){
+    private void CloseComPort(SerialHelper ComPort) {
+        if (ComPort != null) {
             ComPort.stopSend();
             ComPort.close();
         }
     }
+
     //----------------------------------------------------打开串口
-    private void OpenComPort(SerialHelper ComPort){
-        try
-        {
+    private void OpenComPort(SerialHelper ComPort) {
+        try {
             ComPort.open();
         } catch (SecurityException e) {
-            Log.i("TAG","打开串口失败:没有串口读/写权限!");
+            Log.i("TAG", "打开串口失败:没有串口读/写权限!");
         } catch (IOException e) {
-            Log.i("TAG","打开串口失败:未知错误!");
+            Log.i("TAG", "打开串口失败:未知错误!");
         } catch (InvalidParameterException e) {
-            Log.i("TAG","打开串口失败:参数错误!");
+            Log.i("TAG", "打开串口失败:参数错误!");
         }
     }
 }

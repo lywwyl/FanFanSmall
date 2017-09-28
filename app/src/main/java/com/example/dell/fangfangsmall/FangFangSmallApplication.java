@@ -3,6 +3,7 @@ package com.example.dell.fangfangsmall;
 import android.app.Application;
 import android.content.Context;
 
+import com.example.dell.fangfangsmall.dao.GreenDaoManager;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 
@@ -11,12 +12,13 @@ import com.iflytek.cloud.SpeechUtility;
  */
 
 public class FangFangSmallApplication extends Application {
-
+    private static Context context;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+        context = getApplicationContext();
+        GreenDaoManager.getInstance();
         /**
          * 讯飞初始化
          * 原始app_id = 595c594c
@@ -34,6 +36,10 @@ public class FangFangSmallApplication extends Application {
      */
     public static FangFangSmallApplication from(Context context) {
         return (FangFangSmallApplication) context.getApplicationContext();
+    }
+
+    public static Context getContext() {
+        return context;
     }
 
 

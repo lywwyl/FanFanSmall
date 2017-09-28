@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="#696969">
+
+        <EditText
+            android:id="@+id/ed_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="类型:"
+            android:textColor="@color/color_dialog" />
+
+        <EditText
+            android:id="@+id/ed_question"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="问题:"
+            android:textColor="@color/color_dialog" />
+
+        <EditText
+            android:id="@+id/ed_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="答案:"
+            android:textColor="@color/color_dialog" />
+
+
+        <Button
+            android:id="@+id/bt_add_fin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="添加" />
+    </LinearLayout>
+
+
+</LinearLayout>
