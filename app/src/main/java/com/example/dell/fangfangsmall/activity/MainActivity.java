@@ -60,6 +60,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android_serialport_api.SerialPortFinder;
+
 public class MainActivity extends AppCompatActivity implements VoiceFragment.OnDoAnswerListener, MySynthesizerListener.SynListener,
         MyAiuiListener.AiListener, MyRecognizerListener.RecognListener,ReceiveMessage {
 
@@ -117,10 +119,8 @@ private SingleLogin receiveMessage;
 
     private boolean isTalking;
     private String talker;
-private SerialControl ComA;//串口;
-    /**
-     *
-     */
+    private SerialControl ComA;//串口;
+    public String devName = "ttyACM0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,10 +135,27 @@ private SerialControl ComA;//串口;
     }
 
     private void openCom() {
+        if(!isHasDevices()){
+            return;
+        }
         ComA = new SerialControl();
-        ComA.setPort("/dev/ttyACM0");
+        ComA.setPort("/dev/" + devName);
         ComA.setBaudRate("9600");
         OpenComPort(ComA);
+    }
+
+    public boolean isHasDevices(){
+        SerialPortFinder serialPortFinder = new SerialPortFinder();
+        String[] devices = serialPortFinder.getAllDevices();
+        if(devices != null && devices.length > 0){
+            for(int i = 0; i < devices.length; i++){
+                if(devName.equals(devices[i])){
+                    return true;
+                }
+            }
+        }
+        Log.i("isHasDevices", "此机器没有 Devices");
+        return false;
     }
 
     @Override
