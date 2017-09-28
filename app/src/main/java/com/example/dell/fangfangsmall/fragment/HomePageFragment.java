@@ -167,6 +167,11 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     }
 
     @Override
+    public void noFace() {
+
+    }
+
+    @Override
     public Context getContext() {
         return getActivity();
     }

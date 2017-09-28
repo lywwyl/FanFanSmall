@@ -160,6 +160,11 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
         }
     }
 
+    @Override
+    public int getCameraId() {
+        return mCameraId;
+    }
+
     public void setCameraId() {
         if (Camera.CameraInfo.CAMERA_FACING_FRONT == mCameraId) {
             mCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
@@ -228,6 +233,8 @@ public class CameraPresenter extends ICameraPresenter implements Camera.PreviewC
             if(orientionOfPhoto == orientionOfCamera) {
                 mCameraView.tranBitmap(faceBitmap, faceNumber);
             }
+        }else{
+            mCameraView.noFace();
         }
 
         copyBitmap.recycle();
