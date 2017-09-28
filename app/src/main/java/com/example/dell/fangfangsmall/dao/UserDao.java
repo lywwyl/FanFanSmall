@@ -1,7 +1,7 @@
 package com.example.dell.fangfangsmall.dao;
 
 
-import com.example.dell.fangfangsmall.gen.UserInfoDao;
+import com.example.dell.fangfangsmall.gensimple.UserInfoDao;
 
 import org.greenrobot.greendao.query.Query;
 

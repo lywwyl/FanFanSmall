@@ -3,8 +3,8 @@ package com.example.dell.fangfangsmall.helper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.dell.fangfangsmall.gen.DaoMaster;
-import com.example.dell.fangfangsmall.gen.UserInfoDao;
+import com.example.dell.fangfangsmall.gensimple.DaoMaster;
+import com.example.dell.fangfangsmall.gensimple.UserInfoDao;
 
 
 /**
