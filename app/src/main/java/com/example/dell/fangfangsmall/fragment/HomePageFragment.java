@@ -42,7 +42,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     private SurfaceView cameraSurfaceView;
     private FaceVerifPresenter mFaceVerifPresenter;
     private CameraPresenter mCameraPresenter;
-    private Handler mHandler;
+    private Handler mHandler = new Handler();
     private VoiceLineView voicLineView;
     private ImageView iv_robot;
 

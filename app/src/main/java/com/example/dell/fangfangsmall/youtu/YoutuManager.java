@@ -22,7 +22,7 @@ import java.util.List;
 public class YoutuManager {
 
     private static List<String> mGroupId;
-    public static String GROUP_ID = "Delivery-master";
+    public static String GROUP_ID = "fangfangbig-master";
 
     public static String APP_ID = "10098751";
     public static String SECRET_ID = "AKIDLVQ6XjvMnzxf6HcrGQKyLRHrBxUmZdCV";

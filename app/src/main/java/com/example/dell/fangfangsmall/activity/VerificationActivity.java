@@ -151,6 +151,8 @@ public class VerificationActivity extends BaseActivity implements IVerificationP
             showToast("请正对摄像头");
         } else if (code == -1302) {
             showToast("个体已存在");
+        }else if(code == -1310){
+            showToast("个体个数超过限制");
         } else {
             showToast(msg);
         }

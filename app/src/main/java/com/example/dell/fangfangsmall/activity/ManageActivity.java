@@ -56,6 +56,19 @@ public class ManageActivity extends BaseActivity {
 
             }
         });
+//        PersonManager.getGroup(mHandler, new SimpleCallback<YtGroupids>(ManageActivity.this) {
+//            @Override
+//            public void onSuccess(YtGroupids ytGroupids) {
+//                List<String> group_ids = ytGroupids.getGroup_ids();
+//                setAdapter(group_ids);
+//            }
+//
+//            @Override
+//            public void onFail(int code, String msg) {
+//
+//            }
+//        });
+
     }
 
     @Override
