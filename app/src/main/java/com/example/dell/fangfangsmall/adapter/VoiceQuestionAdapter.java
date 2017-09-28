@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.dell.fangfangsmall.R;
-import com.example.dell.fangfangsmall.bean.VoiceQuestion;
+import com.example.dell.fangfangsmall.dao.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
 public class VoiceQuestionAdapter extends RecyclerView.Adapter<VoiceQuestionAdapter.VoiceQuestionViewHolder> {
 
     private Context mContext;
-    private List<String> mVoiceQuestionList = new ArrayList<>();
+    private List<UserInfo> mVoiceQuestionList = new ArrayList<>();
     private LayoutInflater mInflater;
     private onItemClickListener onItemClickListener;
 
@@ -30,7 +30,7 @@ public class VoiceQuestionAdapter extends RecyclerView.Adapter<VoiceQuestionAdap
 
     }
 
-    public void refreshQuestion(List<String> voiceQuestions) {
+    public void refreshQuestion(List<UserInfo> voiceQuestions) {
         this.mVoiceQuestionList = voiceQuestions;
         notifyDataSetChanged();
     }
@@ -53,7 +53,7 @@ public class VoiceQuestionAdapter extends RecyclerView.Adapter<VoiceQuestionAdap
 
     @Override
     public void onBindViewHolder(final VoiceQuestionViewHolder holder, int position) {
-        holder.tv_question.setText(mVoiceQuestionList.get(position).toString());
+        holder.tv_question.setText(mVoiceQuestionList.get(position).getQuestion());
 
         if (onItemClickListener != null) {
             holder.tv_question.setOnClickListener(new View.OnClickListener() {

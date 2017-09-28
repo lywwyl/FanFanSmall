@@ -171,6 +171,16 @@
             android:theme="@style/Dialog_Activity"></activity>
         <activity android:name=".voice.VoiceView" />
         <activity android:name=".select.SelectView" />
+        <activity
+            android:name=".homevideo.HomeVideoCallActivity"
+            android:theme="@style/Dialog_Activity"></activity>
+        <activity android:name=".voice.VoiceView" />
+        <activity android:name=".select.SelectView" />
+        <activity android:name=".activity.DataManagementActivity" />
+        <activity
+            android:name=".activity.AddDataActivity"
+            android:theme="@style/TranslucentTheme" />
+
     </application>
 
 </manifest>
