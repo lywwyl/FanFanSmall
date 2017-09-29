@@ -26,7 +26,7 @@ import static com.example.dell.fangfangsmall.login.SingleLogin.isInitSuccess;
 
 public class LoginActivityPresenter extends ControlBaseActivityPresenter<ILoginView> {
 
-    private String username = "15554955416";
+    private String username = "17600738557";
     private String appKey = "8a216da85ea31fdd015ea399cb4b0075";
     private String token = "c3f9bc4ed6f62a1b2888f4dc4d6604ab";
     private SingleLogin mLogin;

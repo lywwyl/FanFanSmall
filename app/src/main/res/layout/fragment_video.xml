@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/ic_main_background"
-    tools:context="com.example.dell.fangfangsmall.activity.VideoActivity">
+    >
 
 
     <RelativeLayout
@@ -62,7 +62,7 @@
     <RelativeLayout
         android:id="@+id/rl_three"
         android:layout_width="380px"
-        android:layout_height="202px"
+        android:layout_height="189px"
         android:layout_below="@id/rl_one"
         android:layout_marginLeft="64px"
         android:layout_marginTop="10px"
@@ -116,7 +116,7 @@
         android:layout_height="162px"
         android:layout_below="@id/rl_three"
         android:layout_marginLeft="64px"
-        android:layout_marginTop="57px"
+        android:layout_marginTop="10px"
         android:background="@mipmap/ic_voice_five"
         android:gravity="center"
         android:paddingLeft="150px"
@@ -141,7 +141,7 @@
         android:layout_height="230px"
         android:layout_below="@id/rl_four"
         android:layout_marginLeft="390px"
-        android:layout_marginTop="34px"
+        android:layout_marginTop="10px"
         android:background="@mipmap/ic_voice_six"
         android:gravity="center"
         android:paddingLeft="330px"

@@ -2,8 +2,8 @@ package com.example.dell.fangfangsmall.dao;
 
 
 import com.example.dell.fangfangsmall.FangFangSmallApplication;
-import com.example.dell.fangfangsmall.gensimple.DaoMaster;
-import com.example.dell.fangfangsmall.gensimple.DaoSession;
+import com.example.dell.fangfangsmall.gen.DaoMaster;
+import com.example.dell.fangfangsmall.gen.DaoSession;
 import com.example.dell.fangfangsmall.helper.MySQLiteOpenHelper;
 
 import org.greenrobot.greendao.database.Database;

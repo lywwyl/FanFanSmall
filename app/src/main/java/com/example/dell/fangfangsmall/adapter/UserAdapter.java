@@ -16,42 +16,43 @@ import java.util.List;
  * Created by lyw on 2017/9/26
  */
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> implements View.OnClickListener{
+public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> implements View.OnClickListener {
     private OnItemClickListener mOnItemClickListener = null;
 
     private Context mContext;
     private List<UserInfo> mList;
 
-    public UserAdapter(Context context, List<UserInfo> list){
-        this.mContext =context;
-        this.mList =list;
+    public UserAdapter(Context context, List<UserInfo> list) {
+        this.mContext = context;
+        this.mList = list;
     }
-    public void setData(List<UserInfo> list){
-        this.mList =list;
+
+    public void setData(List<UserInfo> list) {
+        this.mList = list;
         notifyDataSetChanged();
     }
 
     @Override
     public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view =LayoutInflater.from(mContext).inflate(R.layout.item_user,parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_user, parent, false);
 
         UserViewHolder vh = new UserViewHolder(view);
-               //将创建的View注册点击事件
-              view.setOnClickListener(this);
-              return vh;
+        //将创建的View注册点击事件
+        view.setOnClickListener(this);
+        return vh;
 
     }
 
     @Override
     public void onBindViewHolder(UserViewHolder holder, int position) {
-        UserInfo item =(UserInfo) mList.get(position);
-            holder.tvId.setText(String.valueOf(position+1));
-            holder.tvType.setText(item.getSendtype());
+        UserInfo item = (UserInfo) mList.get(position);
+        holder.tvId.setText(String.valueOf(position + 1));
+        holder.tvType.setText(item.getSendtype());
         holder.tvQuestion.setText(item.getQuestion());
         holder.tvContent.setText(item.getContent());
 
 
-               //将position保存在itemView的Tag中，以便点击时进行获取
+        //将position保存在itemView的Tag中，以便点击时进行获取
         holder.itemView.setTag(position);
 
 //           if(1==item.getSex()){
@@ -63,24 +64,24 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
 
-
     @Override
     public int getItemCount() {
-        return mList==null?0:mList.size();
+        return mList == null ? 0 : mList.size();
     }
 
     @Override
     public void onClick(View v) {
         if (mOnItemClickListener != null) {
-                      //注意这里使用getTag方法获取position
-                      mOnItemClickListener.onItemClick(v,(int)v.getTag());
-                  }
+            //注意这里使用getTag方法获取position
+            mOnItemClickListener.onItemClick(v, (int) v.getTag());
+        }
 
     }
 
 
-    class UserViewHolder extends RecyclerView.ViewHolder{
-        TextView tvId,tvType,tvQuestion,tvContent;
+    class UserViewHolder extends RecyclerView.ViewHolder {
+        TextView tvId, tvType, tvQuestion, tvContent;
+
         public UserViewHolder(View itemView) {
             super(itemView);
             tvId = (TextView) itemView.findViewById(R.id.tv_id);
@@ -93,8 +94,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public static interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
+
     public void setOnItemClickListener(OnItemClickListener listener) {
-               this.mOnItemClickListener = listener;
-            }
+        this.mOnItemClickListener = listener;
+    }
 
 }

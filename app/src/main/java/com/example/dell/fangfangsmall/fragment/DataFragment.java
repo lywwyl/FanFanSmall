@@ -114,7 +114,7 @@ public class DataFragment extends Fragment {
                 builder.show();
             }
         });
-        addData();
+//        addData();
     }
 
 
@@ -165,6 +165,7 @@ public class DataFragment extends Fragment {
             userInfo.setQuestion(voiceQuestion[i]);
             userInfo.setContent(voiceAnswer[i]);
             UserDao.getInstance().insertOrReplaceData(userInfo);
+//            UserDao.getInstance().queryUserByParams(userInfo.getQuestion(),"哈哈");
         }
 
         queryListData();
@@ -177,6 +178,7 @@ public class DataFragment extends Fragment {
         lists = UserDao.getInstance().queryUserByType("Data");
         adapter.setData(lists);
         //  Toast.makeText(getActivity(), "查询到" + lists.size() + "条数据", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

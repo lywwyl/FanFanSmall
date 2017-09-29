@@ -103,7 +103,7 @@
     <SurfaceView
         android:id="@+id/opengl_layout_surfaceview"
         android:layout_width="300px"
-        android:layout_height="400px"
+        android:layout_height="300px"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/im_face"
         android:layout_marginRight="20px"

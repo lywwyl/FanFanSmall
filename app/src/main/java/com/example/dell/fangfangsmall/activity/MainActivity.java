@@ -138,9 +138,9 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     }
 
     private void openCom() {
-        if (!isHasDevices()) {
-            return;
-        }
+//        if (!isHasDevices()) {
+//            return;
+//        }
         ComA = new SerialControl();
         ComA.setPort("/dev/" + devName);
         ComA.setBaudRate("9600");
@@ -731,6 +731,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
 
     @Override
     public void OnReceivedMessage(ECMessage msg) {
+        L.e("GG", msg.getBody() + "");
         /**
          *
          * 根据自定义的类型 去做相对应的操作
