@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     private MySynthesizerListener synthesizerListener;
     private MyAiuiListener aiuiListener;
     private MyRecognizerListener recognizerListener;
-    private SingleLogin receiveMessage;
+private SingleLogin receiveMessage;
     private Timer aiuiTimer;
     private TimerTask aiuiTimerTask;
     private Timer recognizerTimer;
@@ -134,42 +134,6 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
         isRequireCheck = true;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (isRequireCheck) {
-            if (mChecker.lacksPermissions(PERMISSIONS)) {
-                requestPermissions(PERMISSIONS); // 请求权限
-            } else {
-                allPermissionsGranted(); // 全部权限都已获取
-            }
-        } else {
-            isRequireCheck = true;
-        }
-        if (isFirst) {
-            judgeState();
-        }
-        isFirst = true;
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mTts.isSpeaking()) {
-            mTts.stopSpeaking();
-        }
-        stopListener();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopListener();
-        CloseComPort(ComA);
-        Log.e("GG", "onDestory");
-    }
-
     private void openCom() {
         if(!isHasDevices()){
             return;
@@ -194,6 +158,25 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
         return false;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isRequireCheck) {
+            if (mChecker.lacksPermissions(PERMISSIONS)) {
+                requestPermissions(PERMISSIONS); // 请求权限
+            } else {
+                allPermissionsGranted(); // 全部权限都已获取
+            }
+        } else {
+            isRequireCheck = true;
+        }
+        if (isFirst) {
+            judgeState();
+        }
+        isFirst = true;
+
+    }
+
     private void judgeState() {
         if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE)) {
             stopAiuiListener();
@@ -207,6 +190,23 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
             stopAiuiListener();
             startRecognizerListener();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mTts.isSpeaking()) {
+            mTts.stopSpeaking();
+        }
+        stopListener();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopListener();
+        CloseComPort(ComA);
+        Log.e("GG", "onDestory");
     }
 
     @Override
@@ -650,7 +650,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     @Override
     public void onSpeakBegin() {
 
-        // sendPortData(ComA, "A50C80F1AA");
+       // sendPortData(ComA, "A50C80F1AA");
         isTalking = true;
         stopAiuiTask();
         if (mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
@@ -731,7 +731,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     public void OnReceivedMessage(ECMessage msg) {
         Log.i("WWDZ","msg.getUserData():"+ msg.getUserData());
         if(msg.getUserData().equals("Motion")){
-            String motion= msg.getBody().toString();
+   String motion= msg.getBody().toString();
             ReceiveMotion(motion);
         }else  if (msg.getUserData().equals("SmartChat")){
             talker="aismengchun";

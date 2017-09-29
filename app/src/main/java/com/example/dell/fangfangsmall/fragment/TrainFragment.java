@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.R;
+import com.example.dell.fangfangsmall.activity.DataManagementActivity;
 import com.example.dell.fangfangsmall.activity.ManageActivity;
 import com.example.dell.fangfangsmall.activity.TakePhotoActivity;
 import com.example.dell.fangfangsmall.activity.VerificationActivity;
@@ -66,7 +67,7 @@ public class TrainFragment extends Fragment implements View.OnClickListener {
                 videoPermission();
                 break;
             case R.id.rl_manage:
-                startActivity(new Intent(getActivity(), ManageActivity.class));
+                startActivity(new Intent(getActivity(), DataManagementActivity.class));
                 break;
         }
     }
