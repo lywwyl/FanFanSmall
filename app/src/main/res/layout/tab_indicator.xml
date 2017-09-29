@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:textColor="@drawable/selector_tab_text"
         android:gravity="center"
-        android:background="@drawable/selector_main_bottom"
+        android:background="@drawable/selector_adddata_top"
         android:layout_marginTop="2dp" />
 
 

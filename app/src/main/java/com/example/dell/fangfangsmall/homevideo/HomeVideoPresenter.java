@@ -135,7 +135,7 @@ public class HomeVideoPresenter extends ControlBaseActivityPresenter<IHomeVideoV
                     }
                     if (width > height) {
                         DisplayMetrics dm = new DisplayMetrics();
-                        ((android.support.v4.app.Fragment) mView).getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+                        ((Activity) mView).getWindowManager().getDefaultDisplay().getMetrics(dm);
                         int mSurfaceViewWidth = dm.widthPixels;
                         int mSurfaceViewHeight = dm.heightPixels;
                         int w = mSurfaceViewWidth * height / width;

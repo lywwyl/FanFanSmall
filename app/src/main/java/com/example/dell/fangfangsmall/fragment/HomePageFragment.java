@@ -29,8 +29,6 @@ import com.example.dell.fangfangsmall.camera.IPresenter.ICameraPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtDetectFace;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
-import com.example.dell.fangfangsmall.homevideo.HomeVideoCallActivity;
-import com.example.dell.fangfangsmall.util.JumpItent;
 import com.example.dell.fangfangsmall.util.SendToRobot;
 import com.example.dell.fangfangsmall.view.DrawSurfaceView;
 import com.example.dell.fangfangsmall.view.VoiceLineView;
@@ -48,7 +46,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     private DrawSurfaceView drawSufaceView;
     private FaceVerifPresenter mFaceVerifPresenter;
     private CameraPresenter mCameraPresenter;
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -98,12 +96,6 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         drawSufaceView = (DrawSurfaceView) view.findViewById(R.id.draw_sufaceView);
         (voicLineView) = (VoiceLineView) view.findViewById(R.id.voicLine);
         (iv_robot) = (ImageView) view.findViewById(R.id.iv_robot);
-        iv_robot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                JumpItent.jump(getActivity(), HomeVideoCallActivity.class);
-            }
-        });
 
     }
 
@@ -233,7 +225,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
 
     @Override
     public void distinguishFail(int code, String msg) {
-        Log.e("distinguishFail", code + " " +msg);
+        Log.e("distinguishFail", code + " " + msg);
         mHandler.sendEmptyMessageDelayed(1, 2000);
     }
 
@@ -246,7 +238,6 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     public void distinguishEnd() {
         mHandler.sendEmptyMessageDelayed(1, 1000);
     }
-
 
 
     public void showToast(final String resStr) {

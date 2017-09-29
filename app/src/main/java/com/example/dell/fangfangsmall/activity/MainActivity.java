@@ -782,9 +782,12 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     }
 
     private void ReceiveChat(ECMessage msg) {
-        doAnswer("你好");
-        msg.getBody();
-
+        ECTextMessageBody stateBody = (ECTextMessageBody) msg.getBody();
+        String state = stateBody.getMessage();
+        L.e("GG", state + "");
+        if (!isTalking) {
+            doAnswer(state);
+        }
         Log.i("WWDZ", "main是——" + msg.getBody());
         sendPortData(ComA, "A50C80F1AA");
     }

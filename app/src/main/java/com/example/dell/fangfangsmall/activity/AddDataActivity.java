@@ -15,6 +15,8 @@ import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.dao.UserDao;
 import com.example.dell.fangfangsmall.dao.UserInfo;
 
+import java.util.List;
+
 
 public class AddDataActivity extends Activity implements View.OnClickListener {
     Button add;
@@ -84,9 +86,17 @@ public class AddDataActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_add_fin:
-                addData();
-
+                isExit();
                 break;
+        }
+    }
+
+    public void isExit() {
+        List<UserInfo> userInfos = UserDao.getInstance().queryUserByQuestion(ed_question.getText().toString().trim());
+        if (!userInfos.isEmpty()) {
+            Toast.makeText(AddDataActivity.this, "数据已存在", Toast.LENGTH_LONG).show();
+        } else {
+            addData();
         }
     }
 }

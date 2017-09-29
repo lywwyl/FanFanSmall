@@ -168,6 +168,24 @@ public class UserDao {
 
         return build.list();
     }
+    /**
+     * 根据名称查询 以ID降序排列
+     *
+     * @param question
+     * @return
+     */
+    public List<UserInfo> queryUserByQuestion(String question) {
+        Query<UserInfo> build = null;
+        try {
+            build = getUserInfoDao().queryBuilder()
+                    .where(UserInfoDao.Properties.Question.eq(question))
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return build.list();
+    }
 
     /**
      * 根据参数查询
@@ -178,19 +196,6 @@ public class UserDao {
      */
     public List<UserInfo> queryUserByParams(String where, String... param) {
         return getUserInfoDao().queryRaw(where, param);
-    }
-
-    /**
-     * 根据参数查询
-     *
-     * @param where
-     * @param param
-     * @return
-     */
-    public boolean queryByParams(String where, String... param) {
-
-        getUserInfoDao().queryRaw(where, param);
-        return false;
     }
 
     public UserInfoDao getUserInfoDao() {

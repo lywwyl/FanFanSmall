@@ -6,16 +6,14 @@
     android:layout_gravity=""
 
     android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/rl_layout"
         android:layout_width="fill_parent"
         android:layout_height="40dp"
-
         android:layout_alignParentTop="true"
         android:background="#FFFAFA"
-        android:gravity="center_vertical" >
-
-
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/img_back"
@@ -24,27 +22,24 @@
             android:layout_alignParentBottom="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:background="@mipmap/login_btn_back"
-          />
+            android:background="@mipmap/login_btn_back" />
 
         <ImageView
             android:id="@+id/img_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:background="@mipmap/msg_btn_newmsg_icon"
-             />
+            android:background="@mipmap/msg_btn_newmsg_icon" />
     </RelativeLayout>
 
     <android.support.v4.app.FragmentTabHost
         android:id="@android:id/tabhost"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_white"
-        >
+        android:background="@color/color_white">
 
         <FrameLayout
             android:id="@android:id/tabcontent"
@@ -60,8 +55,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
-        android:background="@color/color_white"
-        />
+        android:background="@color/color_white" />
 
 
 </LinearLayout>
