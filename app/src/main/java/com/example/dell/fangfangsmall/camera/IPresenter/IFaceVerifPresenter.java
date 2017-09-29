@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 
+import com.example.dell.fangfangsmall.face.yt.person.face.YtDetectFace;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
 
 /**
@@ -22,6 +23,9 @@ public abstract class IFaceVerifPresenter {
 
     public abstract void compareFace(YtFaceIdentify ytFaceIdentify);
 
+    public abstract void distinguishFace(Handler handler, Bitmap bitmap);
+
+    public abstract void setDetecting(boolean isDetecting);
 
     public interface IFaceverifView {
 
@@ -32,6 +36,14 @@ public abstract class IFaceVerifPresenter {
         void identifyNoFace();
 
         void verificationFail(int code, String msg);
+
+        void distinguishFaceSuccess(YtDetectFace ytDetectFace);
+
+        void distinguishFail(int code, String msg);
+
+        void distinguishError();
+
+        void distinguishEnd();
 
         Context getContext();
     }

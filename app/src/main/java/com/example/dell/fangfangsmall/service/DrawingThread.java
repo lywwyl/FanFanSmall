@@ -10,6 +10,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.view.SurfaceHolder;
 
+import com.example.dell.fangfangsmall.activity.MainActivity;
 import com.example.dell.fangfangsmall.face.yt.person.face.Face;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtDetectFace;
 
@@ -101,20 +102,21 @@ public class DrawingThread extends HandlerThread implements Handler.Callback {
     }
 
     private void drawFace(Canvas canvas, Face face) {
-        int x = face.getX() * 4;
-        int y = face.getY() * 4;
-        float width = face.getWidth() * 4;
-        float height = face.getHeight() * 4;
+
+        int x = MainActivity.displayWidth / 2 - 240 + face.getX();//150
+        int y = face.getY();
+        float width = face.getWidth();
+        float height = face.getHeight();
 
         if(frontCamera) {
-            x = measuredWidth - x - (int) width;
+            x = MainActivity.displayWidth - x - (int) width;
         }
 //        canvas.drawRect(x, y, x + width, y + height, mPaint);
 
         String testString = "性别：" + face.getGender() + "; 年龄：" + face.getAge() + "; 微笑：" + face.getExpression();
         Rect bounds = new Rect();
         mPaint.getTextBounds(testString, 0, testString.length(), bounds);
-//        mPaint.setTextAlign(Paint.Align.CENTER);
+        mPaint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(testString, x, y, mPaint);
 //        LogUtils.e(face.getFace_id() + " " + x + " " + y);
     }

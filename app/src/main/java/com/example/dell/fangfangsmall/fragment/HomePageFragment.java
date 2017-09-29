@@ -3,12 +3,15 @@ package com.example.dell.fangfangsmall.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -24,10 +27,12 @@ import com.example.dell.fangfangsmall.camera.CameraPresenter;
 import com.example.dell.fangfangsmall.camera.FaceVerifPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.ICameraPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
+import com.example.dell.fangfangsmall.face.yt.person.face.YtDetectFace;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
 import com.example.dell.fangfangsmall.homevideo.HomeVideoCallActivity;
 import com.example.dell.fangfangsmall.util.JumpItent;
 import com.example.dell.fangfangsmall.util.SendToRobot;
+import com.example.dell.fangfangsmall.view.DrawSurfaceView;
 import com.example.dell.fangfangsmall.view.VoiceLineView;
 import com.yuntongxun.ecsdk.voip.video.ECOpenGlView;
 
@@ -40,9 +45,19 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     private ImageView imFace;
     private boolean faceVerifiOpen;
     private SurfaceView cameraSurfaceView;
+    private DrawSurfaceView drawSufaceView;
     private FaceVerifPresenter mFaceVerifPresenter;
     private CameraPresenter mCameraPresenter;
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    mFaceVerifPresenter.setDetecting(false);
+                    break;
+            }
+        }
+    };
     private VoiceLineView voicLineView;
     private ImageView iv_robot;
 
@@ -80,6 +95,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         (mAnswer) = (TextView) view.findViewById(R.id.tv_main_answer);
         imFace = (ImageView) view.findViewById(R.id.im_face);
         cameraSurfaceView = (SurfaceView) view.findViewById(R.id.opengl_layout_surfaceview);
+        drawSufaceView = (DrawSurfaceView) view.findViewById(R.id.draw_sufaceView);
         (voicLineView) = (VoiceLineView) view.findViewById(R.id.voicLine);
         (iv_robot) = (ImageView) view.findViewById(R.id.iv_robot);
         iv_robot.setOnClickListener(new View.OnClickListener() {
@@ -164,11 +180,12 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     @Override
     public void tranBitmap(Bitmap bitmap, int num) {
         mFaceVerifPresenter.faceIdentifyFace(mHandler, bitmap);
+        mFaceVerifPresenter.distinguishFace(mHandler, bitmap);
     }
 
     @Override
     public void noFace() {
-
+        drawSufaceView.clear();
     }
 
     @Override
@@ -190,6 +207,7 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         imFace.setBackgroundResource(R.mipmap.face_close);
         faceVerifiOpen = false;
         cameraSurfaceView.setVisibility(View.GONE);
+        drawSufaceView.setVisibility(View.GONE);
     }
 
     @Override
@@ -205,6 +223,30 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
             showToast(msg);
         }
     }
+
+    @Override
+    public void distinguishFaceSuccess(YtDetectFace ytDetectFace) {
+        boolean frontCamera = mCameraPresenter.getCameraId() == Camera.CameraInfo.CAMERA_FACING_FRONT ? true : false;
+        drawSufaceView.setYtDetectFace(ytDetectFace, frontCamera);
+        mHandler.sendEmptyMessageDelayed(1, 2000);
+    }
+
+    @Override
+    public void distinguishFail(int code, String msg) {
+        Log.e("distinguishFail", code + " " +msg);
+        mHandler.sendEmptyMessageDelayed(1, 2000);
+    }
+
+    @Override
+    public void distinguishError() {
+        mHandler.sendEmptyMessageDelayed(1, 1000);
+    }
+
+    @Override
+    public void distinguishEnd() {
+        mHandler.sendEmptyMessageDelayed(1, 1000);
+    }
+
 
 
     public void showToast(final String resStr) {
@@ -230,9 +272,11 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
                     imFace.setBackgroundResource(R.mipmap.face_close);
                     faceVerifiOpen = false;
                     cameraSurfaceView.setVisibility(View.GONE);
+                    drawSufaceView.setVisibility(View.GONE);
                 } else {
                     imFace.setBackgroundResource(R.mipmap.face_open);
                     faceVerifiOpen = true;
+                    cameraSurfaceView.setVisibility(View.VISIBLE);
                     cameraSurfaceView.setVisibility(View.VISIBLE);
                 }
                 break;

@@ -3,6 +3,7 @@ package com.example.dell.fangfangsmall.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -19,6 +20,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -52,6 +54,7 @@ import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.sunflower.FlowerCollector;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECMessage;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidParameterException;
@@ -122,16 +125,28 @@ private SingleLogin receiveMessage;
     private SerialControl ComA;//串口;
     public String devName = "ttyACM0";
 
+    public static int displayWidth;
+    public static int displayHeight;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_two);
         initView();
-        openCom();
+        initDisplay();
+//        openCom();
         initData();
         initSpeech();
         mChecker = new PermissionsChecker(this);
         isRequireCheck = true;
+    }
+
+    private void initDisplay() {
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+
+        displayWidth = wm.getDefaultDisplay().getWidth();
+        displayHeight = wm.getDefaultDisplay().getHeight();
+
     }
 
     private void openCom() {

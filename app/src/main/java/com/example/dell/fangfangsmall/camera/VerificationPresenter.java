@@ -41,6 +41,8 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
     private boolean isFirst;
     private boolean isDetecting;
 
+    private int cutRatio;
+
     public VerificationPresenter(IVerifcationView baseView) {
         super(baseView);
         mVerifcationView = baseView;
@@ -48,6 +50,7 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
         mPaths = new ArrayList<>();
         isFirst = true;
         showDialog();
+        cutRatio = 4;
     }
 
 
@@ -103,7 +106,8 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
     @Override
     public void foundPerson(Handler handler, final Bitmap bitmap) {
 //        BitmapUtils.saveBitmapToFile(bitmap, "111", "bitmap.jpg");
-        Bitmap copyBitmap = BitmapUtils.ImageCrop(bitmap, 2, 2, true);
+        Bitmap replicaBitmap = Bitmap.createBitmap(bitmap);
+        Bitmap copyBitmap = BitmapUtils.ImageCrop(replicaBitmap, cutRatio, cutRatio, true);
 //        Bitmap copyBitmap = bitmapSaturation(bitmap);
 //        BitmapUtils.saveBitmapToFile(copyBitmap, "111", "copyBitmap.jpg");
         final String currentTimeStr = String.valueOf(System.currentTimeMillis());
@@ -193,7 +197,8 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
 
     @Override
     public void distinguishFace(Handler handler, Bitmap bitmap) {
-        Bitmap copyBitmap = BitmapUtils.ImageCrop(bitmap, 2, 2, true);
+        Bitmap replicaBitmap = Bitmap.createBitmap(bitmap);
+        Bitmap copyBitmap = BitmapUtils.ImageCrop(replicaBitmap, cutRatio, cutRatio, true);
         PersonManager.detectFace(handler, copyBitmap, 0, new SimpleCallback<YtDetectFace>((Activity) mVerifcationView.getContext()) {
             @Override
             public void onBefore() {
