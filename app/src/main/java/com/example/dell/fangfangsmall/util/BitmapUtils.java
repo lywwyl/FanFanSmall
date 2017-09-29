@@ -239,8 +239,8 @@ public class BitmapUtils {
         if (bitmap == null) {
             return null;
         }
-        int w = bitmap.getWidth(); // 得到图片的宽，高
-        int h = bitmap.getHeight();
+        int w = bitmap.getWidth(); // 得到图片的宽，高//480
+        int h = bitmap.getHeight();//640
         int retX, retY;
         int nw, nh;
         if (w > h) {
@@ -262,12 +262,16 @@ public class BitmapUtils {
                 retY = 0;
                 retX = (w - nw) / 2;
             } else {
-                nh = w * num1 / num2;
-                nw = w;
-                retY = (h - nh) / 2;
+                nh = w * num1 / num2;//480
+                nw = w;//480
+                retY = (h - nh) / 2;//80
                 retX = 0;
             }
         }
+        //从原始位图剪切图像，这是一种高级的方式。可以用Matrix(矩阵)来实现旋转等高级方式截图
+        //int x:起始x坐标
+        // int y：起始y坐标
+
         Bitmap bmp = Bitmap.createBitmap(bitmap, retX, retY, nw, nh, null,
                 false);
         if (isRecycled && bitmap != null && !bitmap.equals(bmp)

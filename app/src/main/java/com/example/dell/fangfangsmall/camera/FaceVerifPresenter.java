@@ -14,7 +14,9 @@ import android.util.ArrayMap;
 
 import com.example.dell.fangfangsmall.camera.IPresenter.IFaceVerifPresenter;
 import com.example.dell.fangfangsmall.face.yt.person.face.IdentifyItem;
+import com.example.dell.fangfangsmall.face.yt.person.face.YtDetectFace;
 import com.example.dell.fangfangsmall.face.yt.person.face.YtFaceIdentify;
+import com.example.dell.fangfangsmall.util.BitmapUtils;
 import com.example.dell.fangfangsmall.util.PreferencesUtils;
 import com.example.dell.fangfangsmall.youtu.PersonManager;
 import com.example.dell.fangfangsmall.youtu.callback.SimpleCallback;
@@ -33,6 +35,7 @@ public class FaceVerifPresenter extends IFaceVerifPresenter {
     private long curTime;
 
     private boolean isIdentify;
+    private boolean isDetecting;
 
     public FaceVerifPresenter(IFaceverifView baseView) {
         super(baseView);
@@ -58,6 +61,7 @@ public class FaceVerifPresenter extends IFaceVerifPresenter {
                 @Override
                 public void onSuccess(YtFaceIdentify ytFaceIdentify) {
                     mFaceverifView.verificationSuccess(ytFaceIdentify);
+
                 }
                 @Override
                 public void onFail(int code, String msg) {
@@ -176,6 +180,40 @@ public class FaceVerifPresenter extends IFaceVerifPresenter {
             mFaceverifView.identifyNoFace();
             isIdentify = false;
         }
+    }
+
+    @Override
+    public void distinguishFace(Handler handler, Bitmap bitmap) {
+        Bitmap copyBitmap = BitmapUtils.ImageCrop(bitmap, 4, 4, true);
+        PersonManager.detectFace(handler, copyBitmap, 0, new SimpleCallback<YtDetectFace>((Activity) mFaceverifView.getContext()) {
+            @Override
+            public void onBefore() {
+                isDetecting = true;
+            }
+            @Override
+            public void onSuccess(YtDetectFace ytDetectFace) {
+                mFaceverifView.distinguishFaceSuccess(ytDetectFace);
+
+            }
+            @Override
+            public void onFail(int code, String msg) {
+                mFaceverifView.distinguishFail(code, msg);
+            }
+            @Override
+            public void onError(Exception e) {
+                super.onError(e);
+                mFaceverifView.distinguishError();
+            }
+            @Override
+            public void onEnd() {
+                mFaceverifView.distinguishEnd();
+            }
+        });
+    }
+
+    @Override
+    public void setDetecting(boolean isDetecting) {
+        this.isDetecting = isDetecting;
     }
 
 

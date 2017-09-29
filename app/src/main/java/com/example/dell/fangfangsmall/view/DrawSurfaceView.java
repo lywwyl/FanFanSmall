@@ -6,6 +6,9 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.example.dell.fangfangsmall.face.yt.person.face.YtDetectFace;
+import com.example.dell.fangfangsmall.service.DrawingThread;
+
 
 /**
  * Created by zhangyuanyuan on 2017/9/6.
@@ -15,7 +18,7 @@ public class DrawSurfaceView extends SurfaceView implements  SurfaceHolder.Callb
 
     private SurfaceHolder mHolder; // 用于控制SurfaceView
 
-//    private DrawingThread mDrawingThread;
+    private DrawingThread mDrawingThread;
 
     public DrawSurfaceView(Context context) {
         super(context);
@@ -45,8 +48,8 @@ public class DrawSurfaceView extends SurfaceView implements  SurfaceHolder.Callb
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-//        mDrawingThread = new DrawingThread(mHolder);
-//        mDrawingThread.start(); // 启动线程
+        mDrawingThread = new DrawingThread(mHolder, getMeasuredWidth(), getMeasuredHeight());
+        mDrawingThread.start(); // 启动线程
 
     }
 
@@ -57,20 +60,20 @@ public class DrawSurfaceView extends SurfaceView implements  SurfaceHolder.Callb
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-//        mDrawingThread.quit();
-//        mDrawingThread = null;
+        mDrawingThread.quit();
+        mDrawingThread = null;
     }
 
-//    public void setYtDetectFace(YtDetectFace ytDetectFace, boolean frontCamera) {
-//        if(mDrawingThread != null) {
-//            mDrawingThread.setDetectFace(ytDetectFace, frontCamera);
-//        }
-//    }
-//
-//    public void clear(){
-//        if(mDrawingThread != null) {
-//            mDrawingThread.clearDraw();
-//        }
-//    }
+    public void setYtDetectFace(YtDetectFace ytDetectFace, boolean frontCamera) {
+        if(mDrawingThread != null) {
+            mDrawingThread.setDetectFace(ytDetectFace, frontCamera);
+        }
+    }
+
+    public void clear(){
+        if(mDrawingThread != null) {
+            mDrawingThread.clearDraw();
+        }
+    }
 
 }

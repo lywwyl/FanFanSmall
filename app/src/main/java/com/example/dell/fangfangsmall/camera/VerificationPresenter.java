@@ -12,6 +12,7 @@ import android.os.Handler;
 import com.example.dell.fangfangsmall.camera.IPresenter.IVerificationPresenter;
 import com.example.dell.fangfangsmall.face.yt.person.YtAddperson;
 import com.example.dell.fangfangsmall.face.yt.person.YtNewperson;
+import com.example.dell.fangfangsmall.face.yt.person.face.YtDetectFace;
 import com.example.dell.fangfangsmall.listener.OnConfimListener;
 import com.example.dell.fangfangsmall.util.BitmapUtils;
 import com.example.dell.fangfangsmall.util.PreferencesUtils;
@@ -38,6 +39,9 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
     private long curTime;
     private boolean isnewPerson;
     private boolean isFirst;
+    private boolean isDetecting;
+
+    private int cutRatio;
 
     public VerificationPresenter(IVerifcationView baseView) {
         super(baseView);
@@ -46,6 +50,7 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
         mPaths = new ArrayList<>();
         isFirst = true;
         showDialog();
+        cutRatio = 4;
     }
 
 
@@ -101,7 +106,8 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
     @Override
     public void foundPerson(Handler handler, final Bitmap bitmap) {
 //        BitmapUtils.saveBitmapToFile(bitmap, "111", "bitmap.jpg");
-        Bitmap copyBitmap = BitmapUtils.ImageCrop(bitmap, 2, 2, true);
+        Bitmap replicaBitmap = Bitmap.createBitmap(bitmap);
+        Bitmap copyBitmap = BitmapUtils.ImageCrop(replicaBitmap, cutRatio, cutRatio, true);
 //        Bitmap copyBitmap = bitmapSaturation(bitmap);
 //        BitmapUtils.saveBitmapToFile(copyBitmap, "111", "copyBitmap.jpg");
         final String currentTimeStr = String.valueOf(System.currentTimeMillis());
@@ -187,6 +193,41 @@ public class VerificationPresenter extends IVerificationPresenter implements OnC
                 mVerifcationView.uploadBitmapFail(-1, "错误addFacefoPath");
             }
         });
+    }
+
+    @Override
+    public void distinguishFace(Handler handler, Bitmap bitmap) {
+        Bitmap replicaBitmap = Bitmap.createBitmap(bitmap);
+        Bitmap copyBitmap = BitmapUtils.ImageCrop(replicaBitmap, cutRatio, cutRatio, true);
+        PersonManager.detectFace(handler, copyBitmap, 0, new SimpleCallback<YtDetectFace>((Activity) mVerifcationView.getContext()) {
+            @Override
+            public void onBefore() {
+                isDetecting = true;
+            }
+            @Override
+            public void onSuccess(YtDetectFace ytDetectFace) {
+                mVerifcationView.distinguishFaceSuccess(ytDetectFace);
+
+            }
+            @Override
+            public void onFail(int code, String msg) {
+                mVerifcationView.distinguishFail(code, msg);
+            }
+            @Override
+            public void onError(Exception e) {
+                super.onError(e);
+                mVerifcationView.distinguishError();
+            }
+            @Override
+            public void onEnd() {
+                mVerifcationView.distinguishEnd();
+            }
+        });
+    }
+
+    @Override
+    public void setDetecting(boolean isDetecting) {
+        this.isDetecting = isDetecting;
     }
 
 

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 
+import com.example.dell.fangfangsmall.face.yt.person.face.YtDetectFace;
+
 import java.util.List;
 
 /**
@@ -27,6 +29,10 @@ public abstract class IVerificationPresenter {
 
     public abstract void uploadFaceBitmap(Handler handler, List<String> paths);
 
+    public abstract void distinguishFace(Handler handler, Bitmap bitmap);
+
+    public abstract void setDetecting(boolean isDetecting);
+
     public interface IVerifcationView {
 
         void saveCount(int count, String path);
@@ -46,6 +52,14 @@ public abstract class IVerificationPresenter {
         void uploadBitmapFinish(int c);
 
         void uploadBitmapFail(int code, String msg);
+
+        void distinguishFaceSuccess(YtDetectFace ytDetectFace);
+
+        void distinguishFail(int code, String msg);
+
+        void distinguishError();
+
+        void distinguishEnd();
 
         Context getContext();
     }

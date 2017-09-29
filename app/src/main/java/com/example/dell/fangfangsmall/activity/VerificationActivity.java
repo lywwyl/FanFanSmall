@@ -2,8 +2,10 @@ package com.example.dell.fangfangsmall.activity;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -15,6 +17,7 @@ import com.example.dell.fangfangsmall.camera.CameraPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.ICameraPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.IVerificationPresenter;
 import com.example.dell.fangfangsmall.camera.VerificationPresenter;
+import com.example.dell.fangfangsmall.face.yt.person.face.YtDetectFace;
 import com.example.dell.fangfangsmall.view.DrawSurfaceView;
 
 import java.util.List;
@@ -34,6 +37,9 @@ public class VerificationActivity extends BaseActivity implements IVerificationP
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
+                case 1:
+                    mVerificationPresenter.setDetecting(false);
+                    break;
             }
         }
     };
@@ -106,6 +112,12 @@ public class VerificationActivity extends BaseActivity implements IVerificationP
     @Override
     public void tranBitmap(Bitmap bitmap, int faceNumber) {
         mVerificationPresenter.saveFace(bitmap);
+        mVerificationPresenter.distinguishFace(mHandler, bitmap);
+    }
+
+    @Override
+    public void noFace() {
+        drawSufaceView.clear();
     }
 
     @Override
@@ -166,6 +178,29 @@ public class VerificationActivity extends BaseActivity implements IVerificationP
     @Override
     public void uploadBitmapFail(int code, String msg) {
         showToast(msg);
+    }
+
+    @Override
+    public void distinguishFaceSuccess(YtDetectFace ytDetectFace) {
+        boolean frontCamera = mCameraPresenter.getCameraId() == Camera.CameraInfo.CAMERA_FACING_FRONT ? true : false;
+        drawSufaceView.setYtDetectFace(ytDetectFace, frontCamera);
+        mHandler.sendEmptyMessageDelayed(1, 2000);
+    }
+
+    @Override
+    public void distinguishFail(int code, String msg) {
+        Log.e("distinguishFail", code + " " +msg);
+        mHandler.sendEmptyMessageDelayed(1, 2000);
+    }
+
+    @Override
+    public void distinguishError() {
+        mHandler.sendEmptyMessageDelayed(1, 1000);
+    }
+
+    @Override
+    public void distinguishEnd() {
+        mHandler.sendEmptyMessageDelayed(1, 1000);
     }
 
 

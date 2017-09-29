@@ -31,6 +31,8 @@ public abstract class ICameraPresenter {
 
     public abstract void cameraTakePicture();
 
+    public abstract int getCameraId();
+
     public interface ICameraView{
 
         void previewFinish();
@@ -42,6 +44,8 @@ public abstract class ICameraPresenter {
         void autoFocusSuccess();
 
         void tranBitmap(Bitmap bitmap, int num);
+
+        void noFace();
 
         Context getContext();
     }

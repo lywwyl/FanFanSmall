@@ -1,8 +1,10 @@
 package com.example.dell.fangfangsmall.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -19,6 +21,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -125,22 +128,37 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     private SerialControl ComA;//串口;
     public String devName = "ttyACM0";
 
+    public static int displayWidth;
+    public static int displayHeight;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_two);
         initView();
-        openCom();
+        initDisplay();
+//        openCom();
         initData();
         initSpeech();
         mChecker = new PermissionsChecker(this);
         isRequireCheck = true;
     }
 
+    private void initDisplay() {
+        @SuppressLint("WrongConstant") WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+
+        displayWidth = wm.getDefaultDisplay().getWidth();
+        displayHeight = wm.getDefaultDisplay().getHeight();
+
+    }
+
     private void openCom() {
 //        if (!isHasDevices()) {
 //            return;
 //        }
+        if (!isHasDevices()) {
+            return;
+        }
         ComA = new SerialControl();
         ComA.setPort("/dev/" + devName);
         ComA.setBaudRate("9600");
@@ -212,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
         Log.e("GG", "onDestory");
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public void onBackPressed() {
         if (!quit) { //询问退出程序
@@ -237,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
         (mFragmentTabHost) = (FragmentTabHost) findViewById(android.R.id.tabhost);
         Intent intent = new Intent(MainActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        @SuppressLint("WrongConstant") PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         ECDevice.setPendingIntent(pendingIntent);
     }
 
@@ -403,6 +422,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
         Log.i("WWDZ", "answer : " + answer + "synthesizerListener: " + synthesizerListener);
         FlowerCollector.onEvent(this, "tts_play");
         mTts.startSpeaking(answer, synthesizerListener);
+
     }
 
     private void stopListener() {
@@ -755,7 +775,6 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
             //自由运动
             ReceiveChat(msg);
         }
-
     }
 
     private void ReceiveMotion(String motion) {
@@ -763,13 +782,11 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
     }
 
     private void ReceiveChat(ECMessage msg) {
-        ECTextMessageBody stateBody = (ECTextMessageBody) msg.getBody();
-        String state = stateBody.getMessage();
-        L.e("GG", state + "");
-        if (!isTalking) {
-            doAnswer(state);
-        }
-//        sendPortData(ComA, "A50C80F1AA");
+        doAnswer("你好");
+        msg.getBody();
+
+        Log.i("WWDZ", "main是——" + msg.getBody());
+        sendPortData(ComA, "A50C80F1AA");
     }
 
 

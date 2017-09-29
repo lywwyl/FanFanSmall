@@ -111,6 +111,11 @@ public class TakePhotoActivity extends BaseActivity implements SurfaceHolder.Cal
     }
 
     @Override
+    public void noFace() {
+
+    }
+
+    @Override
     public void previewFinish() {
         mTakePresenter.startCountDownTimer();
     }
