@@ -90,9 +90,10 @@
     <string name="pref_key_iat_show">iat_show</string>
     <string name="text_begin">请开始说话…</string>
 
-    <string name="data">数据</string>
+    <string name="data">本地语音</string>
     <string name="action">动作</string>
 
     <string name="sysset">系统设置</string>
     <string name="other">其它</string>
+    <string name="faceuser">人脸识别</string>
 </resources>

@@ -1,8 +1,10 @@
 package com.example.dell.fangfangsmall.adapter;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.dell.fangfangsmall.R;
+import com.example.dell.fangfangsmall.util.PreferencesUtils;
 
 import java.util.List;
 
@@ -17,6 +19,11 @@ public class UserInfoAdapter extends SimpleAdapter<String> {
 
     @Override
     protected void convert(BaseViewHolder viewHoder, String item, int pos) {
-        viewHoder.getTextView(R.id.tv_info_id).setText(item);
+
+        if(PreferencesUtils.getString(context, item) != null){
+            Log.i("PreferencesUtils!!!",""+PreferencesUtils.getString(context, item));
+            viewHoder.getTextView(R.id.tv_info_id).setText(PreferencesUtils.getString(context, item));
+        }
+
     }
 }

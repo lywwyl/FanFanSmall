@@ -38,15 +38,17 @@ public class AddDataActivity extends Activity implements View.OnClickListener {
         add.setOnClickListener(this);
 
         ed_type = (EditText) findViewById(R.id.ed_type);
+        ed_type.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        ed_type.setGravity(Gravity.TOP);
 
         ed_question = (EditText) findViewById(R.id.ed_question);
         ed_question.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-//文本显示的位置在EditText的最上方
+
         ed_question.setGravity(Gravity.TOP);
 
         ed_content = (EditText) findViewById(R.id.ed_content);
         ed_content.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-//文本显示的位置在EditText的最上方
+
         ed_content.setGravity(Gravity.TOP);
 
     }
@@ -94,7 +96,7 @@ public class AddDataActivity extends Activity implements View.OnClickListener {
     public void isExit() {
         List<UserInfo> userInfos = UserDao.getInstance().queryUserByQuestion(ed_question.getText().toString().trim());
         if (!userInfos.isEmpty()) {
-            Toast.makeText(AddDataActivity.this, "数据已存在", Toast.LENGTH_LONG).show();
+            Toast.makeText(AddDataActivity.this, "请不要添加相同的问题！", Toast.LENGTH_LONG).show();
         } else {
             addData();
         }

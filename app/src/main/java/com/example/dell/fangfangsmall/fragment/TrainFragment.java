@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.activity.DataManagementActivity;
-import com.example.dell.fangfangsmall.activity.ManageActivity;
 import com.example.dell.fangfangsmall.activity.TakePhotoActivity;
 import com.example.dell.fangfangsmall.activity.VerificationActivity;
 import com.example.dell.fangfangsmall.util.JumpItent;
@@ -37,8 +36,9 @@ public class TrainFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_train, container, false);
-        mContext = getActivity();
+
         if (view != null) {
+            mContext = getActivity();
             initView(view);
             initListener();
         }

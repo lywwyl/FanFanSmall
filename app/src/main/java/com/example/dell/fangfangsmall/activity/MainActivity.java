@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
         setContentView(R.layout.activity_main_two);
         initView();
         initDisplay();
-//        openCom();
+       openCom();
         initData();
         initSpeech();
         mChecker = new PermissionsChecker(this);
@@ -156,9 +156,9 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
 //        if (!isHasDevices()) {
 //            return;
 //        }
-        if (!isHasDevices()) {
-            return;
-        }
+//        if (!isHasDevices()) {
+//            return;
+//        }
         ComA = new SerialControl();
         ComA.setPort("/dev/" + devName);
         ComA.setBaudRate("9600");
@@ -195,7 +195,13 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
             judgeState();
         }
         isFirst = true;
+        Log.e("wwdz", "onResume");
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("wwdz", "onStop");
     }
 
     private void judgeState() {
@@ -220,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
             mTts.stopSpeaking();
         }
         stopListener();
+        Log.e("wwdz", "onPause");
     }
 
     @Override
@@ -227,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
         super.onDestroy();
         stopListener();
         CloseComPort(ComA);
-        Log.e("GG", "onDestory");
+        Log.e("wwdz", "onDestory");
     }
 
     @SuppressLint("WrongConstant")
@@ -483,7 +490,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showStr("aiui两秒后我执行了");
+                              //  showStr("aiui两秒后我执行了");
                                 startAiuiListener();
                             }
                         });
@@ -514,7 +521,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
                         @Override
                         public void run() {
                             startRecognizerListener();
-                            showStr("Recognizer两秒后我执行了");
+                       //     showStr("Recognizer两秒后我执行了");
                         }
                     });
 
@@ -702,7 +709,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
 
     @Override
     public void onAIUIDowm() {
-        showStr("onAIUIDowm");
+  //      showStr("onAIUIDowm");
         Log.e("onAIUIDowm", "onAIUIDowm");
         if (mySpeechType.equals(MySpeech.SPEECH_AIUI)) {
             setAiuiCountDown();
@@ -723,7 +730,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
 
     @Override
     public void onErrInfo() {
-        showStr("recogn错误 20006");
+   //     showStr("recogn错误 20006");
         if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE) || mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)) {
             stopAiuiListener();
             if (mIat == null) {
@@ -736,7 +743,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
 
     @Override
     public void onRecognDown() {
-        showStr("recogn错误 10018");
+    //    showStr("recogn错误 10018");
         Log.e("onRecognDown", "onRecognDown");
 //        setRecognizerCountDown();
         if (mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VOICE) || mySpeechType.equals(MySpeech.SPEECH_RECOGNIZER_VIDEO)) {

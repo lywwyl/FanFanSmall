@@ -11,7 +11,7 @@ public class IdentifyItem implements Serializable {
 
     private String person_id;
     private String face_id;
-    private String confidence;
+    private float confidence;
     private String tag;
 
     public String getPerson_id() {
@@ -30,11 +30,11 @@ public class IdentifyItem implements Serializable {
         this.face_id = face_id;
     }
 
-    public String getConfidence() {
+    public float getConfidence() {
         return confidence;
     }
 
-    public void setConfidence(String confidence) {
+    public void setConfidence(float confidence) {
         this.confidence = confidence;
     }
 

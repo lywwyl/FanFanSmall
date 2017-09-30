@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.R;
+import com.example.dell.fangfangsmall.activity.MainActivity;
 import com.example.dell.fangfangsmall.camera.CameraPresenter;
 import com.example.dell.fangfangsmall.camera.FaceVerifPresenter;
 import com.example.dell.fangfangsmall.camera.IPresenter.ICameraPresenter;
@@ -64,13 +65,14 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     private TextView mTip;
     private Button bt_torobro;
     private String toRobot;
-
+private MainActivity mainActivity;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
         mContext = getActivity();
+        mainActivity= (MainActivity) getActivity();
         initView(view);
         final SendToRobot sendto = new SendToRobot();
 //toRobot=" xiaoyan";
@@ -185,6 +187,18 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
         return getActivity();
     }
 
+    @Override
+    public void confidenceLow() {
+        //相似度低
+        showToast("相似度低");
+    }
+
+    @Override
+    public void preNoPerson(String person) {
+        //没有存储的person
+        showToast("没有存储的person");
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -195,7 +209,9 @@ public class HomePageFragment extends Fragment implements IFaceVerifPresenter.IF
     @SuppressLint("WrongConstant")
     @Override
     public void identifyFace(String personId) {
-        showToast("检测到您是：" + personId);
+        String greeting="您好"+personId;
+        mainActivity.doAnswer(greeting);
+      //  showToast("检测到您是：" + personId);
         imFace.setBackgroundResource(R.mipmap.face_close);
         faceVerifiOpen = false;
         cameraSurfaceView.setVisibility(View.GONE);

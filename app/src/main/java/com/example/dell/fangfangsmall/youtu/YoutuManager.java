@@ -22,12 +22,11 @@ import java.util.List;
 public class YoutuManager {
 
     private static List<String> mGroupId;
-    public static String GROUP_ID = "fangfangbig-master";
+    public static String GROUP_ID = "fangfangsmall";
 
-    public static String APP_ID = "10098751";
-    public static String SECRET_ID = "AKIDLVQ6XjvMnzxf6HcrGQKyLRHrBxUmZdCV";
-    public static String SECRET_KEY = "C9qIVTCfuue9PQCiz2rRlriKhphKirkN";
-
+    public static String APP_ID = "10101110";
+    public static String SECRET_ID = "AKIDBHG3mMzz65vZBfQ97voY7UfgXFlAolrl";
+    public static String SECRET_KEY = "1rWzc6OWTFqNn4B6sU7kEYjiVyKArPq5";
 
 
     public static int EXPIRED_SECONDS = 2592000;

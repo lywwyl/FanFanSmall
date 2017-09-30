@@ -10,12 +10,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dell.fangfangsmall.R;
 import com.example.dell.fangfangsmall.bean.Tab;
 import com.example.dell.fangfangsmall.fragment.ActionFragment;
 import com.example.dell.fangfangsmall.fragment.DataFragment;
-import com.example.dell.fangfangsmall.fragment.OtherFragment;
+import com.example.dell.fangfangsmall.fragment.FaceDataFragment;
 import com.example.dell.fangfangsmall.fragment.SysSetFragment;
 
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class DataManagementActivity extends AppCompatActivity implements View.On
         Tab tab_hot = new Tab(ActionFragment.class, R.string.action, 0);
 
         Tab tab_cart = new Tab(SysSetFragment.class, R.string.sysset, 0);
-        Tab tab_mine = new Tab(OtherFragment.class, R.string.other, 0);
+        Tab tab_mine = new Tab(FaceDataFragment.class, R.string.faceuser, 0);
 
         mTabs.add(tab_home);
         mTabs.add(tab_hot);
@@ -101,10 +102,15 @@ public class DataManagementActivity extends AppCompatActivity implements View.On
         switch (v.getId()) {
             case R.id.img_add:
                 // addData();
-                Intent toAdd = new Intent(DataManagementActivity.this, AddDataActivity.class);
-                toAdd.putExtra("type", String.valueOf(mTabhost.getCurrentTab()));
+                if(mTabhost.getCurrentTab()==3){
+                    Toast.makeText(DataManagementActivity.this,"请在人脸提取中添加人脸信息！",Toast.LENGTH_SHORT).show();
+                }else{
+                    Intent toAdd = new Intent(DataManagementActivity.this, AddDataActivity.class);
+                    toAdd.putExtra("type", String.valueOf(mTabhost.getCurrentTab()));
 
-                startActivity(toAdd);
+                    startActivity(toAdd);
+                }
+
                 break;
             case R.id.img_back:
                 finish();

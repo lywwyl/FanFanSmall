@@ -26,13 +26,13 @@
 
         <ImageView
             android:id="@+id/img_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:background="@mipmap/msg_btn_newmsg_icon" />
+            android:background="@mipmap/add_user" />
     </RelativeLayout>
 
     <android.support.v4.app.FragmentTabHost

@@ -46,6 +46,10 @@ public abstract class IFaceVerifPresenter {
         void distinguishEnd();
 
         Context getContext();
+
+        void confidenceLow();
+
+        void preNoPerson(String person);
     }
 
 

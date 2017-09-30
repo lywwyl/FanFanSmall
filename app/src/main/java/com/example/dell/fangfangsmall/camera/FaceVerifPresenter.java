@@ -170,12 +170,18 @@ public class FaceVerifPresenter extends IFaceVerifPresenter {
             int size = tempList.size();
             List<IdentifyItem> list = resultMap.get(tempList.get(size - 1));
             IdentifyItem identifyItem = list.get(0);
-            String person =  identifyItem.getPerson_id();
-            String name = PreferencesUtils.getString(mFaceverifView.getContext(), person);
-            if(name != null){
-
-                mFaceverifView.identifyFace(name);
+            if(identifyItem.getConfidence() >= 70){
+                String person =  identifyItem.getPerson_id();
+                String name = PreferencesUtils.getString(mFaceverifView.getContext(), person);
+                if(name != null){
+                    mFaceverifView.identifyFace(name);
+                }else{
+                    mFaceverifView.preNoPerson(person);
+                }
+            }else{
+                mFaceverifView.confidenceLow();
             }
+
         } else {
             mFaceverifView.identifyNoFace();
             isIdentify = false;

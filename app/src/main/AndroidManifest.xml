@@ -79,7 +79,6 @@
         <activity android:name=".activity.TakePhotoActivity" />
         <activity android:name=".activity.VideoDetailActivity" />
         <activity android:name=".activity.VerificationActivity" />
-        <activity android:name=".activity.ManageActivity" />
         <activity android:name=".login.LoginView">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

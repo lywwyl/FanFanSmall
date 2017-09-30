@@ -31,10 +31,13 @@ public class VideoFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_video, container, false);
-        mContext = getActivity();
-        initView(view);
-        doData(onePageContent);
-        initListener();
+        if(view !=null){
+            mContext = getActivity();
+            initView(view);
+            doData(onePageContent);
+            initListener();
+        }
+
         return view;
     }
 

@@ -7,8 +7,6 @@ import android.os.Bundle;
 import com.example.dell.fangfangsmall.activity.MainActivity;
 import com.example.dell.fangfangsmall.base.ControlBaseActivityPresenter;
 import com.example.dell.fangfangsmall.homevideo.HomeVideoCallActivity;
-import com.example.dell.fangfangsmall.select.SelectView;
-import com.example.dell.fangfangsmall.voice.VoiceView;
 import com.ocean.mvp.library.utils.L;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
@@ -26,7 +24,7 @@ import static com.example.dell.fangfangsmall.login.SingleLogin.isInitSuccess;
 
 public class LoginActivityPresenter extends ControlBaseActivityPresenter<ILoginView> {
 
-    private String username = "17600738557";//15554955416
+    private String username = "12345";//15554955416
     private String appKey = "8a216da85ea31fdd015ea399cb4b0075";
     private String token = "c3f9bc4ed6f62a1b2888f4dc4d6604ab";
     private SingleLogin mLogin;

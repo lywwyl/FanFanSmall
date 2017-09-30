@@ -17,6 +17,7 @@
             android:id="@+id/ed_type"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
             android:layout_weight="1"
             android:hint="类型:"
             android:textColor="@color/color_dialog" />
@@ -42,6 +43,9 @@
             android:id="@+id/bt_add_fin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/selector_adddata_top"
+
             android:layout_weight="1"
             android:text="添加" />
     </LinearLayout>
