@@ -71,10 +71,11 @@ private MainActivity mainActivity;
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
-        mContext = getActivity();
-        mainActivity= (MainActivity) getActivity();
-        initView(view);
-        final SendToRobot sendto = new SendToRobot();
+        if(view!=null){
+            mContext = getActivity();
+            mainActivity= (MainActivity) getActivity();
+            initView(view);
+            final SendToRobot sendto = new SendToRobot();
 //toRobot=" xiaoyan";
 //        bt_torobro= (Button) view.findViewById(R.id.bt_torobro);
 //        bt_torobro.setOnClickListener(new View.OnClickListener() {
@@ -84,8 +85,11 @@ private MainActivity mainActivity;
 //                sendto.SendRobot(toRobot,"SmartChat");
 //            }
 //        });
-        initData();
-        initListener();
+            initData();
+            initListener();
+
+        }
+
         return view;
     }
 
@@ -210,7 +214,10 @@ private MainActivity mainActivity;
     @Override
     public void identifyFace(String personId) {
         String greeting="您好"+personId;
-        mainActivity.doAnswer(greeting);
+        if(mainActivity.isTalking==false){
+            mainActivity.doAnswer(greeting);
+        }
+
       //  showToast("检测到您是：" + personId);
         imFace.setBackgroundResource(R.mipmap.face_close);
         faceVerifiOpen = false;

@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements VoiceFragment.OnD
 
     private boolean isFirst;
 
-    private boolean isTalking;
+    public boolean isTalking;
     private String talker;
     private SerialControl ComA;//串口;
     public String devName = "ttyACM0";
