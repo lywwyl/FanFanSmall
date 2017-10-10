@@ -18,6 +18,9 @@
         android:layout_height="wrap_content"
 android:gravity="center"
         android:textColor="#000000"
+        android:maxEms="4"
+        android:lines="1"
+        android:ellipsize="end"
         android:text="ID"/>
 
     <TextView
@@ -26,7 +29,9 @@ android:gravity="center"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="#000000"
-
+        android:maxEms="5"
+        android:lines="1"
+        android:ellipsize="end"
         android:text="类型"/>
 
 
@@ -36,18 +41,51 @@ android:gravity="center"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="#000000"
-
+        android:maxEms="5"
+        android:lines="1"
+        android:ellipsize="end"
         android:text="问题"/>
 
     <TextView
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:id="@+id/tv_Content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="#000000"
-
+        android:maxEms="5"
+        android:lines="1"
+        android:ellipsize="end"
         android:text="答案"/>
-
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/tv_img"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:maxEms="5"
+            android:lines="1"
+            android:ellipsize="end"
+            android:text="图片"/>
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/tv_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:maxEms="5"
+            android:lines="1"
+            android:ellipsize="end"
+            android:text="动作"/>
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/tv_express"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:maxEms="5"
+            android:lines="1"
+            android:ellipsize="end"
+            android:text="表情"/>
     </LinearLayout>
 <LinearLayout
     android:layout_width="match_parent"

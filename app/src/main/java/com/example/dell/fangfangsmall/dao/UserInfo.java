@@ -17,17 +17,22 @@ public class UserInfo {
     private String sendtype;
     private String question;
     private String content;
-
-    //以下内容是自动产生的
-    @Generated(hash = 416546433)
+    private String action;
+    private String expression;
+    private String img;
+    @Generated(hash = 1715706603)
     public UserInfo(Long id, String name, String type, String sendtype,
-                    String question, String content) {
+            String question, String content, String action, String expression,
+            String img) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.sendtype = sendtype;
         this.question = question;
         this.content = content;
+        this.action = action;
+        this.expression = expression;
+        this.img = img;
     }
 
     @Generated(hash = 1279772520)
@@ -84,6 +89,30 @@ public class UserInfo {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getAction() {
+        return this.action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getExpression() {
+        return this.expression;
+    }
+
+    public void setExpression(String expression) {
+        this.expression = expression;
+    }
+
+    public String getImg() {
+        return this.img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 
 }

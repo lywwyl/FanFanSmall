@@ -96,4 +96,8 @@
     <string name="sysset">系统设置</string>
     <string name="other">其它</string>
     <string name="faceuser">人脸识别</string>
+    <string name="set_type">类型</string>
+    <string name="set_action">执行动作</string>
+    <string name="set_expression">面部表情</string>
+    <string name="set_img">对应图片</string>
 </resources>

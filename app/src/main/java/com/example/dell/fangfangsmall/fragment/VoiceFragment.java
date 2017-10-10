@@ -84,7 +84,7 @@ public class VoiceFragment extends Fragment {
         mQuestion.setAdapter(questionAdapter);
 
 
-        queryListData();
+ //       queryListData();
 //        voiceQuestion = getActivity().getResources().getStringArray(R.array.voice_question_array);
 //        voiceQuestionList = Arrays.asList(voiceQuestion);
 
@@ -93,7 +93,12 @@ public class VoiceFragment extends Fragment {
 
 
     }
+    @Override
+    public void onResume() {
+        super.onResume();
 
+        queryListData();
+    }
     /**
      * 查询数据
      */
@@ -129,6 +134,7 @@ public class VoiceFragment extends Fragment {
             if (text.equals(userInfoArrayList.get(i).getQuestion().toString())) {
                 mAnswerv.setText(userInfoArrayList.get(i).getContent());
                 result = userInfoArrayList.get(i).getContent().toString();
+
                 break;
             } else {
                 result = "抱歉，我没有听懂您说什么";

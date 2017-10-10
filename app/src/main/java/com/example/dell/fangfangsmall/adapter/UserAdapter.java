@@ -50,7 +50,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.tvType.setText(item.getSendtype());
         holder.tvQuestion.setText(item.getQuestion());
         holder.tvContent.setText(item.getContent());
-
+        holder.tvImg.setText(item.getImg());
+        holder.tvAction.setText(item.getAction());
+        holder.tvExpress.setText(item.getExpression());
 
         //将position保存在itemView的Tag中，以便点击时进行获取
         holder.itemView.setTag(position);
@@ -80,7 +82,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
 
     class UserViewHolder extends RecyclerView.ViewHolder {
-        TextView tvId, tvType, tvQuestion, tvContent;
+        TextView tvId, tvType, tvQuestion, tvContent,tvImg,tvAction,tvExpress;
 
         public UserViewHolder(View itemView) {
             super(itemView);
@@ -88,6 +90,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             tvType = (TextView) itemView.findViewById(R.id.tv_type);
             tvQuestion = (TextView) itemView.findViewById(R.id.tv_question);
             tvContent = (TextView) itemView.findViewById(R.id.tv_Content);
+            tvImg = (TextView) itemView.findViewById(R.id.tv_img);
+            tvAction = (TextView) itemView.findViewById(R.id.tv_action);
+            tvExpress = (TextView) itemView.findViewById(R.id.tv_express);
+
         }
     }
 
